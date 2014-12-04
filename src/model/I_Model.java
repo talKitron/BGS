@@ -1,13 +1,12 @@
  package model;
 
+import java.util.Date;
+
 
 /**I_Model interface*/
 public interface I_Model {
 	
-    public boolean addTuple(String startPhoneNumber, String endPhoneNumber, String first, String last);
+    public boolean addPlayer(String name, String password);
 
-    public boolean modifyTuple(String startPhoneNumber, String endPhoneNumber, String first, String last , String phoneBeforeChanging);
-
-    public boolean deleteTuple(String startPhoneNumber, String endPhoneNumber);
-    
+    public boolean addGame(Player player);
 }

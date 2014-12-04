@@ -11,7 +11,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
-import model.Contact;
 import utilities.JTextFieldLimit;
 
 
@@ -67,18 +66,6 @@ public class frm_IPhoneBook extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) tblPhoneBook.getModel();
     String start;
     String end; 
-    for (Map.Entry<?,?> entry : view.getPhoneBook().entrySet()) { 
-        Contact c = (Contact) entry.getValue();
-        if(entry.getKey().toString().length() == 10){
-             start = entry.getKey().toString().substring(0, 3);
-             end = entry.getKey().toString().substring(3, 10);
-        }
-        else{
-             start = entry.getKey().toString().substring(0, 2);
-             end = entry.getKey().toString().substring(2, 9);
-        }
-        model.addRow(new Object[] { start + "-" + end, c.getFirstName(), c.getLastName() });
-    }
  }
 
 public class MyWindowListener extends WindowAdapter {

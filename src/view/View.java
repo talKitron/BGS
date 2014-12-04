@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import model.Contact;
 import utilities.InputChecksClass;
 
 /**
@@ -76,16 +75,16 @@ public final class View {
              InputChecksClass.lettersTest(startPhoneNumber.getText(), "Start Phone Number");
              InputChecksClass.lettersTest(endPhoneNumber.getText(), "End Phone Number");
              
-               if (controller.addTuple(startPhoneNumber.getText(), endPhoneNumber.getText(), first.getText(), last.getText())) {
-                    model.addRow(new Object[]{startPhoneNumber.getText()+ "-" +endPhoneNumber.getText(),first.getText(),last.getText()});
-                    sound("/Sounds/ok.wav");
-                    JOptionPane.showMessageDialog(null, first.getText()+ " " + last.getText() + " was added succesfully to PhoneBook", "Added Message", JOptionPane.INFORMATION_MESSAGE);
-                    clearFields(startPhoneNumber, endPhoneNumber, first, last);
-               }
-               else{
-                   sound("/Sounds/error.wav");
-                   JOptionPane.showMessageDialog(null,"Contact with the number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " already exists in PhoneBook!", "Error Message", JOptionPane.ERROR_MESSAGE);
-               }
+//               if (controller.addTuple(startPhoneNumber.getText(), endPhoneNumber.getText(), first.getText(), last.getText())) {
+//                    model.addRow(new Object[]{startPhoneNumber.getText()+ "-" +endPhoneNumber.getText(),first.getText(),last.getText()});
+//                    sound("/Sounds/ok.wav");
+//                    JOptionPane.showMessageDialog(null, first.getText()+ " " + last.getText() + " was added succesfully to PhoneBook", "Added Message", JOptionPane.INFORMATION_MESSAGE);
+//                    clearFields(startPhoneNumber, endPhoneNumber, first, last);
+//               }
+//               else{
+//                   sound("/Sounds/error.wav");
+//                   JOptionPane.showMessageDialog(null,"Contact with the number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " already exists in PhoneBook!", "Error Message", JOptionPane.ERROR_MESSAGE);
+//               }
          } catch (CheckIntException | CheckLettersException ex) {
             ex.getStackTrace();
         }
@@ -100,18 +99,18 @@ public final class View {
              InputChecksClass.lettersTest(startPhoneNumber.getText(), "Start Phone Number");
              InputChecksClass.lettersTest(endPhoneNumber.getText(), "End Phone Number");
              
-               if (controller.modifyTuple(startPhoneNumber.getText(), endPhoneNumber.getText(), first.getText(), last.getText(),phoneBeforeChanging)) {
-                    model.setValueAt(startPhoneNumber.getText()+"-"+endPhoneNumber.getText(), tblPhoneBook.getSelectedRow(), 0);
-                    model.setValueAt(first.getText(), tblPhoneBook.getSelectedRow(), 1);
-                    model.setValueAt(last.getText(), tblPhoneBook.getSelectedRow(), 2);
-                    sound("/Sounds/ok.wav");
-                    JOptionPane.showMessageDialog(null, first.getText()+ " " + last.getText() + " was Modified succesfully!", "Modified Message", JOptionPane.INFORMATION_MESSAGE);
-                    clearFields(startPhoneNumber, endPhoneNumber, first, last);
-               }
-               else{
-                   sound("/Sounds/error.wav");
-                   JOptionPane.showMessageDialog(null,"Contact " + first.getText()+ " " + last.getText() + " can't be modified!", "Error Message", JOptionPane.ERROR_MESSAGE);
-               }
+//               if (controller.modifyTuple(startPhoneNumber.getText(), endPhoneNumber.getText(), first.getText(), last.getText(),phoneBeforeChanging)) {
+//                    model.setValueAt(startPhoneNumber.getText()+"-"+endPhoneNumber.getText(), tblPhoneBook.getSelectedRow(), 0);
+//                    model.setValueAt(first.getText(), tblPhoneBook.getSelectedRow(), 1);
+//                    model.setValueAt(last.getText(), tblPhoneBook.getSelectedRow(), 2);
+//                    sound("/Sounds/ok.wav");
+//                    JOptionPane.showMessageDialog(null, first.getText()+ " " + last.getText() + " was Modified succesfully!", "Modified Message", JOptionPane.INFORMATION_MESSAGE);
+//                    clearFields(startPhoneNumber, endPhoneNumber, first, last);
+//               }
+//               else{
+//                   sound("/Sounds/error.wav");
+//                   JOptionPane.showMessageDialog(null,"Contact " + first.getText()+ " " + last.getText() + " can't be modified!", "Error Message", JOptionPane.ERROR_MESSAGE);
+//               }
          } catch (CheckIntException | CheckLettersException ex) {
             ex.getStackTrace();
         }
@@ -119,25 +118,18 @@ public final class View {
 
     public void deleteTuple(JTextField startPhoneNumber, JTextField endPhoneNumber,DefaultTableModel model, JTable tblPhoneBook) {
        
-        if (controller.deleteTuple(startPhoneNumber.getText(), endPhoneNumber.getText())) {
-                    sound("/Sounds/ok.wav");
-                    model.removeRow(tblPhoneBook.getSelectedRow());
-                    JOptionPane.showMessageDialog(null, "Contact with phone number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " was Deleted succesfully!", "Deleted Message", JOptionPane.INFORMATION_MESSAGE);
-               }
-               else{
-                   sound("/Sounds/error.wav");
-                   JOptionPane.showMessageDialog(null,"Contact with phone number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " can't be deleted!", "Error Message", JOptionPane.ERROR_MESSAGE);
-               }
+//        if (controller.deleteTuple(startPhoneNumber.getText(), endPhoneNumber.getText())) {
+//                    sound("/Sounds/ok.wav");
+//                    model.removeRow(tblPhoneBook.getSelectedRow());
+//                    JOptionPane.showMessageDialog(null, "Contact with phone number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " was Deleted succesfully!", "Deleted Message", JOptionPane.INFORMATION_MESSAGE);
+//               }
+//               else{
+//                   sound("/Sounds/error.wav");
+//                   JOptionPane.showMessageDialog(null,"Contact with phone number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " can't be deleted!", "Error Message", JOptionPane.ERROR_MESSAGE);
+//               }
     }
 
-    /**
-     * @return the IPhoneBook
-     */
-    public HashMap<String, Contact> getPhoneBook() {
-        return controller.getPhoneBook();
-    }
-
-        /**
+     /**
      * the method gets address of sound file and return the sound for play.
      * @param soundAddress
      * @return 
@@ -162,7 +154,7 @@ public final class View {
      * @throws IOException 
      */
     public void executeSysExit(boolean logOut) throws IOException {
-        controller.executeSysExit(logOut);
+        //controller.executeSysExit(logOut);
     }
 
     }

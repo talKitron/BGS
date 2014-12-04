@@ -5,7 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+
+
 
 public final class DataBase implements java.io.Serializable {
     //***************************************** Variables *********************************************
@@ -19,26 +22,36 @@ public final class DataBase implements java.io.Serializable {
      */
     private static boolean exists = false;
     /**
-     * Stores all the terminals
+     * Stores all the players
      */
-    private HashMap<String, Contact> IPhoneBooks;
+    private HashMap<String, Player> players;
     /**
-     * Stores all the outgoing & arriving flights (departures & arrivals)
+     * Stores all the games
      */
+    private HashSet<Game> games;
+
+   
 
     //***************************************** Constructors ******************************************
     private DataBase() {
-        
-        IPhoneBooks = new HashMap<String, Contact>();
+        players = new HashMap<String, Player>();
+        games = new HashSet<Game>();
+
         executeInput();
     }
     //***************************************** Getters & Setters *************************************
 
     /**
-     * @return the IPhoneBook
+     * @return the players
      */
-    protected HashMap<String, Contact> getIPhoneBook() {
-        return IPhoneBooks;
+    protected HashMap<String, Player> getPlayers() {
+        return players;
+    }
+    /**
+     * @return the games
+     */
+    protected HashSet<Game> getGames() {
+        return games;
     }
 
     //***************************************** Methods ***********************************************
@@ -86,8 +99,9 @@ public final class DataBase implements java.io.Serializable {
     protected void executeOutput(boolean logOut) {
 
         try {
-            instance.IPhoneBooks = getIPhoneBook();
-            FileOutputStream fileOut = new FileOutputStream("IPhoneBookDB.ser");
+            instance.players = getPlayers();
+            instance.games = getGames();
+            FileOutputStream fileOut = new FileOutputStream("BGS.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(instance);
             out.close();

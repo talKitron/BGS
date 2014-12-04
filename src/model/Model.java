@@ -1,9 +1,10 @@
 package model;
 import java.io.IOException;
-import java.util.*;
+
 
 /**
  * Model Logic class
+ * @author BGS Team
  */
 public final class Model implements I_Model, java.io.Serializable {
     //***************************************** Variables *********************************************
@@ -43,49 +44,6 @@ public final class Model implements I_Model, java.io.Serializable {
         }
         return null;
     }
-
-    public HashMap<String, Contact> getPhoneBook() {
-        return db.getIPhoneBook();
-    }
-
-        @Override
-    public boolean addTuple(String startPhoneNumber, String endPhoneNumber, String first, String last) {
-            Contact contact = new Contact(first,last);
-            if (!db.getIPhoneBook().containsKey(startPhoneNumber+""+endPhoneNumber)) {
-                db.getIPhoneBook().put(startPhoneNumber+""+endPhoneNumber, contact);
-                return true;
-            }        
-        return false;
-    }
-
-        @Override
-    public boolean modifyTuple(String startPhoneNumber, String endPhoneNumber, String first, String last, String phoneBeforeChanging) {
-            Contact contact = new Contact(first,last);
-            if (!db.getIPhoneBook().containsKey(startPhoneNumber+""+endPhoneNumber)) {
-                db.getIPhoneBook().put(startPhoneNumber+""+endPhoneNumber, contact);
-                return true;
-            }
-            if (db.getIPhoneBook().containsKey(startPhoneNumber+""+endPhoneNumber)){ // if the number is the same and already exists check if the name was modify
-                if(!(startPhoneNumber+"-"+endPhoneNumber).equals(phoneBeforeChanging)){
-                    return false;
-                }
-                else{
-                    db.getIPhoneBook().put(startPhoneNumber+""+endPhoneNumber, contact);
-                    return true;
-                }
-            }
-            return false;
-    }
-
-        @Override
-    public boolean deleteTuple(String startPhoneNumber, String endPhoneNumber) {
-        if (db.getIPhoneBook().containsKey(startPhoneNumber+""+endPhoneNumber)) {
-            db.getIPhoneBook().remove(startPhoneNumber+""+endPhoneNumber);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * The method handle the exit from system.
      * @param logOut
@@ -94,6 +52,47 @@ public final class Model implements I_Model, java.io.Serializable {
     public void executeSysExit(boolean logOut) throws IOException {
         db.executeOutput(logOut);
     }
+    
+    /** 
+     * The method adds player to system.
+     * @param name
+     * @param password
+     * @return true if add successful
+     */
+    @Override
+    public boolean addPlayer(String name, String password) {
 
+        if(name!=null && password!=null)
+        {
+            if(!db.getPlayers().containsKey(name))
+            {
+                db.getPlayers().put(name, new Player(name, password));
+                return true;
+            }
+        }
+        return false;
+    }
+    /** 
+    * The method adds player to system.
+    * @param player
+    * @return true if add successful
+    */
+    @Override
+    public boolean addGame(Player player) {
 
+        if(player!=null)
+        {
+            Game game = new Game (player);
+            if(!db.getGames().contains(game))
+            {
+                db.getGames().add(game);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void deal(Game game) {
+        game.deal();
+    }
 }
