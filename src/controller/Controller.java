@@ -1,11 +1,14 @@
 package controller;
 import java.io.IOException;
-import java.util.HashMap;
+import model.Deck;
+import model.Game;
 import model.Model;
+import model.Player;
 import view.View;
 
 /**
- * Controller Logic class
+ * Controller Logic class.
+ * @author BGS Team
  */
 public final class Controller {
 
@@ -45,51 +48,38 @@ public final class Controller {
                 return instance;
             }     
         return instance;
-    }													//all methods Will be overridden from Interface in 2nd HW!!
+    }													
     //***************************************** CRUD Methods ******************************************
-//    /**
-//     * @return the PhoneBook
-//     */
-//    public HashMap<String, Contact> getPhoneBook() {
-//        return model.getPhoneBook();
-//    }
-//    /**
-//     * add contact
-//     * @param startPhoneNumber
-//     * @param endPhoneNumber
-//     * @param first
-//     * @param last
-//     * @return 
-//     */
-//    public boolean addTuple(String startPhoneNumber,String endPhoneNumber, String first, String last) {
-//        return model.addTuple(startPhoneNumber,endPhoneNumber ,first,last);
-//    }
-//    /**
-//     * modify contact
-//     * @param startPhoneNumber
-//     * @param endPhoneNumber
-//     * @param first
-//     * @param last
-//     * @param phoneBeforeChanging
-//     * @return 
-//     */
-//    public boolean modifyTuple(String startPhoneNumber,String endPhoneNumber, String first, String last, String phoneBeforeChanging) {
-//        return model.modifyTuple(startPhoneNumber,endPhoneNumber ,first,last,phoneBeforeChanging);
-//    }
-//    /**
-//     * delete contact
-//     * @param startPhoneNumber
-//     * @param endPhoneNumber
-//     * @return 
-//     */
-//    public boolean deleteTuple(String startPhoneNumber,String endPhoneNumber) {
-//        return model.deleteTuple(startPhoneNumber,endPhoneNumber);
-//    }
-//     /**
-//     * The method handle the exit from system.
-//     * @param logOut
-//     */
-//    public void executeSysExit(boolean logOut) throws IOException {
-//        model.executeSysExit(logOut);
-//    }
+    /** 
+     * The method adds player to system.
+     * @param name
+     * @return true if add successful
+     */
+    public boolean addPlayer(String name, String password) {
+        return model.addPlayer(name, password);
+    }
+    /** 
+    * The method adds player to system.
+    * @param player
+    * @return true if add successful
+    */
+    public boolean addGame(Player player) {
+        return model.addGame(player);
+    }
+    
+    public void deal(Game game) {
+        model.deal(game);
+    }
+    
+    
+    
+    
+
+     /**
+     * The method handle the exit from system.
+     * @param logOut
+     */
+    public void executeSysExit(boolean logOut) throws IOException {
+        model.executeSysExit(logOut);
+    }
 }
