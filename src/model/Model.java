@@ -53,6 +53,18 @@ public final class Model implements I_Model, java.io.Serializable {
         db.executeOutput(logOut);
     }
     
+    /**
+     * Checks if such name already exists in the database and if so it checks the password to complete login process.
+     * else, it creates a new Player with the name.
+     * @param name
+     * @param password
+     * @return 1-logged in; 2-password incorrect;
+     */
+    public int loginProcess(String name, String password){
+        
+        return 0;
+    }
+    
     /** 
      * The method adds player to system.
      * @param name

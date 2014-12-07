@@ -27,7 +27,7 @@ public final class View {
     /**
      * the loginFrame
      */
-    private static frm_IPhoneBook frm_IPhoneBook;
+    private static MainFrame mainFrame;
     /**
      * Boolean flag for class instance existence (singleton)
      */
@@ -62,10 +62,10 @@ public final class View {
         return null;
     }
     /**
-     * create new frm_IPhoneBook
+     * create new MainFrame
      */
     public void executeLoginView() {
-        frm_IPhoneBook = new frm_IPhoneBook(instance);      // create new login frame
+        mainFrame = new MainFrame(instance);      // create new login frame
     }
      public void addTuple(JTextField startPhoneNumber, JTextField endPhoneNumber, JTextField first, JTextField last, DefaultTableModel model) {
        

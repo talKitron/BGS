@@ -6,6 +6,8 @@ package utilities;
  */
 public final class Constants {
     
+    /**Debug mode for errors*/
+    public static final boolean DEBUG = true;
     /**number of cards in deck*/
     public static final int CARDS_IN_DECK = 52;
     /**The maximum number for win*/
