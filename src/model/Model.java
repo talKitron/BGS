@@ -72,17 +72,29 @@ public final class Model implements I_Model, java.io.Serializable {
      * @return true if add successful
      */
     @Override
-    public boolean addPlayer(String name, String password) {
-
-        if(name!=null && password!=null)
+    public Player addPlayer(String name, String password) {
+        
+        if(db.getPlayers().containsKey(name)) //chek if player exist
         {
-            if(!db.getPlayers().containsKey(name))
+            if(password==db.getPlayers().get(name).password) //chek if password is correct
             {
-                db.getPlayers().put(name, new Player(name, password));
-                return true;
+                System.out.println("Welcome back " + name + " , We're glad to have you (and especially your money) back!");
+                return db.getPlayers().get(name);
+            }
+            else
+            {
+                System.out.println("Worng password or player name is already exist, try again");
+                return null;
             }
         }
-        return false;
+        else
+        {
+            Player p = new Player(name, password);
+            db.getPlayers().put(name, p);
+            System.out.println("Welcome " + name + " , We are glad you chose to play blackjack with BGS (and spend all your money here)");
+            return p;
+        }
+        
     }
     /** 
     * The method adds player to system.

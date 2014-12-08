@@ -55,7 +55,7 @@ public final class Controller {
      * @param name
      * @return true if add successful
      */
-    public boolean addPlayer(String name, String password) {
+    public Player addPlayer(String name, String password) {
         return model.addPlayer(name, password);
     }
     /** 
