@@ -5,9 +5,15 @@ package model;
  * @author BGS Team
  */
 public class Card {
-  
-    private final int value; //the card number Ace-1, Jack-11, Queen-12 and King-13
-    private final Suit suit;//the card suit
+    /**
+     * Card's number (Also, Ace-1, Jack-11, Queen-12 and King-13).
+     */
+    private final int value;
+    /**
+     * Card's suit.
+     */
+    private final Suit suit;//
+    
     /**
      * Constructor of Card.
      * @param value 
@@ -17,24 +23,26 @@ public class Card {
         this.value = value;
         this.suit = suit;
     }
+    
     /**
      * @return the value
      */
     protected int getValue(){
         return this.value;
     }
+    
     /**
      * @return the suit
      */
     protected Suit getSuit(){
         return this.suit;
     }
+    
     /**
      * @return Card's String representation. 
      */
     @Override
-    public String toString()
-    {
+    public String toString(){
         String str ="";
         
         switch(value) {
@@ -90,7 +98,11 @@ public class Card {
                 str = "King";
                 break;             
         }
-        
-        return str + " " + suit.name();            
+        if (value > 1 && value < 11){
+            return value + " of " + suit.name();
+        }
+        else{
+            return str + " of " + suit.name();
+        }
     }
 }

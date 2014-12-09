@@ -9,27 +9,31 @@ import utilities.Constants;
  * @author BGS Team
  */
 public class Deck {
-    
-    private Card[] cardDeck; // a cardarray that represent the deck
-    private int numOfCard = Constants.CARDS_IN_DECK; //number of cards currently in the deck
+    /**
+     * Array of Cards to consist the Deck.
+     */
+    private Card[] cardDeck;
+    /**
+     * Holds current number of cards in the Deck.
+     */
+    private int numOfCard = Constants.CARDS_IN_DECK;
+    /**
+     * Holds the index for the next card.
+     */
     private int nextCardIndex;
     
     /**
      * Constructor of Card, creating a deck with 52 cards
      */
     public Deck(){
-        
         cardDeck = new Card[Constants.CARDS_IN_DECK];
         nextCardIndex = 0;
         int cardIndex = 0;
         //for suit
-        for(int i = 1 ; i<5 ; i++)
-        {//for the value
-            for(int j = 1 ; j<14 ; j++)
-            {
+        for(int i = 1 ; i<5 ; i++){//for the value
+            for(int j = 1 ; j<14 ; j++){
                 Suit suit=null;
-                switch(i)
-                {
+                switch(i){
                     case 1:
                         suit = Suit.Clubs;
                         break;
@@ -51,30 +55,35 @@ public class Deck {
             }
         }
     }
+    
     /**
      * @return the cardDeck
      */
     protected Card[] getCardDeck(){
         return this.cardDeck;
     }
+    
     /**
      * @return the numOfCard
      */
     protected int getNumOfCard(){
         return this.numOfCard;
     }
+    
     /**
      * @return the nextCardIndex
      */
     protected int getNextCardIndex(){
         return this.nextCardIndex;
     }
+    
     /**
      * @param numOfCard
      */
     protected void setNumOfCard(int numOfCard){
         this.numOfCard=numOfCard;
     }
+    
     /**
      * @return the next card in the deck
      */
@@ -83,12 +92,11 @@ public class Deck {
         nextCardIndex++;
         return card;
     }
+    
     protected void shuffle() {
-        
         Random rand = new Random();
         
-        for(int i = 0 ; i<cardDeck.length ; i++)
-        {
+        for(int i = 0 ; i<cardDeck.length ; i++){
             int r = rand.nextInt(Constants.CARDS_IN_DECK); //random card index for swap
             Card tempCard;
             //swap cards place's

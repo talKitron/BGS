@@ -8,52 +8,107 @@ import utilities.Constants;
  * @author BGS Team
  */
 public class Player {
-    /**player name*/
+    /**
+     * player name
+     */
     String name;
-    /**player password*/
+    /**
+     * player password
+     */
     String password;
-    /**player login date*/
+    /**
+     * player login date
+     */
     Date loginDate;
-    /**how much money the player have*/
+    /**
+     * how much money the player have
+     */
     int bank;
-    /**the cards that the player currently holds in is hand*/
+    /**
+     * the cards that the player currently holds in is hand
+     */
     Hand currentHand;
+    
     /**
      * Constructor of Player.
      * @param name 
      * @param password
      */
-    public Player( String name, String password){
+    public Player(String name, String password){
         this.name = name;
         this.password = password;
         this.loginDate = new Date();
         this.bank = Constants.STARTING_AMOUNT;
         currentHand = new Hand();
     }
+    
+    /**
+     * sets Player's password.
+     * @param password 
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    /**
+     * sets last loginDate of Player.
+     * @param loginDate 
+     */
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
+    }
+    
+    /**
+     * sets Player's bank.
+     * @param bank 
+     */
+    public void setBank(int bank) {
+        this.bank = bank;
+    }
+    
+    /**
+     * sets currentHand.
+     * @param currentHand 
+     */
+    public void setCurrentHand(Hand currentHand) {
+        this.currentHand = currentHand;
+    }
+    
      /**
      * @return the name
      */
-    protected String getName(){
-        return this.name;
+    public String getName(){
+        return name;
     }
+    
      /**
      * @return the password
      */
-    protected String getPassword(){
-        return this.password;
+    public String getPassword(){
+        return password;
     }
+    
      /**
      * @return the loginDate
      */
-    protected Date getLoginDate(){
-        return this.loginDate;
+    public Date getLoginDate(){
+        return loginDate;
     }
+    
      /**
      * @return the bank
      */
-    protected int getBank(){
-        return this.bank;
+    public int getBank(){
+        return bank;
     }
+    
+    /**
+     * @return the current Hand
+     */
+    public Hand getCurrentHand(){
+        return currentHand;
+    }
+    
     /**
      * The method compares given object to this Airline (key fields).
      * @return true/false if equal.
@@ -64,6 +119,7 @@ public class Player {
 			return name.equals(((Player)obj).name);
 		return false;
     }
+    
     /**
     * The method hashing key fields.               
     * @return int hash code result.

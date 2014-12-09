@@ -2,25 +2,18 @@
 package view;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.Map;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.table.DefaultTableModel;
-import utilities.Constants;
-import utilities.JTextFieldLimit;
-
 
 /**
- *
- * @author Rawan
+ * MainFrame frame for the game.
+ * @author BGS Team
  */
 public class MainFrame extends javax.swing.JFrame {
 
@@ -32,12 +25,14 @@ public class MainFrame extends javax.swing.JFrame {
     /**ViewLogic field*/
     private static View view;
     private Image image;
+    boolean firstTimeNameType = true;
+    boolean firstTimePassType = true;
+    
     /**
      * Creates new form MainFrame
      * @param view
      */
     public MainFrame(View view) {
-        
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -58,8 +53,8 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         
         btnSubmit.setContentAreaFilled(false);
+        btnSitDown.setVisible(false);
         
-        fillTable();
         /*lblMessage.setForeground(Color.red);
         tblPhoneBook.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         txtStartPhoneNumber.setDocument(new JTextFieldLimit(3));
@@ -69,16 +64,10 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         addWindowListener(new MyWindowListener());
         //lblBackground.setVisible(false);
-        loginPanel.setOpaque(false);     
+        pnlLogin.setOpaque(false);     
     }
 
-    private void fillTable() {
-    //DefaultTableModel model = (DefaultTableModel) tblPhoneBook.getModel();
-    String start;
-    String end; 
- }
-
-public class MyWindowListener extends WindowAdapter {
+    public class MyWindowListener extends WindowAdapter {
 
         @Override
         public void windowClosing(WindowEvent e) {
@@ -94,7 +83,6 @@ public class MyWindowListener extends WindowAdapter {
                     
                 }
             }
-
         }
     }
     /**
@@ -106,25 +94,7 @@ public class MyWindowListener extends WindowAdapter {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainDesktopPane = new javax.swing.JDesktopPane(){
-            @Override
-            protected void paintComponent(Graphics g) {
-                try {
-                    image = new javax.swing.ImageIcon(getClass().getResource("/resources/login.png")).getImage();
-
-                    if (g != null) {
-                        g.drawImage(image,
-                            (this.getSize().width - image.getWidth(null)) / 2,       // set the frame at the center of the screen
-                            (this.getSize().height - image.getHeight(null)) / 2,
-                            null);
-                    }
-                } catch (NullPointerException npe) {
-                    if (Constants.DEBUG)
-                    System.out.println("Can't find file!! Continue without the original background");
-                }
-            }
-        };
-        loginPanel = new javax.swing.JPanel();
+        pnlLogin = new javax.swing.JPanel();
         lblLogin = new javax.swing.JLabel();
         lblName = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
@@ -132,11 +102,14 @@ public class MyWindowListener extends WindowAdapter {
         txtfPassword = new javax.swing.JPasswordField();
         btnSubmit = new javax.swing.JButton();
         lblError = new javax.swing.JLabel("<html>** You may login your last used name or just register a new one.</html>");
+        btnSitDown = new javax.swing.JButton();
+        pnlBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(1280, 720));
+        setMinimumSize(new java.awt.Dimension(1280, 720));
         setPreferredSize(new java.awt.Dimension(1280, 720));
-
-        mainDesktopPane.setPreferredSize(new java.awt.Dimension(1280, 720));
+        getContentPane().setLayout(null);
 
         lblLogin.setForeground(new java.awt.Color(255, 255, 255));
         lblLogin.setText("Login:");
@@ -148,90 +121,149 @@ public class MyWindowListener extends WindowAdapter {
         lblPassword.setText("Password:");
 
         txtfName.setText("Your name");
+        txtfName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtfNameKeyPressed(evt);
+            }
+        });
 
         txtfPassword.setText("Passowrd");
+        txtfPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtfPasswordKeyPressed(evt);
+            }
+        });
 
-        btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/btnSubmit.png"))); // NOI18N
+        btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/btnSubmit.png"))); // NOI18N
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubmitActionPerformed(evt);
+            }
+        });
 
         lblError.setForeground(new java.awt.Color(153, 255, 255));
         lblError.setPreferredSize(new java.awt.Dimension(185, 60));
 
-        javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
-        loginPanel.setLayout(loginPanelLayout);
-        loginPanelLayout.setHorizontalGroup(
-            loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(loginPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(loginPanelLayout.createSequentialGroup()
-                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnlLoginLayout = new javax.swing.GroupLayout(pnlLogin);
+        pnlLogin.setLayout(pnlLoginLayout);
+        pnlLoginLayout.setHorizontalGroup(
+            pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoginLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlLoginLayout.createSequentialGroup()
+                        .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(pnlLoginLayout.createSequentialGroup()
+                        .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblLogin)
-                            .addGroup(loginPanelLayout.createSequentialGroup()
-                                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblName)
-                                    .addComponent(lblPassword))
+                            .addGroup(pnlLoginLayout.createSequentialGroup()
+                                .addComponent(lblName)
                                 .addGap(18, 18, 18)
-                                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtfPassword)
-                                    .addComponent(txtfName, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)))
+                                .addComponent(txtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlLoginLayout.createSequentialGroup()
+                                .addComponent(lblPassword)
+                                .addGap(32, 32, 32)
+                                .addComponent(txtfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(18, 18, 18))))
         );
-        loginPanelLayout.setVerticalGroup(
-            loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(loginPanelLayout.createSequentialGroup()
-                .addContainerGap()
+        pnlLoginLayout.setVerticalGroup(
+            pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoginLayout.createSequentialGroup()
+                .addGap(11, 11, 11)
                 .addComponent(lblLogin)
                 .addGap(18, 18, 18)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblName)
+                .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlLoginLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblName))
                     .addComponent(txtfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPassword)
+                .addGap(11, 11, 11)
+                .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlLoginLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblPassword))
                     .addComponent(txtfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 36, Short.MAX_VALUE)
+                .addGap(11, 11, 11)
+                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
-
-        javax.swing.GroupLayout mainDesktopPaneLayout = new javax.swing.GroupLayout(mainDesktopPane);
-        mainDesktopPane.setLayout(mainDesktopPaneLayout);
-        mainDesktopPaneLayout.setHorizontalGroup(
-            mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainDesktopPaneLayout.createSequentialGroup()
-                .addContainerGap(1065, Short.MAX_VALUE)
-                .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        mainDesktopPaneLayout.setVerticalGroup(
-            mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainDesktopPaneLayout.createSequentialGroup()
-                .addContainerGap(479, Short.MAX_VALUE)
-                .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        mainDesktopPane.setLayer(loginPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(mainDesktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainDesktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        getContentPane().add(pnlLogin);
+        pnlLogin.setBounds(10, 440, 200, 230);
+
+        btnSitDown.setText("Sit Down");
+        btnSitDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSitDownActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnSitDown);
+        btnSitDown.setBounds(390, 460, 100, 23);
+
+        pnlBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/login.png"))); // NOI18N
+        pnlBackground.setMaximumSize(new java.awt.Dimension(1280, 720));
+        pnlBackground.setMinimumSize(new java.awt.Dimension(1280, 720));
+        pnlBackground.setPreferredSize(new java.awt.Dimension(1280, 720));
+        getContentPane().add(pnlBackground);
+        pnlBackground.setBounds(0, 0, 1280, 720);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        ImageIcon newIcon = new ImageIcon(getClass().getResource("/resources/bgStandUp.jpg"));
+        pnlBackground.setIcon(newIcon);
+        
+        if(txtfName.getText().equals("Your name") && String.valueOf(txtfPassword.getPassword()).equals("Password")){
+            lblError.setText("Please fill fields!");
+            return;
+        }
+        switch(view.loginProcess(txtfName.getText(),String.valueOf(txtfPassword.getPassword()))){
+            case 0:
+                lblError.setText("Undefined Error!");
+                break;
+            case 1:
+                pnlLogin.setVisible(false);
+                btnSitDown.setVisible(true);
+                
+                //lblError.setText("player added!!"); //change this to message box and then show page 2
+                break;
+            case 2:
+                lblError.setText("Incorrect password!");
+                break;
+            case 3:
+                lblError.setText("Illegal name!");
+                break;
+            default: 
+                break;
+        }
+    }//GEN-LAST:event_btnSubmitActionPerformed
+
+    private void txtfNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtfNameKeyPressed
+        if (firstTimeNameType){
+           txtfName.setText("");
+           txtfName.setForeground(Color.BLACK);
+           firstTimeNameType = false;
+        }
+    }//GEN-LAST:event_txtfNameKeyPressed
+
+    private void txtfPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtfPasswordKeyPressed
+        if(firstTimePassType){
+            txtfPassword.setText("");
+            txtfPassword.setForeground(Color.BLACK);
+            firstTimePassType = false;
+        }
+    }//GEN-LAST:event_txtfPasswordKeyPressed
+
+    private void btnSitDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSitDownActionPerformed
+        TableFrame tableFrame = new TableFrame(view);      
+        tableFrame.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnSitDownActionPerformed
 
     /**
      * @param args the command line arguments
@@ -269,13 +301,14 @@ public class MyWindowListener extends WindowAdapter {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSitDown;
     private javax.swing.JButton btnSubmit;
     private javax.swing.JLabel lblError;
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblPassword;
-    private javax.swing.JPanel loginPanel;
-    private javax.swing.JDesktopPane mainDesktopPane;
+    private javax.swing.JLabel pnlBackground;
+    private javax.swing.JPanel pnlLogin;
     private javax.swing.JTextField txtfName;
     private javax.swing.JPasswordField txtfPassword;
     // End of variables declaration//GEN-END:variables

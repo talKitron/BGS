@@ -1,6 +1,7 @@
 package model;
-import java.io.IOException;
 
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Model Logic class
@@ -20,6 +21,7 @@ public final class Model implements I_Model, java.io.Serializable {
      * SysData reference pointer
      */
     private static DataBase db;
+    
     //***************************************** Constructors ******************************************
     private Model() {
        
@@ -29,14 +31,13 @@ public final class Model implements I_Model, java.io.Serializable {
     /**
      * The method creates this class's instance & provides access to it, by returning a reference (singleton).
      * @return reference to this class's only instance, or null if reference was already returned (singleton).
-     * @throws GeneralException
      */
-    public static Model getInstance() throws IOException {
+    public static Model getInstance(){
         if (!exists) {
            
             db = DataBase.getInstance();
             if (db != null) {
-                db.executeInput();
+                DataBase.executeInput();
                 exists = true;
                 instance = new Model();
                 return instance;
@@ -44,6 +45,7 @@ public final class Model implements I_Model, java.io.Serializable {
         }
         return null;
     }
+    
     /**
      * The method handle the exit from system.
      * @param logOut
@@ -57,12 +59,20 @@ public final class Model implements I_Model, java.io.Serializable {
      * Checks if such name already exists in the database and if so it checks the password to complete login process.
      * else, it creates a new Player with the name.
      * @param name
-     * @param password
-     * @return 1-logged in; 2-password incorrect;
+     * @param pass
+     * @return 0-undefined error;1-logged in; 2-password incorrect; 3-name illegal
      */
-    public int loginProcess(String name, String password){
-        
-        return 0;
+    public int loginProcess(String name, String pass){
+        if(db.getPlayers().containsKey(name)){ // player exists in the system
+            if(db.getPlayers().get(name).getPassword().equals(pass)){ // if the pass is equal login else alert "pass isn't compatible"
+                db.getPlayers().get(name).setLoginDate(new Date());
+                return 1; // login successfull
+            }
+            else return 2; // password incorrect!
+        }
+        if (addPlayer(name, pass) == null)
+            return 1; // new player created
+        return 0; 
     }
     
     /** 
@@ -96,6 +106,7 @@ public final class Model implements I_Model, java.io.Serializable {
         }
         
     }
+    
     /** 
     * The method adds player to system.
     * @param player
@@ -116,7 +127,15 @@ public final class Model implements I_Model, java.io.Serializable {
         return false;
     }
     
-    public void deal(Game game) {
-        game.deal();
+    /**
+     * Gets the current Player, creates a new Game for him (also dealing the initial cards) and adds it to the Database
+     * @param player
+     * @return the newly created Game, current Game
+     */
+    public Game deal(Player player) {
+        Game currentGame = new Game(player);
+        db.getGames().add(currentGame);
+        currentGame.deal();
+        return currentGame;
     }
 }

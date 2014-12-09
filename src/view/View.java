@@ -4,15 +4,12 @@ package view;
 //*************************************************** Imports *****************************************************//
 
 import controller.Controller;
-import exceptions.CheckIntException;
-import exceptions.CheckLettersException;
 import java.io.IOException;
-import java.util.HashMap;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import utilities.InputChecksClass;
+import model.Card;
+import model.Game;
+import model.Player;
 
 /**
  * @author Rawan
@@ -36,7 +33,10 @@ public final class View {
      * ControllerLogic reference pointer
      */
     private static Controller controller;
-
+    /**
+     * Holds current player details
+     */
+    public static Player currentPlayer;
 //*************************************************** Constructors *************************************************
     /**
      * empty constructor.
@@ -67,68 +67,7 @@ public final class View {
     public void executeLoginView() {
         mainFrame = new MainFrame(instance);      // create new login frame
     }
-     public void addTuple(JTextField startPhoneNumber, JTextField endPhoneNumber, JTextField first, JTextField last, DefaultTableModel model) {
-       
-         try{
-             InputChecksClass.integerTest(first.getText(), "First Name");
-             InputChecksClass.integerTest(last.getText(), "Last Name");
-             InputChecksClass.lettersTest(startPhoneNumber.getText(), "Start Phone Number");
-             InputChecksClass.lettersTest(endPhoneNumber.getText(), "End Phone Number");
-             
-//               if (controller.addTuple(startPhoneNumber.getText(), endPhoneNumber.getText(), first.getText(), last.getText())) {
-//                    model.addRow(new Object[]{startPhoneNumber.getText()+ "-" +endPhoneNumber.getText(),first.getText(),last.getText()});
-//                    sound("/Sounds/ok.wav");
-//                    JOptionPane.showMessageDialog(null, first.getText()+ " " + last.getText() + " was added succesfully to PhoneBook", "Added Message", JOptionPane.INFORMATION_MESSAGE);
-//                    clearFields(startPhoneNumber, endPhoneNumber, first, last);
-//               }
-//               else{
-//                   sound("/Sounds/error.wav");
-//                   JOptionPane.showMessageDialog(null,"Contact with the number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " already exists in PhoneBook!", "Error Message", JOptionPane.ERROR_MESSAGE);
-//               }
-         } catch (CheckIntException | CheckLettersException ex) {
-            ex.getStackTrace();
-        }
-     }
-         
-    
-
-    public void modifyTuple(JTextField startPhoneNumber, JTextField endPhoneNumber, JTextField first, JTextField last,String phoneBeforeChanging, DefaultTableModel model, JTable tblPhoneBook) {
-        try{
-             InputChecksClass.integerTest(first.getText(), "First Name");
-             InputChecksClass.integerTest(last.getText(), "Last Name");
-             InputChecksClass.lettersTest(startPhoneNumber.getText(), "Start Phone Number");
-             InputChecksClass.lettersTest(endPhoneNumber.getText(), "End Phone Number");
-             
-//               if (controller.modifyTuple(startPhoneNumber.getText(), endPhoneNumber.getText(), first.getText(), last.getText(),phoneBeforeChanging)) {
-//                    model.setValueAt(startPhoneNumber.getText()+"-"+endPhoneNumber.getText(), tblPhoneBook.getSelectedRow(), 0);
-//                    model.setValueAt(first.getText(), tblPhoneBook.getSelectedRow(), 1);
-//                    model.setValueAt(last.getText(), tblPhoneBook.getSelectedRow(), 2);
-//                    sound("/Sounds/ok.wav");
-//                    JOptionPane.showMessageDialog(null, first.getText()+ " " + last.getText() + " was Modified succesfully!", "Modified Message", JOptionPane.INFORMATION_MESSAGE);
-//                    clearFields(startPhoneNumber, endPhoneNumber, first, last);
-//               }
-//               else{
-//                   sound("/Sounds/error.wav");
-//                   JOptionPane.showMessageDialog(null,"Contact " + first.getText()+ " " + last.getText() + " can't be modified!", "Error Message", JOptionPane.ERROR_MESSAGE);
-//               }
-         } catch (CheckIntException | CheckLettersException ex) {
-            ex.getStackTrace();
-        }
-    }
-
-    public void deleteTuple(JTextField startPhoneNumber, JTextField endPhoneNumber,DefaultTableModel model, JTable tblPhoneBook) {
-       
-//        if (controller.deleteTuple(startPhoneNumber.getText(), endPhoneNumber.getText())) {
-//                    sound("/Sounds/ok.wav");
-//                    model.removeRow(tblPhoneBook.getSelectedRow());
-//                    JOptionPane.showMessageDialog(null, "Contact with phone number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " was Deleted succesfully!", "Deleted Message", JOptionPane.INFORMATION_MESSAGE);
-//               }
-//               else{
-//                   sound("/Sounds/error.wav");
-//                   JOptionPane.showMessageDialog(null,"Contact with phone number: " + startPhoneNumber.getText()+ "-" + endPhoneNumber.getText() + " can't be deleted!", "Error Message", JOptionPane.ERROR_MESSAGE);
-//               }
-    }
-
+     
      /**
      * the method gets address of sound file and return the sound for play.
      * @param soundAddress
@@ -148,13 +87,53 @@ public final class View {
             t.setText("");
         }
     }
+    
     /**
-     * method executes the system's exit
+     * Checks if such name already exists in the database and if so it checks the password to complete login process.
+     * else, it creates a new Player with the name.
+     * @param name
+     * @param password
+     * @return 1-logged in; 2-password incorrect;
+     */
+    protected int loginProcess(String name, String password){
+        return controller.loginProcess(name, password);
+    }
+    
+    /**
+     * Gets the current Player, creates a new Game for him (also dealing the initial cards) and adds it to the Database.
+     * @param player
+     * @return the newly created Game, current Game
+     */
+    protected Game deal(Player player) {
+        return controller.deal(player);
+    }
+    
+    /**
+     * receives a Card and returns path for its image.
+     * @param card
+     * @return path of image for given card
+     */
+    protected String getCardImage(Card card){
+        String cardImageName = card.toString().replace(" ", "_");
+        String imagePath = "/resources/cards/" + cardImageName + ".png";
+        System.out.println(imagePath);
+        return imagePath;
+    }
+    
+    /**
+     * receives the TableFrame frame and adds a card to it.
+     * @param tableFrame 
+     */
+    void drawCard(JLabel lbl, Card card) {
+        lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource(getCardImage(card))));
+    }
+    
+    /**
+     * method executes the system's exit.
      * @param logOut
      * @throws IOException 
      */
     public void executeSysExit(boolean logOut) throws IOException {
-        //controller.executeSysExit(logOut);
+        controller.executeSysExit(logOut);
     }
-
-    }
+}

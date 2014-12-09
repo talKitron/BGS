@@ -7,14 +7,21 @@ package model;
  * @author BGS Team
  */
 public class Game {
-    
-    Deck deck;
-    
-    Player player;
-    
-    Hand dealer;
     /**
-     * Constructor of Card.
+     * Current Game's Deck of Cards.
+     */
+    Deck deck;
+    /**
+     * Current Game's Player.
+     */
+    Player player;
+    /**
+     * Current Hand for the Dealer.
+     */
+    Hand dealer;
+    
+    /**
+     * Constructor for Card.
      * @param player
      */
     public Game(Player player){
@@ -22,29 +29,32 @@ public class Game {
         this.player = player;
         dealer = new Hand();
     }
+    
      /**
      * @return the deck
      */
-    protected Deck getDeck(){
+    public Deck getDeck(){
         return this.deck;
     }
+    
      /**
      * @return the player
      */
-    protected Player getPlayer(){
+    public Player getPlayer(){
         return this.player;
     }
+    
      /**
      * @return the dealer
      */
-    protected Hand getDealer(){
+    public Hand getDealer(){
         return this.dealer;
     }
+    
     /**
-     * Occurs after clicking on the "deal" button, deals two cards for player and dealer
+     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
      */
     protected void deal() {
-        
         deck.shuffle();
         
         /*for( int i =0 ; i<52 ; i++) // printing the deck for testing

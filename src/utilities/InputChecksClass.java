@@ -2,15 +2,23 @@ package utilities;
 
 import exceptions.*;
 
-
 public class InputChecksClass {
+    /**
+     * method for checking if the string is start with letter.
+     * @param string
+     * @return true if start with space else return false
+     */
+    public static boolean startWithLetter(String string){
+        return !string.matches("^[A-Za-z].*$");
+    }
+    
     /**
      * method for checking text input. the method throw exceptions if the text contains numbers.
      * @param text
+     * @param label
      * @throws CheckIntException
      */
     public static void integerTest(String text, String label) throws CheckIntException {
-
         char[] chars = text.toCharArray();  // initialize chars array
 
         for (char c : chars) {
@@ -23,6 +31,7 @@ public class InputChecksClass {
     /**
      * method for checking text input. the method throw exceptions if the text contains letters.
      * @param text
+     * @param label
      * @throws CheckLettersException
      */
     public static void lettersTest(String text, String label) throws CheckLettersException {

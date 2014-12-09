@@ -7,9 +7,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import utilities.Constants;
 
-
-
+/**
+ * Database class - Holds BGS data.
+ * @author BGS Team
+ */
 public final class DataBase implements java.io.Serializable {
     //***************************************** Variables *********************************************
 
@@ -34,8 +37,8 @@ public final class DataBase implements java.io.Serializable {
 
     //***************************************** Constructors ******************************************
     private DataBase() {
-        players = new HashMap<String, Player>();
-        games = new HashSet<Game>();
+        players = new HashMap<>();
+        games = new HashSet<>();
 
         executeInput();
     }
@@ -62,7 +65,6 @@ public final class DataBase implements java.io.Serializable {
 
     /**
      * The method creates this class's instance & provides access to it, by returning a reference (singleton).
-     *
      * @return reference to this class's only instance, or null if reference was already returned (singleton).
      */
     protected static DataBase getInstance() {
@@ -79,18 +81,21 @@ public final class DataBase implements java.io.Serializable {
      */
     public static void executeInput() {
         try {
-            FileInputStream fileIn = new FileInputStream("IPhoneBookDB.ser");
+            FileInputStream fileIn = new FileInputStream("BGS.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             setInstance(((DataBase) in.readObject()));
             exists = true;
             in.close();
             fileIn.close();
         } catch (FileNotFoundException e) {
-            e.getStackTrace();
+            if (Constants.DEBUG){
+                System.out.println(e.getMessage());
+            }
         } catch (IOException | ClassNotFoundException e) {
-            e.getStackTrace();
+            if (Constants.DEBUG){
+                 System.out.println(e.getMessage());
+            }
         }
-
     }
     /**
      * the methods execute the output to file.
@@ -110,7 +115,9 @@ public final class DataBase implements java.io.Serializable {
                 System.exit(0);
             }
         } catch (IOException e) {
-            e.getStackTrace();
+            if (Constants.DEBUG){
+                 System.out.println(e.getMessage());
+            }
         }
     }
 }
