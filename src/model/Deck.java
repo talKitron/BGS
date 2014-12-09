@@ -59,14 +59,14 @@ public class Deck {
     /**
      * @return the cardDeck
      */
-    protected Card[] getCardDeck(){
+    public Card[] getCardDeck(){
         return this.cardDeck;
     }
     
     /**
      * @return the numOfCard
      */
-    protected int getNumOfCard(){
+    public int getNumOfCard(){
         return this.numOfCard;
     }
     
@@ -104,6 +104,25 @@ public class Deck {
             cardDeck[i] = cardDeck[r];
             cardDeck[r] = tempCard;
         }
+    }
+    
+    @Override
+    public String toString()
+    {
+        String str = "";
+        String newline = System.getProperty("line.separator");
+        
+        for(int i=0 ; i<cardDeck.length ; i++) // printing the deck for testing
+        {
+            if (i==cardDeck.length-1){
+                str+= String.valueOf(i+1) + "." + " " + getCardDeck()[i];
+                break;
+            }
+            str+= String.valueOf(i+1) + "." + " " + getCardDeck()[i] + newline;
+        }
+        
+        return str;
+        
     }
 }
 
