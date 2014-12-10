@@ -1,4 +1,4 @@
-BGS
+Blackjack Game System
 ===
 
 University of Haifa: Software Engineering and Software Quality Assurance - Blackjack Game System
