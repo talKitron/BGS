@@ -10,9 +10,11 @@ import javax.swing.JTextField;
 import model.Card;
 import model.Game;
 import model.Player;
+import utilities.Constants;
 
 /**
- * @author Rawan
+ * View class to communicate with Controller class and also make the UI/UX happen.
+ * @author BGS Team
  */
 public final class View {
 
@@ -116,7 +118,9 @@ public final class View {
     protected String getCardImage(Card card){
         String cardImageName = card.toString().replace(" ", "_");
         String imagePath = "/resources/cards/" + cardImageName + ".png";
-        System.out.println(imagePath);
+        if (Constants.DEBUG){
+            System.out.println(imagePath);
+        }
         return imagePath;
     }
     
@@ -126,6 +130,14 @@ public final class View {
      */
     void drawCard(JLabel lbl, Card card) {
         lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource(getCardImage(card))));
+    }
+    
+    /**
+     * @return current Player
+     */
+    Player getCurrentPlayer(){
+        currentPlayer = controller.getCurrentPlayer();
+        return currentPlayer;
     }
     
     /**

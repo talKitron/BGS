@@ -1,13 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package exceptions;
-
 //***************************************** Imports *********************************************
 import javax.swing.JOptionPane;
 import view.SoundClass;
 
+/**
+ * Exception for letter occurrence checks.
+ * @author BGS Team
+ */
 public class CheckLettersException extends Exception {
 //***************************************** Constructor *********************************************
 

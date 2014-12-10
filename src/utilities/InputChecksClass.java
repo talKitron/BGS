@@ -2,6 +2,10 @@ package utilities;
 
 import exceptions.*;
 
+/**
+ * Utility class for input checks.
+ * @author BGS Team
+ */
 public class InputChecksClass {
     /**
      * method for checking if the string is start with letter.

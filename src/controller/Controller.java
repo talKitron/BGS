@@ -91,6 +91,13 @@ public final class Controller {
         return model.deal(player);
     }
     
+    /**
+     * @return currentPlayer
+     */
+    public Player getCurrentPlayer() {
+        return model.getCurrentPlayer();
+    }
+    
      /**
      * The method handle the exit from system.
      * @param logOut

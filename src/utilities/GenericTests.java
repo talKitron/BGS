@@ -14,15 +14,9 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
- * @author Roie
+ * Utility class for generic tests in the system.
+ * @author BGS Team
  */
 public class GenericTests {
     
@@ -95,17 +89,17 @@ public class GenericTests {
         
         System.out.print("Please enter your username: ");   
         userName = sc.next();
-        for (int i=0; i<questions.length; i++){                     //ask questions
-            System.out.println(questions[quesNum] + options);   
+        for (String question : questions) { //ask questions
+            System.out.println(questions[quesNum] + options);
             userAnswers[quesNum] = sc.next();
-            if ("Q".equals(userAnswers[quesNum])) return errorCode=1;
+            if ("Q".equals(userAnswers[quesNum])) return errorCode = 1;
             while (!"Y".equals(userAnswers[quesNum]) && !"N".equals(userAnswers[quesNum]) && !"Q".equals(userAnswers[quesNum])){
             
                 System.out.println(errMsg + questions[quesNum] + options);
                 userAnswers[quesNum] = sc.next();
-                if ("Q".equals(userAnswers[quesNum])) return errorCode=1;
-        }
-        quesNum++;
+                if ("Q".equals(userAnswers[quesNum])) return errorCode = 1;
+            }
+            quesNum++;
         }
         
         PrintWriter writer = null;

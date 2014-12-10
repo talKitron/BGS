@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import utilities.Constants;
 
@@ -129,5 +130,13 @@ public class Player {
            final int prime = 31;
            int result = 7;
            return (prime * result + name.hashCode());
+   }
+   
+   /**
+    * @return String representation of the Player
+    */
+   @Override
+   public String toString(){
+       return ("Player: " + name + " Last seen: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(loginDate) + " with " + bank + " in the bank.");
    }
 }

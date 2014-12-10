@@ -1,4 +1,3 @@
-
 package view;
 
 import java.io.IOException;
@@ -9,6 +8,10 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
+/**
+ * Sound class to enable usage of audio files.
+ * @author BGS Team
+ */
 public class SoundClass {
 
     //******************************************** Constructor *******************************************

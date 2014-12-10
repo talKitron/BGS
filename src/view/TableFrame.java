@@ -1,34 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenAccessor;
-import aurelienribon.tweenengine.TweenManager;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import model.Game;
-import model.Player;
 import utilities.Constants;
 
 /**
  * TableFrame frame for the game.
  * @author BGS Team
  */
-public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Object>{
+public class TableFrame extends javax.swing.JFrame{
     private Image image;
     /**ViewLogic field*/
     private final View view;
     /**Current game object*/
     private static Game currentGame;
     /**TweenManager for animations and transitions*/
-    private static TweenManager tweenManager;
+    //private static TweenManager tweenManager;
     
     /**
      * Creates new form TableFrame
@@ -36,12 +25,13 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
      */
     public TableFrame(View view) {
         this.view = view;
-        tweenManager = new TweenManager();
-        Tween.registerAccessor(null, this);
+        //tweenManager = new TweenManager();
+        //Tween.registerAccessor(null, this);
         initComponents();
+        setLocationRelativeTo(null);
         pnlMenuInGame.setVisible(false);
         pnlMenu.setOpaque(false);
-        pnlPlayerCards.setOpaque(false);
+        //pnlPlayerCards.setOpaque(false);
     }
     
     /**
@@ -70,6 +60,7 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
             }
         };
         pnlScoreBoard = new javax.swing.JPanel();
+        lblScoreBoard = new javax.swing.JLabel();
         pnlMenu = new javax.swing.JPanel();
         btnDeal = new javax.swing.JButton();
         btnQuit = new javax.swing.JButton();
@@ -77,28 +68,44 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
         btnHit = new javax.swing.JButton();
         btnStand = new javax.swing.JButton();
         btnSurrender = new javax.swing.JButton();
-        pnlPlayerCards = new javax.swing.JPanel();
+        laypPlayerCards = new javax.swing.JLayeredPane();
+        lblPlayerCard7 = new javax.swing.JLabel();
+        lblPlayerCard6 = new javax.swing.JLabel();
+        lblPlayerCard5 = new javax.swing.JLabel();
+        lblPlayerCard4 = new javax.swing.JLabel();
         lblPlayerCard3 = new javax.swing.JLabel();
         lblPlayerCard2 = new javax.swing.JLabel();
         lblPlayerCard1 = new javax.swing.JLabel();
+        laypDealerCards = new javax.swing.JLayeredPane();
+        lblDealerCard7 = new javax.swing.JLabel();
+        lblDealerCard6 = new javax.swing.JLabel();
+        lblDealerCard5 = new javax.swing.JLabel();
+        lblDealerCard4 = new javax.swing.JLabel();
+        lblDealerCard3 = new javax.swing.JLabel();
+        lblDealerCard2 = new javax.swing.JLabel();
+        lblDealerCard1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1280, 740));
         setResizable(false);
 
         mainDesktopPane.setPreferredSize(new java.awt.Dimension(1280, 850));
 
         pnlScoreBoard.setOpaque(false);
 
+        lblScoreBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ScoreBoard.png"))); // NOI18N
+
         javax.swing.GroupLayout pnlScoreBoardLayout = new javax.swing.GroupLayout(pnlScoreBoard);
         pnlScoreBoard.setLayout(pnlScoreBoardLayout);
         pnlScoreBoardLayout.setHorizontalGroup(
             pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addComponent(lblScoreBoard)
         );
         pnlScoreBoardLayout.setVerticalGroup(
             pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 506, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlScoreBoardLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblScoreBoard)
+                .addGap(35, 35, 35))
         );
 
         pnlMenu.setOpaque(false);
@@ -141,20 +148,20 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
         pnlMenuLayout.setHorizontalGroup(
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuLayout.createSequentialGroup()
-                .addContainerGap(428, Short.MAX_VALUE)
+                .addContainerGap(423, Short.MAX_VALUE)
                 .addComponent(btnDeal, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(370, 370, 370))
+                .addGap(375, 375, 375))
         );
         pnlMenuLayout.setVerticalGroup(
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(pnlMenuLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMenuLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnDeal, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pnlMenuInGame.setOpaque(false);
@@ -186,6 +193,11 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
                 btnStandMouseExited(evt);
             }
         });
+        btnStand.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStandActionPerformed(evt);
+            }
+        });
 
         btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Surrender.png"))); // NOI18N
         btnSurrender.setContentAreaFilled(false);
@@ -197,82 +209,176 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
                 btnSurrenderMouseExited(evt);
             }
         });
+        btnSurrender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSurrenderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlMenuInGameLayout = new javax.swing.GroupLayout(pnlMenuInGame);
         pnlMenuInGame.setLayout(pnlMenuInGameLayout);
         pnlMenuInGameLayout.setHorizontalGroup(
             pnlMenuInGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuInGameLayout.createSequentialGroup()
-                .addContainerGap(421, Short.MAX_VALUE)
+                .addContainerGap(418, Short.MAX_VALUE)
                 .addComponent(btnHit, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnStand, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSurrender, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(217, 217, 217))
+                .addGap(220, 220, 220))
         );
         pnlMenuInGameLayout.setVerticalGroup(
             pnlMenuInGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuInGameLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+            .addGroup(pnlMenuInGameLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addGroup(pnlMenuInGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnSurrender, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnStand, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        lblPlayerCard3.setText("jLabel1");
         lblPlayerCard3.setPreferredSize(new java.awt.Dimension(120, 170));
 
-        lblPlayerCard2.setText("jLabel1");
         lblPlayerCard2.setPreferredSize(new java.awt.Dimension(120, 170));
 
-        lblPlayerCard1.setText("jLabel1");
         lblPlayerCard1.setMaximumSize(new java.awt.Dimension(150, 200));
         lblPlayerCard1.setMinimumSize(new java.awt.Dimension(150, 200));
         lblPlayerCard1.setPreferredSize(new java.awt.Dimension(150, 200));
 
-        javax.swing.GroupLayout pnlPlayerCardsLayout = new javax.swing.GroupLayout(pnlPlayerCards);
-        pnlPlayerCards.setLayout(pnlPlayerCardsLayout);
-        pnlPlayerCardsLayout.setHorizontalGroup(
-            pnlPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlPlayerCardsLayout.createSequentialGroup()
-                .addGap(157, 157, 157)
-                .addGroup(pnlPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPlayerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlPlayerCardsLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
+        javax.swing.GroupLayout laypPlayerCardsLayout = new javax.swing.GroupLayout(laypPlayerCards);
+        laypPlayerCards.setLayout(laypPlayerCardsLayout);
+        laypPlayerCardsLayout.setHorizontalGroup(
+            laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+            .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(laypPlayerCardsLayout.createSequentialGroup()
+                    .addGap(117, 117, 117)
+                    .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
+                            .addGap(100, 100, 100)
+                            .addComponent(lblPlayerCard6)
+                            .addGap(20, 20, 20)
+                            .addComponent(lblPlayerCard7))
+                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
+                            .addGap(60, 60, 60)
+                            .addComponent(lblPlayerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
+                            .addGap(80, 80, 80)
+                            .addComponent(lblPlayerCard5, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
+                            .addGap(20, 20, 20)
+                            .addComponent(lblPlayerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblPlayerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
+                            .addGap(40, 40, 40)
+                            .addComponent(lblPlayerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+        laypPlayerCardsLayout.setVerticalGroup(
+            laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 254, Short.MAX_VALUE)
+            .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(laypPlayerCardsLayout.createSequentialGroup()
+                    .addGap(12, 12, 12)
+                    .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblPlayerCard6)
+                        .addComponent(lblPlayerCard7)
+                        .addComponent(lblPlayerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblPlayerCard5)
+                        .addComponent(lblPlayerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblPlayerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblPlayerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPlayerCardsLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(lblPlayerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(182, Short.MAX_VALUE))
+                    .addContainerGap(72, Short.MAX_VALUE)))
         );
-        pnlPlayerCardsLayout.setVerticalGroup(
-            pnlPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlPlayerCardsLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(pnlPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPlayerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPlayerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPlayerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(72, Short.MAX_VALUE))
+        laypPlayerCards.setLayer(lblPlayerCard7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypPlayerCards.setLayer(lblPlayerCard6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypPlayerCards.setLayer(lblPlayerCard5, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypPlayerCards.setLayer(lblPlayerCard4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypPlayerCards.setLayer(lblPlayerCard3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypPlayerCards.setLayer(lblPlayerCard2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypPlayerCards.setLayer(lblPlayerCard1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblDealerCard3.setPreferredSize(new java.awt.Dimension(120, 170));
+
+        lblDealerCard2.setPreferredSize(new java.awt.Dimension(120, 170));
+
+        lblDealerCard1.setMaximumSize(new java.awt.Dimension(150, 200));
+        lblDealerCard1.setMinimumSize(new java.awt.Dimension(150, 200));
+        lblDealerCard1.setPreferredSize(new java.awt.Dimension(150, 200));
+
+        javax.swing.GroupLayout laypDealerCardsLayout = new javax.swing.GroupLayout(laypDealerCards);
+        laypDealerCards.setLayout(laypDealerCardsLayout);
+        laypDealerCardsLayout.setHorizontalGroup(
+            laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 361, Short.MAX_VALUE)
+            .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(laypDealerCardsLayout.createSequentialGroup()
+                    .addGap(117, 117, 117)
+                    .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
+                            .addGap(100, 100, 100)
+                            .addComponent(lblDealerCard6)
+                            .addGap(20, 20, 20)
+                            .addComponent(lblDealerCard7))
+                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
+                            .addGap(60, 60, 60)
+                            .addComponent(lblDealerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
+                            .addGap(80, 80, 80)
+                            .addComponent(lblDealerCard5, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
+                            .addGap(20, 20, 20)
+                            .addComponent(lblDealerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblDealerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
+                            .addGap(40, 40, 40)
+                            .addComponent(lblDealerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(44, Short.MAX_VALUE)))
         );
+        laypDealerCardsLayout.setVerticalGroup(
+            laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 254, Short.MAX_VALUE)
+            .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(laypDealerCardsLayout.createSequentialGroup()
+                    .addGap(12, 12, 12)
+                    .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblDealerCard6)
+                        .addComponent(lblDealerCard7)
+                        .addComponent(lblDealerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDealerCard5)
+                        .addComponent(lblDealerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDealerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDealerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(72, Short.MAX_VALUE)))
+        );
+        laypDealerCards.setLayer(lblDealerCard7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypDealerCards.setLayer(lblDealerCard6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypDealerCards.setLayer(lblDealerCard5, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypDealerCards.setLayer(lblDealerCard4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypDealerCards.setLayer(lblDealerCard3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypDealerCards.setLayer(lblDealerCard2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        laypDealerCards.setLayer(lblDealerCard1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout mainDesktopPaneLayout = new javax.swing.GroupLayout(mainDesktopPane);
         mainDesktopPane.setLayout(mainDesktopPaneLayout);
         mainDesktopPaneLayout.setHorizontalGroup(
             mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(168, Short.MAX_VALUE))
+            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
                 .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                        .addGap(386, 386, 386)
-                        .addComponent(pnlPlayerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(423, 423, 423)
-                .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(laypPlayerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(298, 298, 298))
+                    .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(laypDealerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainDesktopPaneLayout.createSequentialGroup()
                     .addContainerGap()
@@ -282,12 +388,16 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
         mainDesktopPaneLayout.setVerticalGroup(
             mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGap(0, 234, Short.MAX_VALUE)
-                .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pnlPlayerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                        .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                        .addContainerGap(77, Short.MAX_VALUE)
+                        .addComponent(laypDealerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(laypPlayerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60)))
                 .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,7 +409,8 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
         mainDesktopPane.setLayer(pnlScoreBoard, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlMenu, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlMenuInGame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(pnlPlayerCards, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainDesktopPane.setLayer(laypPlayerCards, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainDesktopPane.setLayer(laypDealerCards, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -315,13 +426,14 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnDealMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMouseEntered
-        btnDeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Deal.png")));
-    }//GEN-LAST:event_btnDealMouseEntered
-
-    private void btnDealMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMouseExited
-        btnDeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Deal.png")));
-    }//GEN-LAST:event_btnDealMouseExited
+    private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
+        //are you sure? if yes, open MainFrame; if Not, do nothing
+        int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to stand-up and quit the table?", "Stand-Up", JOptionPane.YES_NO_OPTION);
+        if (question == JOptionPane.YES_OPTION) { // if clicked YES
+            //close TableFrame, open MainFrame
+            System.out.println("Bye.");
+        }
+    }//GEN-LAST:event_btnQuitActionPerformed
 
     private void btnQuitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitMouseExited
         btnQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Quit.png")));
@@ -333,14 +445,41 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
 
     private void btnDealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDealActionPerformed
         pnlMenu.setVisible(false);
-        currentGame = view.deal(new Player("elad", "1234"));
+        System.out.println(view.getCurrentPlayer());
+        currentGame = view.deal(view.getCurrentPlayer());
         pnlMenuInGame.setVisible(true);
-        
-        //JLabel lblCard = new JLabel("dsadsadsadas", JLabel.CENTER);
-        //lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource(view.getCardImage(currentGame.getPlayer().getCurrentHand().getCards()[0]))));
+
         view.drawCard(lblPlayerCard1, currentGame.getPlayer().getCurrentHand().getCards()[0]);
         view.drawCard(lblPlayerCard2, currentGame.getPlayer().getCurrentHand().getCards()[1]);
+        
+        //view.drawCard(lblDealerCard1, currentGame.getDealer().getCards()[0]);
+        lblDealerCard1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+        view.drawCard(lblDealerCard2, currentGame.getDealer().getCards()[1]);
     }//GEN-LAST:event_btnDealActionPerformed
+
+    private void btnDealMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMouseExited
+        btnDeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Deal.png")));
+    }//GEN-LAST:event_btnDealMouseExited
+
+    private void btnDealMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMouseEntered
+        btnDeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Deal.png")));
+    }//GEN-LAST:event_btnDealMouseEntered
+
+    private void btnSurrenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSurrenderActionPerformed
+        System.out.println("Never surrender!!!");
+    }//GEN-LAST:event_btnSurrenderActionPerformed
+
+    private void btnSurrenderMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSurrenderMouseExited
+        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Surrender.png")));
+    }//GEN-LAST:event_btnSurrenderMouseExited
+
+    private void btnSurrenderMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSurrenderMouseEntered
+        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Surrender.png")));
+    }//GEN-LAST:event_btnSurrenderMouseEntered
+
+    private void btnStandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStandActionPerformed
+        System.out.println("I'm still standing you just fade away.");
+    }//GEN-LAST:event_btnStandActionPerformed
 
     private void btnStandMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStandMouseExited
         btnStand.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Stand.png")));
@@ -362,46 +501,32 @@ public class TableFrame extends javax.swing.JFrame implements TweenAccessor<Obje
         btnHit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Hit.png")));
     }//GEN-LAST:event_btnHitMouseEntered
 
-    private void btnSurrenderMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSurrenderMouseEntered
-        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Surrender.png")));
-    }//GEN-LAST:event_btnSurrenderMouseEntered
-
-    private void btnSurrenderMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSurrenderMouseExited
-        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Surrender.png")));
-    }//GEN-LAST:event_btnSurrenderMouseExited
-
-    private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
-        //are you sure? if yes, open MainFrame; if Not, do nothing
-        int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to stand-up and quit the table?", "Stand-Up", JOptionPane.YES_NO_OPTION);
-        if (question == JOptionPane.YES_OPTION) { // if clicked YES
-            //close TableFrame, open MainFrame
-            System.out.println("Bye.");
-        }
-    }//GEN-LAST:event_btnQuitActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeal;
     private javax.swing.JButton btnHit;
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnStand;
     private javax.swing.JButton btnSurrender;
+    private javax.swing.JLayeredPane laypDealerCards;
+    private javax.swing.JLayeredPane laypPlayerCards;
+    private javax.swing.JLabel lblDealerCard1;
+    private javax.swing.JLabel lblDealerCard2;
+    private javax.swing.JLabel lblDealerCard3;
+    private javax.swing.JLabel lblDealerCard4;
+    private javax.swing.JLabel lblDealerCard5;
+    private javax.swing.JLabel lblDealerCard6;
+    private javax.swing.JLabel lblDealerCard7;
     private javax.swing.JLabel lblPlayerCard1;
     private javax.swing.JLabel lblPlayerCard2;
     private javax.swing.JLabel lblPlayerCard3;
+    private javax.swing.JLabel lblPlayerCard4;
+    private javax.swing.JLabel lblPlayerCard5;
+    private javax.swing.JLabel lblPlayerCard6;
+    private javax.swing.JLabel lblPlayerCard7;
+    private javax.swing.JLabel lblScoreBoard;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JPanel pnlMenu;
     private javax.swing.JPanel pnlMenuInGame;
-    private javax.swing.JPanel pnlPlayerCards;
     private javax.swing.JPanel pnlScoreBoard;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public int getValues(Object t, int i, float[] floats) {
-        return 0;
-    }
-
-    @Override
-    public void setValues(Object t, int i, float[] floats) {
-        
-    }
 }

@@ -6,8 +6,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 /**
- *
- * @author Rawan
+ * Utility class to represent a JTextField with a limit on amount of characters.
+ * @author BGS Team
  */
 public class JTextFieldLimit extends PlainDocument {
 

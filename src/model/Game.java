@@ -1,7 +1,5 @@
 package model;
 
-
-
 /**
  * Blackjack Game representation class.
  * @author BGS Team

@@ -3,7 +3,6 @@ package model;
 import java.util.Random;
 import utilities.Constants;
 
-
 /**
  * Representation of the Deck of Cards.
  * @author BGS Team
@@ -30,9 +29,9 @@ public class Deck {
         nextCardIndex = 0;
         int cardIndex = 0;
         //for suit
-        for(int i = 1 ; i<5 ; i++){//for the value
-            for(int j = 1 ; j<14 ; j++){
-                Suit suit=null;
+        for(int i = 1; i < 5; i++){ //for the value
+            for(int j = 1; j < 14; j++){
+                Suit suit = null;
                 switch(i){
                     case 1:
                         suit = Suit.Clubs;
@@ -50,7 +49,7 @@ public class Deck {
                         suit = Suit.Spades;
                         break;
                 }
-                cardDeck[cardIndex]= new Card(j, suit);
+                cardDeck[cardIndex] = new Card(j, suit);
                 cardIndex++;
             }
         }
@@ -81,7 +80,7 @@ public class Deck {
      * @param numOfCard
      */
     protected void setNumOfCard(int numOfCard){
-        this.numOfCard=numOfCard;
+        this.numOfCard = numOfCard;
     }
     
     /**
@@ -96,7 +95,7 @@ public class Deck {
     protected void shuffle() {
         Random rand = new Random();
         
-        for(int i = 0 ; i<cardDeck.length ; i++){
+        for(int i = 0; i < cardDeck.length; i++){
             int r = rand.nextInt(Constants.CARDS_IN_DECK); //random card index for swap
             Card tempCard;
             //swap cards place's
@@ -107,22 +106,19 @@ public class Deck {
     }
     
     @Override
-    public String toString()
-    {
+    public String toString(){
         String str = "";
         String newline = System.getProperty("line.separator");
         
-        for(int i=0 ; i<cardDeck.length ; i++) // printing the deck for testing
-        {
-            if (i==cardDeck.length-1){
-                str+= String.valueOf(i+1) + "." + " " + getCardDeck()[i];
+        for(int i = 0; i < cardDeck.length; i++){ //printing the deck for testing
+            if (i == cardDeck.length-1){
+                str += String.valueOf(i+1) + "." + " " + getCardDeck()[i];
                 break;
             }
-            str+= String.valueOf(i+1) + "." + " " + getCardDeck()[i] + newline;
+            str += String.valueOf(i+1) + "." + " " + getCardDeck()[i] + newline;
         }
         
         return str;
-        
     }
 }
 

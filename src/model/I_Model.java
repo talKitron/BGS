@@ -1,8 +1,5 @@
  package model;
 
-import java.util.Date;
-
-
 /**I_Model interface*/
 public interface I_Model {
 	

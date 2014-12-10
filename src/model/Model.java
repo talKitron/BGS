@@ -21,7 +21,10 @@ public final class Model implements I_Model, java.io.Serializable {
      * SysData reference pointer
      */
     private static DataBase db;
-    
+    /**
+     * Holds current player details
+     */
+    public static Player currentPlayer;
     //***************************************** Constructors ******************************************
     private Model() {
        
@@ -34,9 +37,8 @@ public final class Model implements I_Model, java.io.Serializable {
      */
     public static Model getInstance(){
         if (!exists) {
-           
             db = DataBase.getInstance();
-            if (db != null) {
+            if (db != null){
                 DataBase.executeInput();
                 exists = true;
                 instance = new Model();
@@ -60,18 +62,19 @@ public final class Model implements I_Model, java.io.Serializable {
      * else, it creates a new Player with the name.
      * @param name
      * @param pass
-     * @return 0-undefined error;1-logged in; 2-password incorrect; 3-name illegal
+     * @return 0-undefined error; 1-logged in; 2-password incorrect; 3-name illegal
      */
     public int loginProcess(String name, String pass){
         if(db.getPlayers().containsKey(name)){ // player exists in the system
             if(db.getPlayers().get(name).getPassword().equals(pass)){ // if the pass is equal login else alert "pass isn't compatible"
                 db.getPlayers().get(name).setLoginDate(new Date());
+                currentPlayer = db.getPlayers().get(name);
                 return 1; // login successfull
             }
             else return 2; // password incorrect!
-        }
-        if (addPlayer(name, pass) == null)
+        } else if (addPlayer(name, pass) != null){
             return 1; // new player created
+        }
         return 0; 
     }
     
@@ -79,32 +82,18 @@ public final class Model implements I_Model, java.io.Serializable {
      * The method adds player to system.
      * @param name
      * @param password
-     * @return true if add successful
+     * @return the newly added Player if added successful
      */
     @Override
     public Player addPlayer(String name, String password) {
-        
-        if(db.getPlayers().containsKey(name)) //chek if player exist
-        {
-            if(password==db.getPlayers().get(name).password) //chek if password is correct
-            {
-                System.out.println("Welcome back " + name + " , We're glad to have you (and especially your money) back!");
-                return db.getPlayers().get(name);
-            }
-            else
-            {
-                System.out.println("Worng password or player name is already exist, try again");
+            Player newPlayer = new Player(name, password);
+            if (db.getPlayers().put(name, newPlayer) == null){
+                System.out.println("Welcome " + name + ", we're glad you chose to play Blackjack with BGS (and spend all your money here!)");
+                currentPlayer = newPlayer;
+                return newPlayer;
+            } else {
                 return null;
             }
-        }
-        else
-        {
-            Player p = new Player(name, password);
-            db.getPlayers().put(name, p);
-            System.out.println("Welcome " + name + " , We are glad you chose to play blackjack with BGS (and spend all your money here)");
-            return p;
-        }
-        
     }
     
     /** 
@@ -114,12 +103,9 @@ public final class Model implements I_Model, java.io.Serializable {
     */
     @Override
     public boolean addGame(Player player) {
-
-        if(player!=null)
-        {
+        if (player != null){
             Game game = new Game (player);
-            if(!db.getGames().contains(game))
-            {
+            if (!db.getGames().contains(game)){
                 db.getGames().add(game);
                 return true;
             }
@@ -137,5 +123,12 @@ public final class Model implements I_Model, java.io.Serializable {
         db.getGames().add(currentGame);
         currentGame.deal();
         return currentGame;
+    }
+    
+    /**
+     * @return currentPlayer
+     */
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 }
