@@ -4,7 +4,7 @@ package model;
  * Class Card - this class represents the object Card
  * @author BGS Team
  */
-public class Card {
+public class Card implements java.io.Serializable {
     /**
      * Card's number (Also, Ace-1, Jack-11, Queen-12 and King-13).
      */

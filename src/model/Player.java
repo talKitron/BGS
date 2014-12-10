@@ -8,7 +8,7 @@ import utilities.Constants;
  * The class represents a Player in the system.
  * @author BGS Team
  */
-public class Player {
+public class Player implements java.io.Serializable {
     /**
      * player name
      */

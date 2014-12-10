@@ -141,6 +141,13 @@ public final class View {
     }
     
     /**
+     * @return a random fact about Blackjack
+     */
+    public String getFact(){
+        return controller.getFact();
+    }
+    
+    /**
      * method executes the system's exit.
      * @param logOut
      * @throws IOException 

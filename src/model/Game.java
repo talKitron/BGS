@@ -4,7 +4,7 @@ package model;
  * Blackjack Game representation class.
  * @author BGS Team
  */
-public class Game {
+public class Game implements java.io.Serializable {
     /**
      * Current Game's Deck of Cards.
      */

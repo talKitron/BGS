@@ -32,7 +32,32 @@ public final class DataBase implements java.io.Serializable {
      * Stores all the games
      */
     private HashSet<Game> games;
-
+    /**
+     * Stores Blackjack facts for the MainFrame
+     */
+    private String[] facts = {
+                                "Blackjack originated in French casinos around the 1700s where it was called \"vingt-et-un\" (twenty-and-one).",
+                                "Emperor Napoleon played and enjoyed it more than any other card game.",
+                                "There are approximately 140 countries in the world with casinos that offer blackjack.",
+                                "The proper name of the game is \"21\"; \"blackjack\" was only added as slang in the 1920s.",
+                                "The object of the game is not to get 21; the real object is to beat the dealer.",
+                                "20 is the second best hand in the game.",
+                                "16 is the worst hand in blackjack, followed by 15 as the second worst hand.",
+                                "11 is the third best hand in blackjack.",
+                                "Mathematically, in 100 hands the dealer will win 48 hands, the player will win 44 and there will be eight ties. Why does the dealer always win more hands? Because the dealer plays their hand LAST.",
+                                "Casinos have the right to ask \"card counters\" and anyone else to leave the casino. It is based on the old English law that states, \"Management has the right to refuse service\".",
+                                "Blackjack dealers only earn minimum wage, so tipping is very important for them in making a living.",
+                                "A blackjack player has six options when deciding what action to take in any given hand: (1) hit, (2) stand, (3) split, (4) double down, (5) take insurance (6) surrender.",
+                                "Mathematically, the dealer's average hand is a little better than 18.",
+                                "Statistically, taking insurance is a sucker's bet. You'll lose more often than you win.",
+                                "The blackjack shoe was introduced in Cuba during the 1950s.",
+                                "Some casinos allow the dealer to hit a soft 17. You want the dealer to stay on ALL 17s.",
+                                "Blackjack is a one-player game. The player's opponent is the game, not the dealer.",
+                                "In blackjack, the most powerful card, the one that affects the deck the most, is the 5. Removing the 5 results in +0.64%, that is higher than any other card.",
+                                "There are four times as many 10s in a blackjack deck as any other card.",
+                                "House rules are important. They dictate what your advantage or disadvantage is.",
+                                "It takes at least 7 shuffles to completely randomize a new deck of cards."
+    };
    
 
     //***************************************** Constructors ******************************************
@@ -55,6 +80,10 @@ public final class DataBase implements java.io.Serializable {
      */
     protected HashSet<Game> getGames() {
         return games;
+    }
+    
+    protected String[] getFacts(){
+        return facts;
     }
 
     //***************************************** Methods ***********************************************

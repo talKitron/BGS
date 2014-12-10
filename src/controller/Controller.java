@@ -98,6 +98,13 @@ public final class Controller {
         return model.getCurrentPlayer();
     }
     
+    /**
+     * @return a random fact about Blackjack
+     */
+    public String getFact(){
+        return model.getFact();
+    }
+    
      /**
      * The method handle the exit from system.
      * @param logOut

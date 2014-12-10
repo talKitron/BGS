@@ -7,7 +7,7 @@ import utilities.Constants;
  * Representation of the Deck of Cards.
  * @author BGS Team
  */
-public class Deck {
+public class Deck implements java.io.Serializable {
     /**
      * Array of Cards to consist the Deck.
      */

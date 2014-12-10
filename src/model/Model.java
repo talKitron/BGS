@@ -32,8 +32,8 @@ public final class Model implements I_Model, java.io.Serializable {
     //***************************************** Methods ***********************************************
 
     /**
-     * The method creates this class's instance & provides access to it, by returning a reference (singleton).
-     * @return reference to this class's only instance, or null if reference was already returned (singleton).
+     * The method creates this class' instance & provides access to it, by returning a reference (singleton).
+     * @return reference to this class' only instance, or null if reference was already returned (singleton).
      */
     public static Model getInstance(){
         if (!exists) {
@@ -130,5 +130,12 @@ public final class Model implements I_Model, java.io.Serializable {
      */
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+    
+    /**
+     * @return a random fact about Blackjack
+     */
+    public String getFact(){
+        return db.getFacts()[(int)(Math.random() * 21)];
     }
 }

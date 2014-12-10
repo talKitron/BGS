@@ -2,6 +2,11 @@ package view;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Game;
 import utilities.Constants;
@@ -32,6 +37,25 @@ public class TableFrame extends javax.swing.JFrame{
         pnlMenuInGame.setVisible(false);
         pnlMenu.setOpaque(false);
         //pnlPlayerCards.setOpaque(false);
+    }
+    
+    public class MyWindowListener extends WindowAdapter {
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            int question = JOptionPane.showConfirmDialog(null, "Save changes before exit?", "Save", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (question == JOptionPane.NO_OPTION) { // if user clicked NO, exit
+                System.exit(0);
+            }
+            if (question == JOptionPane.YES_OPTION) { // if clicked YES, try to save his data
+                try {
+                    view.executeSysExit(false);
+                    
+                } catch (IOException ex) {
+                    
+                }
+            }
+        }
     }
     
     /**
@@ -120,6 +144,12 @@ public class TableFrame extends javax.swing.JFrame{
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnDealMouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnDealMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btnDealMouseReleased(evt);
+            }
         });
         btnDeal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,6 +165,12 @@ public class TableFrame extends javax.swing.JFrame{
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnQuitMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnQuitMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btnQuitMouseReleased(evt);
             }
         });
         btnQuit.addActionListener(new java.awt.event.ActionListener() {
@@ -176,6 +212,12 @@ public class TableFrame extends javax.swing.JFrame{
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnHitMouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnHitMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btnHitMouseReleased(evt);
+            }
         });
         btnHit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,6 +234,12 @@ public class TableFrame extends javax.swing.JFrame{
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnStandMouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnStandMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btnStandMouseReleased(evt);
+            }
         });
         btnStand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -207,6 +255,12 @@ public class TableFrame extends javax.swing.JFrame{
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnSurrenderMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnSurrenderMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btnSurrenderMouseReleased(evt);
             }
         });
         btnSurrender.addActionListener(new java.awt.event.ActionListener() {
@@ -430,8 +484,14 @@ public class TableFrame extends javax.swing.JFrame{
         //are you sure? if yes, open MainFrame; if Not, do nothing
         int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to stand-up and quit the table?", "Stand-Up", JOptionPane.YES_NO_OPTION);
         if (question == JOptionPane.YES_OPTION) { // if clicked YES
-            //close TableFrame, open MainFrame
             System.out.println("Bye.");
+            try {
+                view.executeSysExit(true);
+            } catch (IOException ex) {
+                if (Constants.DEBUG){
+                    System.out.println(ex.getMessage());
+                }
+            }
         }
     }//GEN-LAST:event_btnQuitActionPerformed
 
@@ -501,6 +561,46 @@ public class TableFrame extends javax.swing.JFrame{
         btnHit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Hit.png")));
     }//GEN-LAST:event_btnHitMouseEntered
 
+    private void btnHitMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHitMousePressed
+        btnHit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonActive_Hit.png")));
+    }//GEN-LAST:event_btnHitMousePressed
+
+    private void btnHitMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHitMouseReleased
+        btnHit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Hit.png")));
+    }//GEN-LAST:event_btnHitMouseReleased
+
+    private void btnStandMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStandMousePressed
+        btnStand.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonActive_Stand.png")));
+    }//GEN-LAST:event_btnStandMousePressed
+
+    private void btnStandMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStandMouseReleased
+        btnStand.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Stand.png")));
+    }//GEN-LAST:event_btnStandMouseReleased
+
+    private void btnSurrenderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSurrenderMousePressed
+        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonActive_Surrender.png")));
+    }//GEN-LAST:event_btnSurrenderMousePressed
+
+    private void btnSurrenderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSurrenderMouseReleased
+        btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Surrender.png")));
+    }//GEN-LAST:event_btnSurrenderMouseReleased
+
+    private void btnDealMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMousePressed
+        btnDeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonActive_Deal.png")));
+    }//GEN-LAST:event_btnDealMousePressed
+
+    private void btnDealMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMouseReleased
+        btnDeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Deal.png")));
+    }//GEN-LAST:event_btnDealMouseReleased
+
+    private void btnQuitMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitMousePressed
+        btnQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonActive_Quit.png")));
+    }//GEN-LAST:event_btnQuitMousePressed
+
+    private void btnQuitMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitMouseReleased
+        btnQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Quit.png")));
+    }//GEN-LAST:event_btnQuitMouseReleased
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeal;
     private javax.swing.JButton btnHit;
