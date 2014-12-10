@@ -8,7 +8,7 @@ public class Hand implements java.io.Serializable {
     /**
      * Hand's current Cards.
      */
-    Card[] cards;
+    private Card[] cards;
     
     /**
      * Constructor for Hand class.

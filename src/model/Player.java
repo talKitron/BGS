@@ -12,23 +12,23 @@ public class Player implements java.io.Serializable {
     /**
      * player name
      */
-    String name;
+    private String name;
     /**
      * player password
      */
-    String password;
+    private String password;
     /**
      * player login date
      */
-    Date loginDate;
+    private Date loginDate;
     /**
      * how much money the player have
      */
-    int bank;
+    private int bank;
     /**
      * the cards that the player currently holds in is hand
      */
-    Hand currentHand;
+    private Hand currentHand;
     
     /**
      * Constructor of Player.

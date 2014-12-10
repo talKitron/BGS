@@ -64,6 +64,7 @@ public final class Model implements I_Model, java.io.Serializable {
      * @param pass
      * @return 0-undefined error; 1-logged in; 2-password incorrect; 3-name illegal
      */
+    @Override
     public int loginProcess(String name, String pass){
         if(db.getPlayers().containsKey(name)){ // player exists in the system
             if(db.getPlayers().get(name).getPassword().equals(pass)){ // if the pass is equal login else alert "pass isn't compatible"
@@ -118,6 +119,7 @@ public final class Model implements I_Model, java.io.Serializable {
      * @param player
      * @return the newly created Game, current Game
      */
+    @Override
     public Game deal(Player player) {
         Game currentGame = new Game(player);
         db.getGames().add(currentGame);
@@ -128,6 +130,7 @@ public final class Model implements I_Model, java.io.Serializable {
     /**
      * @return currentPlayer
      */
+    @Override
     public Player getCurrentPlayer() {
         return currentPlayer;
     }

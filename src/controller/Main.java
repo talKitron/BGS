@@ -5,6 +5,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilities.*;
 import exceptions.*;
+import model.Game;
+import model.Player;
 
 
 /**
@@ -17,8 +19,9 @@ public class Main  implements java.io.Serializable{
      */
     private static Controller controller;
     public static void main(String[] args) {
-        //controller.deal(new Game(new Player("elad", "123")));      
+            
         controller = Controller.getInstance();
+
         
         
         /**

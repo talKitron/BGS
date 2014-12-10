@@ -8,15 +8,15 @@ public class Game implements java.io.Serializable {
     /**
      * Current Game's Deck of Cards.
      */
-    Deck deck;
+    private Deck deck;
     /**
      * Current Game's Player.
      */
-    Player player;
+    private Player player;
     /**
      * Current Hand for the Dealer.
      */
-    Hand dealer;
+    private Hand dealer;
     
     /**
      * Constructor for Card.
@@ -58,22 +58,22 @@ public class Game implements java.io.Serializable {
         /*for( int i =0 ; i<52 ; i++) // printing the deck for testing
             System.out.println(deck.getCardDeck()[i]);*/
         
-        System.out.println(player.name + " cards:");
+        System.out.println(player.getName() + " cards:");
         Card card = deck.dealNextCard();
-        player.currentHand.cards[0] = card; //deals player first card
+        player.getCurrentHand().getCards()[0] = card; //deals player first card
         System.out.println(card); //print player first card
         
         card = deck.dealNextCard();
-        player.currentHand.cards[1] = card; //deals player second card
+        player.getCurrentHand().getCards()[1] = card; //deals player second card
         System.out.println(card); //print player second card
         
         System.out.println("Dealer cards:");
         card = deck.dealNextCard();
-        dealer.cards[0] = card; //deals dealer first card
+        dealer.getCards()[0] = card; //deals dealer first card
         System.out.println("Hidden card");
         
         card = deck.dealNextCard();
-        dealer.cards[1] = card; //deals dealer second card
+        dealer.getCards()[1] = card; //deals dealer second card
         System.out.println(card); //print dealer second card
     }
 }
