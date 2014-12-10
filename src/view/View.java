@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import model.Card;
 import model.Game;
 import model.Player;
+import utilities.Constants;
 
 /**
  * @author Rawan
@@ -116,7 +117,9 @@ public final class View {
     protected String getCardImage(Card card){
         String cardImageName = card.toString().replace(" ", "_");
         String imagePath = "/resources/cards/" + cardImageName + ".png";
-        System.out.println(imagePath);
+        if (Constants.DEBUG){
+            System.out.println(imagePath);
+        }
         return imagePath;
     }
     
@@ -126,6 +129,14 @@ public final class View {
      */
     void drawCard(JLabel lbl, Card card) {
         lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource(getCardImage(card))));
+    }
+    
+    /**
+     * @return current Player
+     */
+    Player getCurrentPlayer(){
+        currentPlayer = controller.getCurrentPlayer();
+        return currentPlayer;
     }
     
     /**

@@ -103,6 +103,8 @@ public class MainFrame extends javax.swing.JFrame {
         btnSubmit = new javax.swing.JButton();
         lblError = new javax.swing.JLabel("<html>** You may login your last used name or just register a new one.</html>");
         btnSitDown = new javax.swing.JButton();
+        pnlScoreBoard = new javax.swing.JPanel();
+        lblScoreBoard = new javax.swing.JLabel();
         pnlBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -110,6 +112,8 @@ public class MainFrame extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(1280, 720));
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
+
+        pnlLogin.setOpaque(false);
 
         lblLogin.setForeground(new java.awt.Color(255, 255, 255));
         lblLogin.setText("Login:");
@@ -127,14 +131,26 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        txtfPassword.setText("Passowrd");
+        txtfPassword.setText("Password");
         txtfPassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtfPasswordKeyPressed(evt);
             }
         });
 
-        btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/btnSubmit.png"))); // NOI18N
+        btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Submit.png"))); // NOI18N
+        btnSubmit.setContentAreaFilled(false);
+        btnSubmit.setMaximumSize(new java.awt.Dimension(154, 39));
+        btnSubmit.setMinimumSize(new java.awt.Dimension(154, 39));
+        btnSubmit.setPreferredSize(new java.awt.Dimension(154, 39));
+        btnSubmit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnSubmitMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnSubmitMouseExited(evt);
+            }
+        });
         btnSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSubmitActionPerformed(evt);
@@ -165,7 +181,7 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addComponent(lblPassword)
                                 .addGap(32, 32, 32)
                                 .addComponent(txtfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18))))
         );
         pnlLoginLayout.setVerticalGroup(
@@ -195,19 +211,52 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().add(pnlLogin);
         pnlLogin.setBounds(10, 440, 200, 230);
 
-        btnSitDown.setText("Sit Down");
+        btnSitDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_SitDown.png"))); // NOI18N
+        btnSitDown.setContentAreaFilled(false);
+        btnSitDown.setMaximumSize(new java.awt.Dimension(154, 39));
+        btnSitDown.setMinimumSize(new java.awt.Dimension(154, 39));
+        btnSitDown.setPreferredSize(new java.awt.Dimension(154, 39));
+        btnSitDown.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnSitDownMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnSitDownMouseExited(evt);
+            }
+        });
         btnSitDown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSitDownActionPerformed(evt);
             }
         });
         getContentPane().add(btnSitDown);
-        btnSitDown.setBounds(390, 460, 100, 23);
+        btnSitDown.setBounds(560, 600, 154, 39);
+
+        pnlScoreBoard.setOpaque(false);
+        pnlScoreBoard.setVisible(false);
+
+        lblScoreBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ScoreBoard.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlScoreBoardLayout = new javax.swing.GroupLayout(pnlScoreBoard);
+        pnlScoreBoard.setLayout(pnlScoreBoardLayout);
+        pnlScoreBoardLayout.setHorizontalGroup(
+            pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addComponent(lblScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 3, Short.MAX_VALUE))
+        );
+        pnlScoreBoardLayout.setVerticalGroup(
+            pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlScoreBoardLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblScoreBoard)
+                .addGap(35, 35, 35))
+        );
+
+        getContentPane().add(pnlScoreBoard);
+        pnlScoreBoard.setBounds(1060, 0, 220, 410);
 
         pnlBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/login.png"))); // NOI18N
-        pnlBackground.setMaximumSize(new java.awt.Dimension(1280, 720));
-        pnlBackground.setMinimumSize(new java.awt.Dimension(1280, 720));
-        pnlBackground.setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().add(pnlBackground);
         pnlBackground.setBounds(0, 0, 1280, 720);
 
@@ -215,28 +264,27 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
-        ImageIcon newIcon = new ImageIcon(getClass().getResource("/resources/bgStandUp.jpg"));
-        pnlBackground.setIcon(newIcon);
-        
         if(txtfName.getText().equals("Your name") && String.valueOf(txtfPassword.getPassword()).equals("Password")){
-            lblError.setText("Please fill fields!");
+            lblError.setText("Please fill in all the fields.");
             return;
         }
         switch(view.loginProcess(txtfName.getText(),String.valueOf(txtfPassword.getPassword()))){
-            case 0:
-                lblError.setText("Undefined Error!");
+            case 0: //general error
+                lblError.setText("General error.");
                 break;
-            case 1:
+            case 1: //login succeeded
+                ImageIcon newIcon = new ImageIcon(getClass().getResource("/resources/bgStandUp.png")); //change
+                pnlBackground.setIcon(newIcon);                                                        //background
                 pnlLogin.setVisible(false);
                 btnSitDown.setVisible(true);
-                
-                //lblError.setText("player added!!"); //change this to message box and then show page 2
+                pnlScoreBoard.setVisible(true);
+                view.getCurrentPlayer();
                 break;
-            case 2:
-                lblError.setText("Incorrect password!");
+            case 2: //user already exist & password is incorrect for login
+                lblError.setText("Incorrect password.");
                 break;
-            case 3:
-                lblError.setText("Illegal name!");
+            case 3: //entered name is illegal
+                lblError.setText("Illegal name.");
                 break;
             default: 
                 break;
@@ -264,6 +312,22 @@ public class MainFrame extends javax.swing.JFrame {
         tableFrame.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_btnSitDownActionPerformed
+
+    private void btnSitDownMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSitDownMouseEntered
+        btnSitDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_SitDown.png")));
+    }//GEN-LAST:event_btnSitDownMouseEntered
+
+    private void btnSitDownMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSitDownMouseExited
+        btnSitDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_SitDown.png")));
+    }//GEN-LAST:event_btnSitDownMouseExited
+
+    private void btnSubmitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubmitMouseEntered
+        btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Submit.png")));
+    }//GEN-LAST:event_btnSubmitMouseEntered
+
+    private void btnSubmitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubmitMouseExited
+        btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButtonHover_Submit.png")));
+    }//GEN-LAST:event_btnSubmitMouseExited
 
     /**
      * @param args the command line arguments
@@ -307,8 +371,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblScoreBoard;
     private javax.swing.JLabel pnlBackground;
     private javax.swing.JPanel pnlLogin;
+    private javax.swing.JPanel pnlScoreBoard;
     private javax.swing.JTextField txtfName;
     private javax.swing.JPasswordField txtfPassword;
     // End of variables declaration//GEN-END:variables

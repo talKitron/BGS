@@ -107,8 +107,7 @@ public class Deck {
     }
     
     @Override
-    public String toString()
-    {
+    public String toString(){
         String str = "";
         String newline = System.getProperty("line.separator");
         
