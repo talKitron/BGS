@@ -126,7 +126,38 @@ public final class Model implements I_Model, java.io.Serializable {
         currentGame.deal();
         return currentGame;
     }
-    
+    /**
+     * Occurs after clicking on the "Hit" button, deals one card for player
+     * @param game
+     */
+    @Override
+    public void hit(Game game) {
+        game.hit();
+    }
+    /**
+     * @param game
+     * @return true if player hand is more than 21 and false if not
+     */
+    @Override
+    public boolean isBusted(Game game) {
+        return game.isBusted();
+    }
+    /**
+     * Occurs after clicking on the "Stand" button, check dealer cards
+     * @param game
+     */
+    @Override
+    public void stand(Game game) {
+        game.stand();
+    }
+     /**
+     * @param game
+     * @return true if player win and false if not
+     */
+    @Override
+    public boolean whoWon(Game game) {
+        return game.whoWon();
+    }
     /**
      * @return currentPlayer
      */
@@ -138,6 +169,7 @@ public final class Model implements I_Model, java.io.Serializable {
     /**
      * @return a random fact about Blackjack
      */
+    @Override
     public String getFact(){
         return db.getFacts()[(int)(Math.random() * 21)];
     }

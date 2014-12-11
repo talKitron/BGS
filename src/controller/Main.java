@@ -21,8 +21,26 @@ public class Main  implements java.io.Serializable{
     public static void main(String[] args) {
             
         controller = Controller.getInstance();
-
         
+        /**
+        * Backend tests Block
+        */
+        
+        /*Player player = new Player("elad", "123");
+        Game game = controller.deal(player); 
+        System.out.println("player value: " + player.getCurrentHand().handValue());
+        System.out.println("Dealer value: " + game.getDealer().handValue());
+        while(player.getCurrentHand().handValue()<17)
+        {
+            controller.hit(game);
+            System.out.println("player value: " + player.getCurrentHand().handValue());
+        }
+        
+        if(!controller.isBusted(game))
+        {
+           controller.stand(game);
+           controller.whoWon(game);
+        }*/
         
         /**
         * Tests Block

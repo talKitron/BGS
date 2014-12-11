@@ -90,7 +90,34 @@ public final class Controller {
     public Game deal(Player player) {
         return model.deal(player);
     }
-    
+    /**
+     * Occurs after clicking on the "Hit" button, deals one card for player
+     * @param game
+     */
+    public void hit(Game game) {
+        model.hit(game);
+    }
+    /**
+     * @param game
+     * @return true if player hand is more than 21 and false if not
+     */
+    public boolean isBusted(Game game) {
+        return model.isBusted(game);
+    }
+    /**
+     * Occurs after clicking on the "Stand" button, check dealer cards
+     * @param game
+     */
+    public void stand(Game game) {
+        model.stand(game);
+    }
+     /**
+     * @param game
+     * @return true if player win and false if not
+     */
+    public boolean whoWon(Game game) {
+        return model.whoWon(game);
+    }
     /**
      * @return currentPlayer
      */

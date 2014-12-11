@@ -26,6 +26,14 @@ public class Player implements java.io.Serializable {
      */
     private int bank;
     /**
+     * how much wins the player has
+     */
+    private int wins;
+    /**
+     * how much loses the player has
+     */
+    private int loses;
+    /**
      * the cards that the player currently holds in is hand
      */
     private Hand currentHand;
@@ -40,9 +48,36 @@ public class Player implements java.io.Serializable {
         this.password = password;
         this.loginDate = new Date();
         this.bank = Constants.STARTING_AMOUNT;
+        wins = 0;
+        loses = 0;
         currentHand = new Hand();
     }
-    
+     /**
+     * @return the wins
+     */
+    public int getWins() {
+        return wins;
+    }
+    /**
+     * sets Player's wins.
+     * @param wins 
+     */
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+    /**
+     * @return the loses
+     */
+    public int getLoses() {
+        return loses;
+    }
+    /**
+     * sets Player's loses.
+     * @param loses 
+     */
+    public void setLoses(int loses) {
+        this.loses = loses;
+    }
     /**
      * sets Player's password.
      * @param password 

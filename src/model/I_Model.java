@@ -12,4 +12,14 @@ public interface I_Model {
     public Game deal(Player player);
     
     public Player getCurrentPlayer();
+    
+    public void hit(Game game);
+    
+    public boolean isBusted(Game game);
+    
+    public void stand(Game game);
+    
+    public boolean whoWon(Game game);
+    
+    public String getFact();
 }

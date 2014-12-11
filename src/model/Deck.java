@@ -103,6 +103,7 @@ public class Deck implements java.io.Serializable {
             cardDeck[i] = cardDeck[r];
             cardDeck[r] = tempCard;
         }
+        nextCardIndex = 0; //reset the next card index
     }
     
     @Override
