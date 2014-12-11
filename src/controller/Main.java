@@ -28,12 +28,12 @@ public class Main  implements java.io.Serializable{
         
         /*Player player = new Player("elad", "123");
         Game game = controller.deal(player); 
-        System.out.println("player value: " + player.getCurrentHand().handValue());
-        System.out.println("Dealer value: " + game.getDealer().handValue());
-        while(player.getCurrentHand().handValue()<17)
+        System.out.println("player value: " + player.getCurrentHand().playerHandValue());
+        System.out.println("Dealer value: " + game.getDealer().dealerHandValue());
+        while(player.getCurrentHand().playerHandValue()<17)
         {
             controller.hit(game);
-            System.out.println("player value: " + player.getCurrentHand().handValue());
+            System.out.println("player value: " + player.getCurrentHand().playerHandValue());
         }
         
         if(!controller.isBusted(game))

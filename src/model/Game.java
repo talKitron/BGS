@@ -19,9 +19,14 @@ public class Game implements java.io.Serializable {
      */
     private Hand dealer;
     /**
-     * Current Game's bet.
+     * Current Game's score.
      */
-    private int bet;
+    private int score;
+    /**
+     * Current Game's round.
+     */
+    private int round;
+    
     /**
      * Constructor for Card.
      * @param player
@@ -30,6 +35,8 @@ public class Game implements java.io.Serializable {
         this.deck = new Deck();
         this.player = player;
         dealer = new Hand();
+        score = 0;
+        round = 0;
     }
     
      /**
@@ -53,18 +60,32 @@ public class Game implements java.io.Serializable {
         return this.dealer;
     }
      /**
-     * @return the bet
+     * @return the score
      */
-    public int getBet() {
-        return bet;
+    public int getScore() {
+        return score;
     }
     /**
-     * sets game's bet.
-     * @param bet 
+     * sets game's score.
+     * @param score 
      */
-    public void setBet(int bet) {
-        this.bet = bet;
+    public void setScore(int score) {
+        this.score = score;
     }
+    /**
+     * @return the round
+     */
+    public int getRound() {
+        return round;
+    }
+    /**
+     * sets game's round.
+     * @param round 
+     */
+    public void setRound(int round) {
+        this.round = round;
+    }
+    
     /**
     * reset game: reset dealer hand, player hand and shuffle deck.
     */
@@ -78,6 +99,8 @@ public class Game implements java.io.Serializable {
      * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
      */
     protected void deal() {
+        
+        round++;
         deck.shuffle();
         
         System.out.println(player.getName() + " cards:");
@@ -88,10 +111,10 @@ public class Game implements java.io.Serializable {
         card = deck.dealNextCard();
         player.getCurrentHand().getCards()[1] = card; //deals player second card
         System.out.println(card); //print player second card
+        dealer.getCards()[0] = card; //deals dealer first card
         
         System.out.println("Dealer cards:");
         card = deck.dealNextCard();
-        dealer.getCards()[0] = card; //deals dealer first card
         System.out.println("Hidden card");
         
         card = deck.dealNextCard();
@@ -112,7 +135,7 @@ public class Game implements java.io.Serializable {
      * @return true if player hand is more than 21 and false if not
      */
     public boolean isBusted() {
-         if(player.getCurrentHand().handValue()>Constants.BLACKJACK)
+         if(player.getCurrentHand().playerHandValue()>Constants.BLACKJACK)
         {
            System.out.println("busted");
            System.out.println(player.getName() + ", lose");
@@ -121,12 +144,22 @@ public class Game implements java.io.Serializable {
         }
         return false;
     }
+    public int calculateScore() {
+        if(round%2==0)
+        {
+            return player.getCurrentHand().playerHandValue()*3;
+        }
+        else
+        {
+            return player.getCurrentHand().playerHandValue()*2;
+        }
+    } 
     /**
      * Occurs when player win a round
      */
     public void playerWin() {
         player.setLoses(1+player.getLoses());
-        player.setBank(player.getBank()-bet);
+        score += calculateScore();
         resetGame();
     }
     /**
@@ -134,14 +167,14 @@ public class Game implements java.io.Serializable {
      */
     public void playerLose() {
         player.setLoses(1+player.getLoses());
-        player.setBank(player.getBank()-bet);
+        score -= calculateScore();
         resetGame();
     }
      /**
      * @return true if player win and false if not
      */
     public boolean whoWon() {
-        if(dealer.handValue() > Constants.BLACKJACK || player.getCurrentHand().handValue()>dealer.handValue())
+        if(dealer.dealerHandValue() > Constants.BLACKJACK || player.getCurrentHand().playerHandValue()>dealer.dealerHandValue())
         {
             playerWin();
             System.out.println(player.getName() + ", win");
@@ -159,9 +192,9 @@ public class Game implements java.io.Serializable {
      */
     public void stand() {
         
-        while(dealer.handValue()<=17)
+        while(dealer.dealerHandValue()<=Constants.DEALER_STAND)
         {
-            if(dealer.handValue()<17 || (dealer.handValue()==17 && dealer.isSoft()))
+            if(dealer.dealerHandValue()<Constants.DEALER_STAND || (dealer.dealerHandValue()==Constants.DEALER_STAND && dealer.isSoft()))
             {
                 Card card = deck.dealNextCard();
                 int i = dealer.findNextFreeIndex();

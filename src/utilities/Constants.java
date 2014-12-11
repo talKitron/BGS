@@ -14,4 +14,6 @@ public final class Constants {
     public static final int BLACKJACK = 21;
     /**The initial amount of money that the player have in is bank*/
     public static final int STARTING_AMOUNT = 50;
+    
+     public static final int DEALER_STAND = 17;
 }

@@ -67,9 +67,9 @@ public class Hand implements java.io.Serializable {
         return -1;
     }
     /**
-     * @return the Hand value.
+     * @return the dealer Hand value.
      */
-    public int handValue() {
+    public int dealerHandValue() {
         
         int numOfAce = 0;//number of aces in hand
         int value = 0;// hand value
@@ -106,6 +106,47 @@ public class Hand implements java.io.Serializable {
             }
         }
         
+        return value;
+    }
+    
+    /**
+     * @return the player Hand value.
+     */
+    public int playerHandValue() {
+        
+        int numOfAce = 0;//number of aces in hand
+        int value = 0;// hand value
+        
+        for(int i = 0; cards[i]!=null ; i++)//run on hand's card
+        {
+            if(cards[i].getValue()==1)//if card is Ace
+            {
+               numOfAce++; 
+            }
+            else
+            {
+                if(cards[i].getValue()>=11)//if card is jack, queen or king
+                {
+                    value += 10;
+                }
+                else
+                {
+                    value += cards[i].getValue();//if card is beetween 2-10
+                }
+            }
+        }
+        
+        for(int i = 0; i<numOfAce ; i++)//calculates the value of aces
+        {
+            if(i==0)//the first ace is 11, the others is 1
+            {
+                value+=11;
+            }
+            else
+            {
+               value+=1; 
+            }
+        }
         return value;
     }
 }
