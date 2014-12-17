@@ -22,6 +22,14 @@ public class Game implements java.io.Serializable {
      * Current Game's score.
      */
     private int score;
+     /**
+     * how much wins the player has
+     */
+    private int wins;
+    /**
+     * how much loses the player has
+     */
+    private int loses;
     /**
      * Current Game's round.
      */
@@ -37,8 +45,35 @@ public class Game implements java.io.Serializable {
         dealer = new Hand();
         score = 0;
         round = 0;
+        wins = 0;
+        loses = 0;
     }
-    
+     /**
+     * @return the wins
+     */
+    public int getWins() {
+        return wins;
+    }
+    /**
+     * sets Player's wins.
+     * @param wins 
+     */
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+    /**
+     * @return the loses
+     */
+    public int getLoses() {
+        return loses;
+    }
+    /**
+     * sets Player's loses.
+     * @param loses 
+     */
+    public void setLoses(int loses) {
+        this.loses = loses;
+    }
      /**
      * @return the deck
      */
@@ -52,7 +87,6 @@ public class Game implements java.io.Serializable {
     public Player getPlayer(){
         return this.player;
     }
-    
      /**
      * @return the dealer
      */
@@ -105,20 +139,24 @@ public class Game implements java.io.Serializable {
         
         System.out.println(player.getName() + " cards:");
         Card card = deck.dealNextCard();
-        player.getCurrentHand().getCards()[0] = card; //deals player first card
+        player.getCurrentHand().getCards()[player.getCurrentHand().getNextIndex()] = card; //deals player first card
+        player.getCurrentHand().setNextIndex(player.getCurrentHand().getNextIndex()+1);
         System.out.println(card); //print player first card
         
         card = deck.dealNextCard();
-        player.getCurrentHand().getCards()[1] = card; //deals player second card
+        player.getCurrentHand().getCards()[player.getCurrentHand().getNextIndex()] = card; //deals player second card
+        player.getCurrentHand().setNextIndex(player.getCurrentHand().getNextIndex()+1);
         System.out.println(card); //print player second card
-        dealer.getCards()[0] = card; //deals dealer first card
-        
-        System.out.println("Dealer cards:");
+
         card = deck.dealNextCard();
+        dealer.getCards()[dealer.getNextIndex()] = card; //deals dealer first card
+        dealer.setNextIndex(dealer.getNextIndex() + 1);
+        System.out.println("Dealer cards:");
         System.out.println("Hidden card");
         
         card = deck.dealNextCard();
-        dealer.getCards()[1] = card; //deals dealer second card
+        dealer.getCards()[dealer.getNextIndex()] = card; //deals dealer second card
+        dealer.setNextIndex(dealer.getNextIndex() + 1);
         System.out.println(card); //print dealer second card
     }
     /**
@@ -126,8 +164,8 @@ public class Game implements java.io.Serializable {
      */
     public void hit() {
         Card card = deck.dealNextCard();
-        int i = player.getCurrentHand().findNextFreeIndex();
-        player.getCurrentHand().getCards()[i] = card;
+        player.getCurrentHand().getCards()[player.getCurrentHand().getNextIndex()] = card;
+        player.getCurrentHand().setNextIndex(player.getCurrentHand().getNextIndex()+1);
         System.out.println(player.getName() + " next card is:");
         System.out.println(card);
     }
@@ -144,6 +182,9 @@ public class Game implements java.io.Serializable {
         }
         return false;
     }
+    /**
+    * calculate Score
+    */
     public int calculateScore() {
         if(round%2==0)
         {
@@ -158,7 +199,7 @@ public class Game implements java.io.Serializable {
      * Occurs when player win a round
      */
     public void playerWin() {
-        player.setLoses(1+player.getLoses());
+        wins++;
         score += calculateScore();
         resetGame();
     }
@@ -166,7 +207,7 @@ public class Game implements java.io.Serializable {
      * Occurs when player lose a round
      */
     public void playerLose() {
-        player.setLoses(1+player.getLoses());
+        loses++;;
         score -= calculateScore();
         resetGame();
     }
@@ -197,8 +238,8 @@ public class Game implements java.io.Serializable {
             if(dealer.dealerHandValue()<Constants.DEALER_STAND || (dealer.dealerHandValue()==Constants.DEALER_STAND && dealer.isSoft()))
             {
                 Card card = deck.dealNextCard();
-                int i = dealer.findNextFreeIndex();
-                dealer.getCards()[i] = card;
+                dealer.getCards()[dealer.getNextIndex()] = card;
+        dealer.setNextIndex(dealer.getNextIndex() + 1);
                 System.out.println("Dealer next card is:");
                 System.out.println(card);
             }

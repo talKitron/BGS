@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import model.Game;
 import utilities.Constants;
@@ -21,6 +22,7 @@ public class TableFrame extends javax.swing.JFrame{
     private final View view;
     /**Current game object*/
     private static Game currentGame;
+
     /**TweenManager for animations and transitions*/
     //private static TweenManager tweenManager;
     
@@ -37,6 +39,7 @@ public class TableFrame extends javax.swing.JFrame{
         pnlMenuInGame.setVisible(false);
         pnlMenu.setOpaque(false);
         //pnlPlayerCards.setOpaque(false);
+
     }
     
     public class MyWindowListener extends WindowAdapter {

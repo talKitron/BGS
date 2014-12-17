@@ -10,6 +10,10 @@ public class Hand implements java.io.Serializable {
      */
     private Card[] cards;
     /**
+     * card's next index.
+     */
+    private int nextIndex;
+    /**
      * a flag that gives us an indication if the hand value is soft 17 or not
      */
     private boolean soft;
@@ -19,8 +23,21 @@ public class Hand implements java.io.Serializable {
     public Hand() {
        cards = new Card[11];
        soft = false;
+       nextIndex = 0;
     }
-    
+    /**
+     * @return card's next index.
+     */
+    public int getNextIndex() {
+        return nextIndex;
+    }
+    /**
+     * sets nextIndex.
+     * @param nextIndex 
+     */
+    public void setNextIndex(int nextIndex) {
+        this.nextIndex = nextIndex;
+    }
     /**
      * @return the cards.
      */
@@ -49,22 +66,8 @@ public class Hand implements java.io.Serializable {
         for(int i = 0 ; cards[i]!=null ; i++)
         {
             cards[i] = null;
+            nextIndex = 0;
         }
-    }
-    /**
-     * @return the next free index in the hand array
-     */
-    public int findNextFreeIndex()
-    {
-        for(int i = 1 ; cards[i]!=null ; )
-        {
-            i++;
-            if( cards[i]==null)
-            {
-                return i;
-            }
-        }
-        return -1;
     }
     /**
      * @return the dealer Hand value.

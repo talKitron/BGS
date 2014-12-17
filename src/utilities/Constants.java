@@ -15,5 +15,5 @@ public final class Constants {
     /**The initial amount of money that the player have in is bank*/
     public static final int STARTING_AMOUNT = 50;
     
-     public static final int DEALER_STAND = 17;
+    public static final int DEALER_STAND = 17;
 }

@@ -29,6 +29,7 @@ public class MainFrame extends javax.swing.JFrame {
     boolean firstTimeNameType = true;
     boolean firstTimePassType = true;
     
+    
     /**
      * Creates new form MainFrame
      * @param view

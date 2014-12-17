@@ -123,7 +123,6 @@ public final class View {
         }
         return imagePath;
     }
-    
     /**
      * receives the TableFrame frame and adds a card to it.
      * @param tableFrame 

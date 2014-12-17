@@ -26,7 +26,7 @@ public class Main  implements java.io.Serializable{
         * Backend tests Block
         */
         
-        /*Player player = new Player("elad", "123");
+        Player player = new Player("elad", "123");
         Game game = controller.deal(player); 
         System.out.println("player value: " + player.getCurrentHand().playerHandValue());
         System.out.println("Dealer value: " + game.getDealer().dealerHandValue());
@@ -40,7 +40,7 @@ public class Main  implements java.io.Serializable{
         {
            controller.stand(game);
            controller.whoWon(game);
-        }*/
+        }
         
         /**
         * Tests Block

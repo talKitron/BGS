@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import model.Card;
 import model.Game;
 import model.Model;
 import model.Player;
@@ -45,7 +46,7 @@ public final class Controller {
                 model = Model.getInstance();
                 instance = new Controller();
                 view = View.getInstance(instance);
-                view.executeLoginView();
+                //view.executeLoginView();
                 return instance;
             }     
         return instance;
