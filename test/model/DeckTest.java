@@ -5,6 +5,10 @@
  */
 package model;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import org.hamcrest.core.IsEqual;
+import org.hamcrest.core.IsNot;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -37,99 +41,45 @@ public class DeckTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of getCardDeck method, of class Deck.
-     */
-    @Test
-    public void testGetCardDeck() {
-        System.out.println("getCardDeck");
-        Deck instance = new Deck();
-        Card[] expResult = null;
-        Card[] result = instance.getCardDeck();
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getNumOfCard method, of class Deck.
-     */
-    @Test
-    public void testGetNumOfCard() {
-        System.out.println("getNumOfCard");
-        Deck instance = new Deck();
-        int expResult = 0;
-        int result = instance.getNumOfCard();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getNextCardIndex method, of class Deck.
-     */
-    @Test
-    public void testGetNextCardIndex() {
-        System.out.println("getNextCardIndex");
-        Deck instance = new Deck();
-        int expResult = 0;
-        int result = instance.getNextCardIndex();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setNumOfCard method, of class Deck.
-     */
-    @Test
-    public void testSetNumOfCard() {
-        System.out.println("setNumOfCard");
-        int numOfCard = 0;
-        Deck instance = new Deck();
-        instance.setNumOfCard(numOfCard);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of dealNextCard method, of class Deck.
-     */
-    @Test
-    public void testDealNextCard() {
-        System.out.println("dealNextCard");
-        Deck instance = new Deck();
-        Card expResult = null;
-        Card result = instance.dealNextCard();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
+     /**
      * Test of shuffle method, of class Deck.
      */
     @Test
     public void testShuffle() {
-        System.out.println("shuffle");
+        System.out.println("Testing shuffle() Method...");
         Deck instance = new Deck();
-        instance.shuffle();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Deck testDeck = new Deck();
+        int[] valueArray = new int[52];
+        String[] suitArray = new String[52];
+        int[] valueArray2 = new int[52];
+        String[] suitArray2 = new String[52];
+        
+        for (int i=0; i<52; i++){                                       //copy original deck's cards values and suits to arrays for comparison later
+            valueArray[i] = instance.getCardDeck()[i].getValue();
+        }
+        for (int i=0; i<52; i++){
+            suitArray[i] = instance.getCardDeck()[i].getSuit().name();
+        }
+        for (int i=0; i<52; i++){                                       //copy test deck's cards values and suits to arrays for comparison later
+            valueArray2[i] = testDeck.getCardDeck()[i].getValue();
+        }
+        for (int i=0; i<52; i++){
+            suitArray2[i] = testDeck.getCardDeck()[i].getSuit().name();
+        }
+        
+        assertArrayEquals(valueArray,valueArray2);                      //compare between original deck to test deck to make sure are equal
+        assertArrayEquals(suitArray,suitArray2);
+        
+        instance.shuffle();                                             //shuffle the original deck
+        
+        for (int i=0; i<52; i++){                                       //copy values and suits again after shuffle
+            valueArray[i] = instance.getCardDeck()[i].getValue();
+        }
+        for (int i=0; i<52; i++){
+            suitArray[i] = instance.getCardDeck()[i].getSuit().name();
+        }
+        
+        assertThat(valueArray, not(equalTo(valueArray2)));              //compare between original deck to test deck to make sure are NOT equal
+        assertThat(suitArray, not(equalTo(suitArray2)));
     }
-
-    /**
-     * Test of toString method, of class Deck.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        Deck instance = new Deck();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
 }

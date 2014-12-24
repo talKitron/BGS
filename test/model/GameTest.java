@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -198,7 +197,7 @@ public class GameTest {
      * Test of resetGame method, of class Game.
      * This test need testResetHand and testShuffle to pass in order to pass
      */
-    @Ignore("Ignored until writing testResetHand and testShuffle.")
+    
     @Test
     public void testResetGame() {
         System.out.println("Testing resetGame() Method...");
