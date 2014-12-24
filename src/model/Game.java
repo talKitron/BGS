@@ -239,7 +239,7 @@ public class Game implements java.io.Serializable {
             {
                 Card card = deck.dealNextCard();
                 dealer.getCards()[dealer.getNextIndex()] = card;
-        dealer.setNextIndex(dealer.getNextIndex() + 1);
+                dealer.setNextIndex(dealer.getNextIndex() + 1);
                 System.out.println("Dealer next card is:");
                 System.out.println(card);
             }
@@ -249,4 +249,14 @@ public class Game implements java.io.Serializable {
             }
         }  
     }
+
+    /**
+     * Sets dealer. Used for GameTest unit test.
+     * @param dealer the dealer to set
+     */
+    public void setDealer_debug(Hand dealer) {
+        this.dealer = dealer;
+    }
+    
+    
 }

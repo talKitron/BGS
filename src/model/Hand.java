@@ -152,4 +152,14 @@ public class Hand implements java.io.Serializable {
         }
         return value;
     }
+
+    /**
+     * Sets Cards. Used for GameTest & HandTest unit tests.
+     * @param cards the cards to set
+     */
+    public void setCards_debug(Card[] cards) {
+        this.cards = cards;
+    }
+    
+    
 }
