@@ -8,13 +8,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
-import javafx.event.ActionEvent;
+//import javafx.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import model.Game;
 import utilities.Constants;
 
 /**
@@ -431,7 +432,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtfPasswordKeyPressed
 
     private void btnSitDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSitDownActionPerformed
-        TableFrame tableFrame = new TableFrame(view);      
+        Game game = view.addGame(view.getCurrentPlayer());
+        TableFrame tableFrame = new TableFrame(view, game);      
         tableFrame.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_btnSitDownActionPerformed

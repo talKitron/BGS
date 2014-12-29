@@ -71,8 +71,12 @@ public final class Model implements I_Model, java.io.Serializable {
                 return 1; // login successfull
             }
             else return 2; // password incorrect!
-        } else if (addPlayer(name, pass) != null){
-            return 1; // new player created
+        } else
+          {
+              currentPlayer = addPlayer(name, pass);
+                if (currentPlayer != null){
+                return 1; // new player created
+           }
         }
         return 0; 
     }
@@ -101,28 +105,25 @@ public final class Model implements I_Model, java.io.Serializable {
     * @return true if add successful
     */
     @Override
-    public boolean addGame(Player player) {
+    public Game addGame(Player player) {
         if (player != null){
             Game game = new Game (player);
             if (!db.getGames().contains(game)){
                 db.getGames().add(game);
-                return true;
+                return game;
             }
         }
-        return false;
+        return null;
     }
     
     /**
-     * Gets the current Player, creates a new Game for him (also dealing the initial cards) and adds it to the Database
-     * @param player
-     * @return the newly created Game, current Game
+     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
+     * @param game
      */
     @Override
-    public Game deal(Player player) {
-        Game currentGame = new Game(player);
-        db.getGames().add(currentGame);
-        currentGame.deal();
-        return currentGame;
+    public void deal(Game game) {
+        game.deal();
+
     }
     /**
      * Occurs after clicking on the "Hit" button, deals one card for player

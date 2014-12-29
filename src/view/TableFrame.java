@@ -43,9 +43,11 @@ public class TableFrame extends javax.swing.JFrame{
     /**
      * Creates new form TableFrame
      * @param view
+     * @param game
      */
-    public TableFrame(View view) {
+    public TableFrame(View view, Game game) {
         this.view = view;
+        TableFrame.currentGame = game;
         dealerHand = new ArrayList<>();
         playerHand = new ArrayList<>();
         deckOfCards = new ArrayList<>();
@@ -336,7 +338,7 @@ public class TableFrame extends javax.swing.JFrame{
             lblPlayerWins.setText("" + currentGame.getWins());
             lblPlayerLoses.setText("" + currentGame.getLoses());
         }
-        lblPlayerBank.setText("" + view.getCurrentPlayer().getBank());
+        lblPlayerBank.setText("" + currentGame.getScore());
     }
     
     /**
@@ -346,8 +348,9 @@ public class TableFrame extends javax.swing.JFrame{
         /** TODO **/
         pnlMenuInGame.setVisible(false);
         pnlMenu.setVisible(true);
-        updateScoreBoard();
+        
         lblPlayerResult.setText("You " + gameWon(currentGame.whoWon()) + "!");
+        updateScoreBoard();
         pnlShowWinner.setVisible(true);
         /*
         hide pnlInGame (Hit/Stand/... buttons)
@@ -731,7 +734,7 @@ public class TableFrame extends javax.swing.JFrame{
     private void btnDealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDealActionPerformed
         clearGUI();
         pnlMenu.setVisible(false);
-        currentGame = view.deal(view.getCurrentPlayer());
+        view.deal(currentGame);
         pnlMenuInGame.setVisible(true);
         animateDeck();
         dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");

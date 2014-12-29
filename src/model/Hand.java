@@ -76,6 +76,7 @@ public class Hand implements java.io.Serializable {
         
         int numOfAce = 0;//number of aces in hand
         int value = 0;// hand value
+        soft = false;
         
         for(int i = 0; cards[i]!=null ; i++)//run on hand's card
         {
@@ -101,6 +102,7 @@ public class Hand implements java.io.Serializable {
             if(value+11 > 21)//if value + 11 is over 21 add 1 else add 11
             {
                value+=1; 
+               
             }
             else
             {

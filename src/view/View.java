@@ -102,14 +102,30 @@ public final class View{
     protected int loginProcess(String name, String password){
         return controller.loginProcess(name, password);
     }
-    
-    /**
-     * Gets the current Player, creates a new Game for him (also dealing the initial cards) and adds it to the Database.
-     * @param player
-     * @return the newly created Game, current Game
+    /** 
+     * The method adds player to system.
+     * @param name
+     * @param password
+     * @return true if add successful
      */
-    protected Game deal(Player player) {
-        return controller.deal(player);
+    public Player addPlayer(String name, String password) {
+        return controller.addPlayer(name, password);
+    }
+    
+    /** 
+    * The method adds player to system.
+    * @param player
+    * @return true if add successful
+    */
+    public Game addGame(Player player) {
+        return controller.addGame(player);
+    }
+   /**
+     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
+     * @param game
+     */
+    protected void deal(Game game) {
+        controller.deal(game);
     }
     
     /**

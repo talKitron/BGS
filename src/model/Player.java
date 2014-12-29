@@ -22,11 +22,6 @@ public class Player implements java.io.Serializable {
      */
     private Date loginDate;
     /**
-     * how much money the player have
-     */
-    private int bank;
-   
-    /**
      * the cards that the player currently holds in is hand
      */
     private Hand currentHand;
@@ -40,7 +35,6 @@ public class Player implements java.io.Serializable {
         this.name = name;
         this.password = password;
         this.loginDate = new Date();
-        this.bank = Constants.STARTING_AMOUNT;
         currentHand = new Hand();
     }
     /**
@@ -57,14 +51,6 @@ public class Player implements java.io.Serializable {
      */
     public void setLoginDate(Date loginDate) {
         this.loginDate = loginDate;
-    }
-    
-    /**
-     * sets Player's bank.
-     * @param bank 
-     */
-    public void setBank(int bank) {
-        this.bank = bank;
     }
     
     /**
@@ -94,13 +80,6 @@ public class Player implements java.io.Serializable {
      */
     public Date getLoginDate(){
         return loginDate;
-    }
-    
-     /**
-     * @return the bank
-     */
-    public int getBank(){
-        return bank;
     }
     
     /**
@@ -137,6 +116,6 @@ public class Player implements java.io.Serializable {
     */
    @Override
    public String toString(){
-       return ("Player: " + name + " Last seen: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(loginDate) + " with " + bank + " in the bank.");
+       return ("Player: " + name + " Last seen: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(loginDate));
    }
 }

@@ -78,17 +78,16 @@ public final class Controller{
     * @param player
     * @return true if add successful
     */
-    public boolean addGame(Player player) {
+    public Game addGame(Player player) {
         return model.addGame(player);
     }
     
     /**
-     * Gets the current Player, creates a new Game for him (also dealing the initial cards) and adds it to the Database
-     * @param player
-     * @return the newly created Game, current Game
+     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
+     * @param game
      */
-    public Game deal(Player player) {
-        return model.deal(player);
+    public void deal(Game game) {
+        model.deal(game);
     }
     
     /**

@@ -179,7 +179,6 @@ public class Game{
         if(player.getCurrentHand().playerHandValue()>Constants.BLACKJACK){
            System.out.println("busted");
            System.out.println(player.getName() + ", lose");
-           playerLose();
            return true; 
         }
         return false;
@@ -207,7 +206,7 @@ public class Game{
      * Occurs when player lose a round
      */
     public void playerLose() {
-        loses++;;
+        loses++;
         score -= calculateScore();
         resetGame();
     }
@@ -215,6 +214,12 @@ public class Game{
      * @return true if player win and false if not
      */
     public boolean whoWon() {
+        if(player.getCurrentHand().playerHandValue()> Constants.BLACKJACK)
+        {
+           playerLose(); 
+           System.out.println(player.getName() + ", lose");
+           return false; 
+        }
         if(dealer.dealerHandValue() > Constants.BLACKJACK || player.getCurrentHand().playerHandValue()> dealer.dealerHandValue()){
             playerWin();
             System.out.println(player.getName() + ", win");

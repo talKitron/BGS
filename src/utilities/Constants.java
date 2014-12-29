@@ -12,8 +12,8 @@ public final class Constants {
     public static final int CARDS_IN_DECK = 52;
     /**The maximum number for win*/
     public static final int BLACKJACK = 21;
-    /**The initial amount of money that the player have in is bank*/
-    public static final int STARTING_AMOUNT = 50;
+    
+     public static final int STARTING_AMOUNT = 0;
     /**The maximum possible cards in a hand (Dealer: 4 aces, 4 2's, 3 3's (4*1 + 4*2 + 3*3 = 21)*/
     //public static final int MAX_CARDS_IN_HAND = 11;
     /**The amount Dealers stands on*/
