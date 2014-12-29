@@ -15,7 +15,6 @@ import utilities.Constants;
  */
 public final class DataBase implements java.io.Serializable {
     //***************************************** Variables *********************************************
-
     /**
      * Singleton instance of this class, loaded on the first execution of SysData.getInstance()
      */
@@ -27,15 +26,15 @@ public final class DataBase implements java.io.Serializable {
     /**
      * Stores all the players
      */
-    private HashMap<String, Player> players;
+    private final HashMap<String, Player> players;
     /**
      * Stores all the games
      */
-    private HashSet<Game> games;
+    private final HashSet<Game> games;
     /**
      * Stores Blackjack facts for the MainFrame
      */
-    private String[] facts = {
+    private final String[] facts = {
                                 "Blackjack originated in French casinos around the 1700s where it was called \"vingt-et-un\" (twenty-and-one).",
                                 "Emperor Napoleon played and enjoyed it more than any other card game.",
                                 "There are approximately 140 countries in the world with casinos that offer blackjack.",
@@ -44,7 +43,7 @@ public final class DataBase implements java.io.Serializable {
                                 "20 is the second best hand in the game.",
                                 "16 is the worst hand in blackjack, followed by 15 as the second worst hand.",
                                 "11 is the third best hand in blackjack.",
-                                "Mathematically, in 100 hands the dealer will win 48 hands, the player will win 44 and there will be eight ties. Why does the dealer always win more hands? Because the dealer plays their hand LAST.",
+                                //"Mathematically, in 100 hands the dealer will win 48 hands, the player will win 44 and there will be eight ties. Why does the dealer always win more hands? Because the dealer plays their hand LAST.",
                                 "Casinos have the right to ask \"card counters\" and anyone else to leave the casino. It is based on the old English law that states, \"Management has the right to refuse service\".",
                                 "Blackjack dealers only earn minimum wage, so tipping is very important for them in making a living.",
                                 "A blackjack player has six options when deciding what action to take in any given hand: (1) hit, (2) stand, (3) split, (4) double down, (5) take insurance (6) surrender.",
@@ -93,8 +92,8 @@ public final class DataBase implements java.io.Serializable {
     }
 
     /**
-     * The method creates this class's instance & provides access to it, by returning a reference (singleton).
-     * @return reference to this class's only instance, or null if reference was already returned (singleton).
+     * The method creates the class instance & provides access to it, by returning a reference (singleton).
+     * @return reference to the class only instance, or null if reference was already returned (singleton).
      */
     protected static DataBase getInstance() {
            executeInput();
@@ -105,17 +104,16 @@ public final class DataBase implements java.io.Serializable {
         }
         return instance;
     }
+    
     /**
      * the methods execute the input from file.
      */
     public static void executeInput() {
         try {
-            FileInputStream fileIn = new FileInputStream("BGS.ser");
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            setInstance(((DataBase) in.readObject()));
-            exists = true;
-            in.close();
-            fileIn.close();
+            try (FileInputStream fileIn = new FileInputStream("BGS.ser"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
+                setInstance(((DataBase) in.readObject()));
+                exists = true;
+            }
         } catch (FileNotFoundException e) {
             if (Constants.DEBUG){
                 System.out.println(e.getMessage());
@@ -126,20 +124,18 @@ public final class DataBase implements java.io.Serializable {
             }
         }
     }
+    
     /**
      * the methods execute the output to file.
      * @param logOut
      */
     protected void executeOutput(boolean logOut) {
-
         try {
-            instance.players = getPlayers();
-            instance.games = getGames();
-            FileOutputStream fileOut = new FileOutputStream("BGS.ser");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(instance);
-            out.close();
-            fileOut.close();
+            //instance.players = getPlayers();
+            //instance.games = getGames();
+            try (FileOutputStream fileOut = new FileOutputStream("BGS.ser"); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+                out.writeObject(instance);
+            }
             if (!logOut) {
                 System.exit(0);
             }

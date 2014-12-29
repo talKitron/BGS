@@ -17,7 +17,7 @@ public interface I_Model {
     
     public boolean isBusted(Game game);
     
-    public void stand(Game game);
+    public Card stand(Game game);
     
     public boolean whoWon(Game game);
     

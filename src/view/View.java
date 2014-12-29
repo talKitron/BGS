@@ -5,6 +5,8 @@ package view;
 
 import controller.Controller;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import model.Card;
@@ -16,7 +18,7 @@ import utilities.Constants;
  * View class to communicate with Controller class and also make the UI/UX happen.
  * @author BGS Team
  */
-public final class View {
+public final class View{
 
 //*************************************************** Variables *****************************************************// 
     /**
@@ -116,11 +118,8 @@ public final class View {
      * @return path of image for given card
      */
     protected String getCardImage(Card card){
-        String cardImageName = card.toString().replace(" ", "_");
+        String cardImageName = card.toString().replace(" ", "_").toLowerCase();
         String imagePath = "/resources/cards/" + cardImageName + ".png";
-        if (Constants.DEBUG){
-            System.out.println(imagePath);
-        }
         return imagePath;
     }
     /**
@@ -129,6 +128,31 @@ public final class View {
      */
     void drawCard(JLabel lbl, Card card) {
         lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource(getCardImage(card))));
+    }
+    
+    /**
+     * @param game
+     * @return true if player hand is more than 21 and false if not
+     */
+    public boolean isBusted(Game game) {
+        return controller.isBusted(game);
+    }
+    
+    /**
+     * Occurs after clicking on the "Stand" button, check dealer cards
+     * @param game
+     * @return The last Card dealt to Dealer
+     */
+    public Card stand(Game game) {
+        return controller.stand(game);
+    }
+    
+     /**
+     * @param game
+     * @return true if player win and false if not
+     */
+    public boolean whoWon(Game game) {
+        return controller.whoWon(game);
     }
     
     /**
@@ -146,12 +170,17 @@ public final class View {
         return controller.getFact();
     }
     
-    /**
-     * method executes the system's exit.
+     /**
+     * The method handle the exit from system.
      * @param logOut
-     * @throws IOException 
      */
-    public void executeSysExit(boolean logOut) throws IOException {
-        controller.executeSysExit(logOut);
+    public void executeSysExit(boolean logOut){
+        try {
+            controller.executeSysExit(logOut);
+        } catch (IOException ex) {
+            if (Constants.DEBUG){
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 }

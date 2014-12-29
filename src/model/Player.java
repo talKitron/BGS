@@ -12,7 +12,7 @@ public class Player implements java.io.Serializable {
     /**
      * player name
      */
-    private String name;
+    private final String name;
     /**
      * player password
      */

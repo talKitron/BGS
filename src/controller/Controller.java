@@ -5,14 +5,13 @@ import model.Card;
 import model.Game;
 import model.Model;
 import model.Player;
-import utilities.Constants;
 import view.View;
 
 /**
  * Controller Logic class.
  * @author BGS Team
  */
-public final class Controller {
+public final class Controller{
 
     /**
      * Singleton instance of this class, loaded on the first execution of ControllerLogic.getInstance()
@@ -46,7 +45,7 @@ public final class Controller {
                 model = Model.getInstance();
                 instance = new Controller();
                 view = View.getInstance(instance);
-                //view.executeLoginView();
+                view.executeLoginView();
                 return instance;
             }     
         return instance;
@@ -91,6 +90,7 @@ public final class Controller {
     public Game deal(Player player) {
         return model.deal(player);
     }
+    
     /**
      * Occurs after clicking on the "Hit" button, deals one card for player
      * @param game
@@ -98,6 +98,7 @@ public final class Controller {
     public void hit(Game game) {
         model.hit(game);
     }
+    
     /**
      * @param game
      * @return true if player hand is more than 21 and false if not
@@ -105,13 +106,16 @@ public final class Controller {
     public boolean isBusted(Game game) {
         return model.isBusted(game);
     }
+    
     /**
      * Occurs after clicking on the "Stand" button, check dealer cards
      * @param game
+     * @return The last Card dealt to Dealer
      */
-    public void stand(Game game) {
-        model.stand(game);
+    public Card stand(Game game) {
+        return model.stand(game);
     }
+    
      /**
      * @param game
      * @return true if player win and false if not
@@ -119,6 +123,7 @@ public final class Controller {
     public boolean whoWon(Game game) {
         return model.whoWon(game);
     }
+    
     /**
      * @return currentPlayer
      */
@@ -136,14 +141,9 @@ public final class Controller {
      /**
      * The method handle the exit from system.
      * @param logOut
+     * @throws java.io.IOException
      */
-    public void executeSysExit(boolean logOut){
-        try {
+    public void executeSysExit(boolean logOut) throws IOException {
             model.executeSysExit(logOut);
-        } catch (IOException ex) {
-            if (Constants.DEBUG){
-                System.out.println(ex.getMessage());
-            }
-        }
     }
 }

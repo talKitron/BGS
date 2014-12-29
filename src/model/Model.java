@@ -1,6 +1,5 @@
 package model;
 
-import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -32,8 +31,8 @@ public final class Model implements I_Model, java.io.Serializable {
     //***************************************** Methods ***********************************************
 
     /**
-     * The method creates this class' instance & provides access to it, by returning a reference (singleton).
-     * @return reference to this class' only instance, or null if reference was already returned (singleton).
+     * The method creates the class instance & provides access to it, by returning a reference (singleton).
+     * @return reference to the class only instance, or null if reference was already returned (singleton).
      */
     public static Model getInstance(){
         if (!exists) {
@@ -51,9 +50,8 @@ public final class Model implements I_Model, java.io.Serializable {
     /**
      * The method handle the exit from system.
      * @param logOut
-     * @throws java.io.IOException
      */
-    public void executeSysExit(boolean logOut) throws IOException {
+    public void executeSysExit(boolean logOut){
         db.executeOutput(logOut);
     }
     
@@ -145,10 +143,11 @@ public final class Model implements I_Model, java.io.Serializable {
     /**
      * Occurs after clicking on the "Stand" button, check dealer cards
      * @param game
+     * @return Dealer latest dealt card
      */
     @Override
-    public void stand(Game game) {
-        game.stand();
+    public Card stand(Game game) {
+        return game.stand();
     }
      /**
      * @param game
@@ -171,6 +170,6 @@ public final class Model implements I_Model, java.io.Serializable {
      */
     @Override
     public String getFact(){
-        return db.getFacts()[(int)(Math.random() * 21)];
+        return db.getFacts()[(int)(Math.random() * 20)];
     }
 }

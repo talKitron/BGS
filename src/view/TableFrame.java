@@ -4,13 +4,22 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import model.Card;
 import model.Game;
+import model.Hand;
 import utilities.Constants;
+import AppPackage.AnimationClass;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 /**
  * TableFrame frame for the game.
@@ -22,9 +31,14 @@ public class TableFrame extends javax.swing.JFrame{
     private final View view;
     /**Current game object*/
     private static Game currentGame;
-
-    /**TweenManager for animations and transitions*/
-    //private static TweenManager tweenManager;
+    /**Current Dealer Hand JLabels*/
+    private static ArrayList<JLabel> dealerHand;
+    /**Current Player Hand JLabels*/
+    private static ArrayList<JLabel> playerHand;
+    /**Current Deck of Cards JLabels*/
+    private static ArrayList<JLabel> deckOfCards;
+    /**Animation manager object*/
+    public static AnimationClass ac;
     
     /**
      * Creates new form TableFrame
@@ -32,14 +46,44 @@ public class TableFrame extends javax.swing.JFrame{
      */
     public TableFrame(View view) {
         this.view = view;
-        //tweenManager = new TweenManager();
-        //Tween.registerAccessor(null, this);
+        dealerHand = new ArrayList<>();
+        playerHand = new ArrayList<>();
+        deckOfCards = new ArrayList<>();
+        ac = new AnimationClass();
         initComponents();
         setLocationRelativeTo(null);
         pnlMenuInGame.setVisible(false);
         pnlMenu.setOpaque(false);
-        //pnlPlayerCards.setOpaque(false);
-
+        pnlShowWinner.setVisible(false);
+        updateScoreBoard();
+        
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == btnStand){
+                    btnStandActionPerformed(e);
+                } else if (e.getSource() == btnHit){
+                    btnHitActionPerformed(e);
+                } else if (e.getSource() == btnSurrender){
+                    btnSurrenderActionPerformed(e);
+                } else if (e.getSource() == btnDeal){
+                    btnDealActionPerformed(e);
+                } else if (e.getSource() == btnQuit){
+                    btnQuitActionPerformed(e);
+                }
+            }
+        };
+        
+        KeyStroke keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false);
+        btnStand.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_H, 0, false);
+        btnHit.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_E, 0, false);
+        btnSurrender.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false);
+        btnDeal.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, false);
+        btnQuit.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
     
     public class MyWindowListener extends WindowAdapter {
@@ -50,15 +94,273 @@ public class TableFrame extends javax.swing.JFrame{
             if (question == JOptionPane.NO_OPTION) { // if user clicked NO, exit
                 System.exit(0);
             }
-            if (question == JOptionPane.YES_OPTION) { // if clicked YES, try to save his data
-                try {
-                    view.executeSysExit(false);
-                    
-                } catch (IOException ex) {
-                    
-                }
+            if (question == JOptionPane.YES_OPTION) {
+                view.executeSysExit(false);
+            }
+            if (question == JOptionPane.CANCEL_OPTION) {
+                //do nothing
             }
         }
+    }
+    
+    /**
+     * The method resets the in-game UI components
+     */
+    private void clearGUI(){
+        pnlShowWinner.setVisible(false);
+        for(JLabel l : playerHand){
+            l.setVisible(false);
+            l = null;
+        }
+        playerHand = new ArrayList<>();
+        for(JLabel l : dealerHand){
+            l.setVisible(false);
+            l = null;
+        }
+        dealerHand = new ArrayList<>();
+        for(JLabel l : deckOfCards){
+            l.setVisible(false);
+            l = null;
+        }
+        deckOfCards = new ArrayList<>();
+    }
+    
+    /**
+     * The method creates a deck of card animation and presents it to the UI
+     */
+    private void animateDeck(){
+        clearGUI(); //clear earlier events of in-game animation
+        JLabel label;
+        int i = 0, x = 0;
+        
+        for (Card c : currentGame.getDeck().getCardDeck()){
+            if (i%5==0){
+                label = new JLabel(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+                label.setBounds(Constants.DeckX+x, -200, 117, 170);
+                deckOfCards.add(label);
+                mainDesktopPane.add(label, -1);
+                ac.jLabelYDown(-200, Constants.DeckY+x-2, 1, 2, label);
+                x+=4;
+            }
+            i+=1;
+        }
+        //animateShuffle();
+    }
+    
+    /**
+     * The method creates a deck of card shuffle animation and presents it to the UI
+     * NOTICE: NOT YET FUNCTION
+     */
+    private void animateShuffle(){
+        final int[] x = new int[deckOfCards.size()];
+        
+        animateDivide(x);
+        System.out.println("Spreading complete, now gathering...");
+        animateJoin(x);
+    }
+    
+    /**
+     * NOTICE: NOT YET FUNCTIONAL
+     * @param x 
+     */
+    private void animateDivide(int[] x){
+        AnimationClass ac1 = new AnimationClass();
+        int i = 0;
+
+        for(JLabel l : deckOfCards){
+            x[i] = l.getLocation().x;
+            if (i%2==0){ //is going left
+                ac1.jLabelXLeft(l.getLocation().x, l.getLocation().x-100, 1, 1, l);
+                System.out.println("currently at x: " + l.getLocation() + " ia going left to x: " + (l.getLocation().x-100));
+            } else { //is going right
+                ac1.jLabelXRight(l.getLocation().x, l.getLocation().x+100, 1, 1, l);
+                System.out.println("currently at x: " + l.getLocation() + " is going right to x: " + (l.getLocation().x+100));
+            }
+            ac1.jLabelYDown(-100, Constants.DeckY, 1, 1, l);
+            i++;
+            try {
+                Thread.sleep(120);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TableFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    /**
+     * NOTICE: NOT YET FUNCTIONAL
+     * @param x 
+     */
+    private void animateJoin(int[] x){
+        AnimationClass ac1 = new AnimationClass();
+        int i = 0;
+            
+        for(JLabel l : deckOfCards){
+            if (i%2==0){ //is at left
+                System.out.println("Is left at x: " + (x[i]-150) + " going right to " + x[i]);
+                ac1.jLabelXRight(l.getLocation().x-150, x[i], 1, 1, l);
+            } else { //is at right
+                System.out.println("Is right at x: " + (x[i]+150) + " going left to " + x[i]);
+                ac1.jLabelXLeft(l.getLocation().x+150, x[i], 1, 1, l);
+            }
+            ac1.jLabelYDown(-100, Constants.DeckY, 1, 1, l);
+            i++;
+        }
+    }
+    
+    /**
+     * Deals cards to current Hand
+     * @param hand (Player's Hand / Dealer)
+     * @param hit (true if it's a Hit, false if it's initial cards)
+     * @param player (String to represent the user)
+     */
+    private void dealCards(Hand hand, boolean hit, String player){
+        JLabel label;
+        switch (player) {
+            case "Player":
+                if (hit){
+                    label = dealCard(playerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Player");
+                } else {
+                    JLabel firstCard = dealCard(null, hand.getCards()[hand.getNextIndex()-2], "Player");
+                    playerHand.add(firstCard);
+                    mainDesktopPane.add(firstCard, 1);
+                    //animateDealCard(firstCard, Constants.PlayerX, Constants.PlayerY);
+                    label = dealCard(playerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Player");
+                }   playerHand.add(label);
+                mainDesktopPane.add(label, 1);
+                //animateDealCard(label, Constants.PlayerX + 25, Constants.PlayerY);
+                break;
+            case "Dealer":
+                if (hit){
+                    label = dealCard(dealerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Dealer");
+                } else {
+                    JLabel firstCard = dealCard(null, hand.getCards()[hand.getNextIndex()-2], "Dealer");
+                    dealerHand.add(firstCard);
+                    mainDesktopPane.add(firstCard, 1);
+                    //animateDealCard(firstCard, Constants.DealerX, Constants.DealerY);
+                    label = dealCard(dealerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Dealer");         
+                }   dealerHand.add(label);
+                mainDesktopPane.add(label, 1);
+                //animateDealCard(label, dealerHand.get(hand.getNextIndex()-1).getLocation().x + 25, Constants.DealerY);
+                break;
+        }
+    }
+    
+    /**
+     * Creates an animation of a JLabel card from x to y.
+     * @param cardToDeal
+     * @param x
+     * @param y 
+     */
+    private void animateDealCard(JLabel cardToDeal, int x, int y){
+        //System.out.println(cardToDeal.getIcon().toString() + " x: " + x  + " y: " + y);
+        AnimationClass acDealer = new AnimationClass();
+        if (x > y){ //dealt to Player
+            acDealer.jLabelYDown(Constants.DeckY, y, 1, 1, cardToDeal);
+            acDealer.jLabelXLeft(Constants.DeckX, x, 1, 1, cardToDeal);
+        } else { //dealt to Dealer
+            acDealer.jLabelXLeft(Constants.DeckX, x, 1, 1, cardToDeal);
+            acDealer.jLabelYDown(Constants.DeckY, y, 1, 1, cardToDeal);
+        }
+    }
+    
+    /**
+     * The method is a utility method for dealCards(), it creates a new JLabel and animates movement from Deck of Cards to the current player.
+     * @param lastCard
+     * @param cardToDeal
+     * @param player
+     * @return the moved JLabel card.
+     */
+    private JLabel dealCard(JLabel lastCard, Card cardToDeal, String player){
+        JLabel dealtCard = new JLabel(new ImageIcon(getClass().getResource(view.getCardImage(cardToDeal))));
+        
+        switch (player) {
+            case "Player":
+                if (lastCard == null){ //first card
+                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
+                    animateDealCard(dealtCard, Constants.PlayerX, Constants.PlayerY);
+                } else { //any other card
+                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
+                    animateDealCard(dealtCard, Constants.PlayerX + (playerHand.size()* 25), Constants.PlayerY);
+                }   break;
+            case "Dealer":
+                if (lastCard == null){ //first card
+                    dealtCard.setIcon(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
+                    animateDealCard(dealtCard, Constants.DealerX, Constants.DealerY);
+                } else { //any other card
+                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
+                    animateDealCard(dealtCard, Constants.DealerX + (dealerHand.size()* 25), Constants.DealerY);
+                }   break;
+        }
+        return dealtCard;
+    }
+    
+    /**
+     * The method represents the Stand process of the Player and imitates Dealer\'s actions.
+     */
+    private void stand(){
+        while(currentGame.getDealer().dealerHandValue() <= Constants.DEALER_STAND){
+            if(currentGame.getDealer().dealerHandValue() < Constants.DEALER_STAND 
+                    || (currentGame.getDealer().dealerHandValue() == Constants.DEALER_STAND && currentGame.getDealer().isSoft())){
+                Card card = view.stand(currentGame);
+                currentGame.getDealer().getCards()[currentGame.getDealer().getNextIndex()] = card;
+                currentGame.getDealer().setNextIndex(currentGame.getDealer().getNextIndex() + 1);
+                dealCards(currentGame.getDealer(), true, "Dealer");
+                System.out.println("Dealer next card is: " + card);
+            } else {
+                return;
+            }
+        }  
+    }
+    
+    /**
+     * The method is a utility method to update GUI about the game\'s victor.
+     * @param playerWon (true if Player won, false if Dealer did).
+     * @return 
+     */
+    private String gameWon(boolean playerWon){
+        if (playerWon){
+            pnlMenuInGame.setVisible(false);
+            return "WON";
+        } else { //Dealer won
+            pnlMenuInGame.setVisible(false);
+            return "LOST";
+        }
+    }
+    
+    /**
+     * The method retrieves the most updated scores from the current Game and updates the ScoreBoard accordingly
+     */
+    private void updateScoreBoard(){
+        if (currentGame != null){
+            lblPlayerWins.setText("" + currentGame.getWins());
+            lblPlayerLoses.setText("" + currentGame.getLoses());
+        }
+        lblPlayerBank.setText("" + view.getCurrentPlayer().getBank());
+    }
+    
+    /**
+     * The method deals with what happens in the UI when a Game is won.
+     */
+    private void showWinner(){
+        /** TODO **/
+        pnlMenuInGame.setVisible(false);
+        pnlMenu.setVisible(true);
+        updateScoreBoard();
+        lblPlayerResult.setText("You " + gameWon(currentGame.whoWon()) + "!");
+        pnlShowWinner.setVisible(true);
+        /*
+        hide pnlInGame (Hit/Stand/... buttons)
+        show pnlMenu (Deal/Quit buttons)
+        run updateScoreBoard();
+            //create a new Panel (opaque=false) with a JLabel of the same size to be used as background (resources/showWinner.png).
+            //make the Panel layout Absolute to be able to put labels upon eachother.
+            //add labels to the panel to represent "You win/Lose" messages, make use of gameWon(boolean playerWon).
+        show that panel to the user
+        
+        check logic for btnStandActionPerformed() and btnHitActionPerformed(). both are checking for win/loss and updating scoreboard, maybe no need for this way anymore.
+            *** if you have time, try to add sounds to the application, you have the sound class you've used in the past (package: Sounds).
+        */
     }
     
     /**
@@ -86,8 +388,15 @@ public class TableFrame extends javax.swing.JFrame{
                 }
             }
         };
+        pnlShowWinner = new javax.swing.JPanel();
+        lblPlayerResult = new javax.swing.JLabel();
+        lblShowWinner = new javax.swing.JLabel();
         pnlScoreBoard = new javax.swing.JPanel();
+        lblPlayerWins = new javax.swing.JLabel();
+        lblPlayerLoses = new javax.swing.JLabel();
+        lblPlayerBank = new javax.swing.JLabel();
         lblScoreBoard = new javax.swing.JLabel();
+        lblPlayerName = new javax.swing.JLabel();
         pnlMenu = new javax.swing.JPanel();
         btnDeal = new javax.swing.JButton();
         btnQuit = new javax.swing.JButton();
@@ -95,44 +404,93 @@ public class TableFrame extends javax.swing.JFrame{
         btnHit = new javax.swing.JButton();
         btnStand = new javax.swing.JButton();
         btnSurrender = new javax.swing.JButton();
-        laypPlayerCards = new javax.swing.JLayeredPane();
-        lblPlayerCard7 = new javax.swing.JLabel();
-        lblPlayerCard6 = new javax.swing.JLabel();
-        lblPlayerCard5 = new javax.swing.JLabel();
-        lblPlayerCard4 = new javax.swing.JLabel();
-        lblPlayerCard3 = new javax.swing.JLabel();
-        lblPlayerCard2 = new javax.swing.JLabel();
-        lblPlayerCard1 = new javax.swing.JLabel();
-        laypDealerCards = new javax.swing.JLayeredPane();
-        lblDealerCard7 = new javax.swing.JLabel();
-        lblDealerCard6 = new javax.swing.JLabel();
-        lblDealerCard5 = new javax.swing.JLabel();
-        lblDealerCard4 = new javax.swing.JLabel();
-        lblDealerCard3 = new javax.swing.JLabel();
-        lblDealerCard2 = new javax.swing.JLabel();
-        lblDealerCard1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         mainDesktopPane.setPreferredSize(new java.awt.Dimension(1280, 850));
 
+        pnlShowWinner.setOpaque(false);
+
+        lblPlayerResult.setFont(new java.awt.Font("GadMFW", 0, 24)); // NOI18N
+        lblPlayerResult.setForeground(new java.awt.Color(255, 255, 255));
+        lblPlayerResult.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        lblShowWinner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/showWinner.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlShowWinnerLayout = new javax.swing.GroupLayout(pnlShowWinner);
+        pnlShowWinner.setLayout(pnlShowWinnerLayout);
+        pnlShowWinnerLayout.setHorizontalGroup(
+            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblShowWinner)
+        );
+        pnlShowWinnerLayout.setVerticalGroup(
+            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblShowWinner)
+        );
+
         pnlScoreBoard.setOpaque(false);
 
+        lblPlayerWins.setFont(new java.awt.Font("GadMFW", 1, 15)); // NOI18N
+        lblPlayerWins.setForeground(new java.awt.Color(255, 255, 255));
+        lblPlayerWins.setText("0");
+
+        lblPlayerLoses.setFont(new java.awt.Font("GadMFW", 1, 15)); // NOI18N
+        lblPlayerLoses.setForeground(new java.awt.Color(255, 255, 255));
+        lblPlayerLoses.setText("0");
+
+        lblPlayerBank.setFont(new java.awt.Font("GadMFW", 1, 15)); // NOI18N
+        lblPlayerBank.setForeground(new java.awt.Color(255, 255, 255));
+        lblPlayerBank.setText("" + Constants.STARTING_AMOUNT);
+
         lblScoreBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ScoreBoard.png"))); // NOI18N
+
+        lblPlayerName.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblPlayerName.setForeground(new java.awt.Color(255, 255, 255));
+        lblPlayerName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPlayerName.setText(view.getCurrentPlayer().getName());
+        lblPlayerName.setToolTipText("");
 
         javax.swing.GroupLayout pnlScoreBoardLayout = new javax.swing.GroupLayout(pnlScoreBoard);
         pnlScoreBoard.setLayout(pnlScoreBoardLayout);
         pnlScoreBoardLayout.setHorizontalGroup(
             pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(lblPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(lblPlayerLoses, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(lblPlayerWins, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(lblScoreBoard)
         );
         pnlScoreBoardLayout.setVerticalGroup(
             pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlScoreBoardLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblScoreBoard)
-                .addGap(35, 35, 35))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(lblPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(270, 270, 270)
+                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(303, 303, 303)
+                .addComponent(lblPlayerLoses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(265, 265, 265)
+                .addComponent(lblPlayerWins, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addComponent(lblScoreBoard))
         );
 
         pnlMenu.setOpaque(false);
@@ -296,128 +654,6 @@ public class TableFrame extends javax.swing.JFrame{
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        lblPlayerCard3.setPreferredSize(new java.awt.Dimension(120, 170));
-
-        lblPlayerCard2.setPreferredSize(new java.awt.Dimension(120, 170));
-
-        lblPlayerCard1.setMaximumSize(new java.awt.Dimension(150, 200));
-        lblPlayerCard1.setMinimumSize(new java.awt.Dimension(150, 200));
-        lblPlayerCard1.setPreferredSize(new java.awt.Dimension(150, 200));
-
-        javax.swing.GroupLayout laypPlayerCardsLayout = new javax.swing.GroupLayout(laypPlayerCards);
-        laypPlayerCards.setLayout(laypPlayerCardsLayout);
-        laypPlayerCardsLayout.setHorizontalGroup(
-            laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 327, Short.MAX_VALUE)
-            .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(laypPlayerCardsLayout.createSequentialGroup()
-                    .addGap(117, 117, 117)
-                    .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
-                            .addGap(100, 100, 100)
-                            .addComponent(lblPlayerCard6)
-                            .addGap(20, 20, 20)
-                            .addComponent(lblPlayerCard7))
-                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
-                            .addGap(60, 60, 60)
-                            .addComponent(lblPlayerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
-                            .addGap(80, 80, 80)
-                            .addComponent(lblPlayerCard5, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
-                            .addGap(20, 20, 20)
-                            .addComponent(lblPlayerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(lblPlayerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(laypPlayerCardsLayout.createSequentialGroup()
-                            .addGap(40, 40, 40)
-                            .addComponent(lblPlayerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
-        laypPlayerCardsLayout.setVerticalGroup(
-            laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 254, Short.MAX_VALUE)
-            .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(laypPlayerCardsLayout.createSequentialGroup()
-                    .addGap(12, 12, 12)
-                    .addGroup(laypPlayerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(lblPlayerCard6)
-                        .addComponent(lblPlayerCard7)
-                        .addComponent(lblPlayerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblPlayerCard5)
-                        .addComponent(lblPlayerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblPlayerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblPlayerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(72, Short.MAX_VALUE)))
-        );
-        laypPlayerCards.setLayer(lblPlayerCard7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypPlayerCards.setLayer(lblPlayerCard6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypPlayerCards.setLayer(lblPlayerCard5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypPlayerCards.setLayer(lblPlayerCard4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypPlayerCards.setLayer(lblPlayerCard3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypPlayerCards.setLayer(lblPlayerCard2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypPlayerCards.setLayer(lblPlayerCard1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        lblDealerCard3.setPreferredSize(new java.awt.Dimension(120, 170));
-
-        lblDealerCard2.setPreferredSize(new java.awt.Dimension(120, 170));
-
-        lblDealerCard1.setMaximumSize(new java.awt.Dimension(150, 200));
-        lblDealerCard1.setMinimumSize(new java.awt.Dimension(150, 200));
-        lblDealerCard1.setPreferredSize(new java.awt.Dimension(150, 200));
-
-        javax.swing.GroupLayout laypDealerCardsLayout = new javax.swing.GroupLayout(laypDealerCards);
-        laypDealerCards.setLayout(laypDealerCardsLayout);
-        laypDealerCardsLayout.setHorizontalGroup(
-            laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 361, Short.MAX_VALUE)
-            .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(laypDealerCardsLayout.createSequentialGroup()
-                    .addGap(117, 117, 117)
-                    .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
-                            .addGap(100, 100, 100)
-                            .addComponent(lblDealerCard6)
-                            .addGap(20, 20, 20)
-                            .addComponent(lblDealerCard7))
-                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
-                            .addGap(60, 60, 60)
-                            .addComponent(lblDealerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
-                            .addGap(80, 80, 80)
-                            .addComponent(lblDealerCard5, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
-                            .addGap(20, 20, 20)
-                            .addComponent(lblDealerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(lblDealerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(laypDealerCardsLayout.createSequentialGroup()
-                            .addGap(40, 40, 40)
-                            .addComponent(lblDealerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(44, Short.MAX_VALUE)))
-        );
-        laypDealerCardsLayout.setVerticalGroup(
-            laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 254, Short.MAX_VALUE)
-            .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(laypDealerCardsLayout.createSequentialGroup()
-                    .addGap(12, 12, 12)
-                    .addGroup(laypDealerCardsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(lblDealerCard6)
-                        .addComponent(lblDealerCard7)
-                        .addComponent(lblDealerCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblDealerCard5)
-                        .addComponent(lblDealerCard2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblDealerCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblDealerCard3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(72, Short.MAX_VALUE)))
-        );
-        laypDealerCards.setLayer(lblDealerCard7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypDealerCards.setLayer(lblDealerCard6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypDealerCards.setLayer(lblDealerCard5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypDealerCards.setLayer(lblDealerCard4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypDealerCards.setLayer(lblDealerCard3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypDealerCards.setLayer(lblDealerCard2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        laypDealerCards.setLayer(lblDealerCard1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
         javax.swing.GroupLayout mainDesktopPaneLayout = new javax.swing.GroupLayout(mainDesktopPane);
         mainDesktopPane.setLayout(mainDesktopPaneLayout);
         mainDesktopPaneLayout.setHorizontalGroup(
@@ -426,15 +662,9 @@ public class TableFrame extends javax.swing.JFrame{
                 .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(168, Short.MAX_VALUE))
             .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(laypPlayerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(298, 298, 298))
-                    .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(laypDealerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(148, 148, 148)
                 .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainDesktopPaneLayout.createSequentialGroup()
@@ -449,12 +679,10 @@ public class TableFrame extends javax.swing.JFrame{
                     .addGroup(mainDesktopPaneLayout.createSequentialGroup()
                         .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                        .addContainerGap(77, Short.MAX_VALUE)
-                        .addComponent(laypDealerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
-                        .addComponent(laypPlayerCards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainDesktopPaneLayout.createSequentialGroup()
+                        .addGap(0, 220, Short.MAX_VALUE)
+                        .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)))
                 .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -463,11 +691,10 @@ public class TableFrame extends javax.swing.JFrame{
                     .addComponent(pnlMenuInGame, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap()))
         );
+        mainDesktopPane.setLayer(pnlShowWinner, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlScoreBoard, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlMenu, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlMenuInGame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(laypPlayerCards, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(laypDealerCards, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -481,6 +708,7 @@ public class TableFrame extends javax.swing.JFrame{
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
@@ -488,13 +716,7 @@ public class TableFrame extends javax.swing.JFrame{
         int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to stand-up and quit the table?", "Stand-Up", JOptionPane.YES_NO_OPTION);
         if (question == JOptionPane.YES_OPTION) { // if clicked YES
             System.out.println("Bye.");
-            try {
-                view.executeSysExit(true);
-            } catch (IOException ex) {
-                if (Constants.DEBUG){
-                    System.out.println(ex.getMessage());
-                }
-            }
+            view.executeSysExit(false);
         }
     }//GEN-LAST:event_btnQuitActionPerformed
 
@@ -507,17 +729,13 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnQuitMouseEntered
 
     private void btnDealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDealActionPerformed
+        clearGUI();
         pnlMenu.setVisible(false);
-        System.out.println(view.getCurrentPlayer());
         currentGame = view.deal(view.getCurrentPlayer());
         pnlMenuInGame.setVisible(true);
-
-        view.drawCard(lblPlayerCard1, currentGame.getPlayer().getCurrentHand().getCards()[0]);
-        view.drawCard(lblPlayerCard2, currentGame.getPlayer().getCurrentHand().getCards()[1]);
-        
-        //view.drawCard(lblDealerCard1, currentGame.getDealer().getCards()[0]);
-        lblDealerCard1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
-        view.drawCard(lblDealerCard2, currentGame.getDealer().getCards()[1]);
+        animateDeck();
+        dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
+        dealCards(currentGame.getDealer(), false, "Dealer");
     }//GEN-LAST:event_btnDealActionPerformed
 
     private void btnDealMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMouseExited
@@ -542,6 +760,12 @@ public class TableFrame extends javax.swing.JFrame{
 
     private void btnStandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStandActionPerformed
         System.out.println("I'm still standing you just fade away.");
+        if(!view.isBusted(currentGame)){
+           stand();
+           //gameWon(view.whoWon(currentGame));
+           //updateScoreBoard();
+           showWinner();
+        }
     }//GEN-LAST:event_btnStandActionPerformed
 
     private void btnStandMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStandMouseExited
@@ -554,6 +778,13 @@ public class TableFrame extends javax.swing.JFrame{
 
     private void btnHitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitActionPerformed
         System.out.println("Hit me baby, one more time!");
+        currentGame.hit();
+        dealCards(currentGame.getPlayer().getCurrentHand(), true, "Player");
+        if (currentGame.isBusted()){
+            //gameWon(currentGame.whoWon());
+            //updateScoreBoard();
+            showWinner();
+        }
     }//GEN-LAST:event_btnHitActionPerformed
 
     private void btnHitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHitMouseExited
@@ -610,26 +841,17 @@ public class TableFrame extends javax.swing.JFrame{
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnStand;
     private javax.swing.JButton btnSurrender;
-    private javax.swing.JLayeredPane laypDealerCards;
-    private javax.swing.JLayeredPane laypPlayerCards;
-    private javax.swing.JLabel lblDealerCard1;
-    private javax.swing.JLabel lblDealerCard2;
-    private javax.swing.JLabel lblDealerCard3;
-    private javax.swing.JLabel lblDealerCard4;
-    private javax.swing.JLabel lblDealerCard5;
-    private javax.swing.JLabel lblDealerCard6;
-    private javax.swing.JLabel lblDealerCard7;
-    private javax.swing.JLabel lblPlayerCard1;
-    private javax.swing.JLabel lblPlayerCard2;
-    private javax.swing.JLabel lblPlayerCard3;
-    private javax.swing.JLabel lblPlayerCard4;
-    private javax.swing.JLabel lblPlayerCard5;
-    private javax.swing.JLabel lblPlayerCard6;
-    private javax.swing.JLabel lblPlayerCard7;
+    private javax.swing.JLabel lblPlayerBank;
+    private javax.swing.JLabel lblPlayerLoses;
+    private javax.swing.JLabel lblPlayerName;
+    private javax.swing.JLabel lblPlayerResult;
+    private javax.swing.JLabel lblPlayerWins;
     private javax.swing.JLabel lblScoreBoard;
+    private javax.swing.JLabel lblShowWinner;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JPanel pnlMenu;
     private javax.swing.JPanel pnlMenuInGame;
     private javax.swing.JPanel pnlScoreBoard;
+    private javax.swing.JPanel pnlShowWinner;
     // End of variables declaration//GEN-END:variables
 }

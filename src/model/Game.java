@@ -1,11 +1,14 @@
 package model;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import utilities.Constants;
 
 /**
  * Blackjack Game representation class.
  * @author BGS Team
  */
-public class Game implements java.io.Serializable {
+public class Game{
     /**
      * Current Game's Deck of Cards.
      */
@@ -173,8 +176,7 @@ public class Game implements java.io.Serializable {
      * @return true if player hand is more than 21 and false if not
      */
     public boolean isBusted() {
-         if(player.getCurrentHand().playerHandValue()>Constants.BLACKJACK)
-        {
+        if(player.getCurrentHand().playerHandValue()>Constants.BLACKJACK){
            System.out.println("busted");
            System.out.println(player.getName() + ", lose");
            playerLose();
@@ -184,14 +186,12 @@ public class Game implements java.io.Serializable {
     }
     /**
     * calculate Score
+     * @return player's score.
     */
     public int calculateScore() {
-        if(round%2==0)
-        {
+        if (round%2 == 0){
             return player.getCurrentHand().playerHandValue()*3;
-        }
-        else
-        {
+        } else {
             return player.getCurrentHand().playerHandValue()*2;
         }
     } 
@@ -215,14 +215,11 @@ public class Game implements java.io.Serializable {
      * @return true if player win and false if not
      */
     public boolean whoWon() {
-        if(dealer.dealerHandValue() > Constants.BLACKJACK || player.getCurrentHand().playerHandValue()>dealer.dealerHandValue())
-        {
+        if(dealer.dealerHandValue() > Constants.BLACKJACK || player.getCurrentHand().playerHandValue()> dealer.dealerHandValue()){
             playerWin();
             System.out.println(player.getName() + ", win");
             return true;
-        }
-        else
-        {
+        } else {
            playerLose(); 
            System.out.println(player.getName() + ", lose");
            return false;
@@ -230,24 +227,21 @@ public class Game implements java.io.Serializable {
     }
     /**
      * Occurs after clicking on the "Stand" button, check dealer cards
+     * @return The last Card dealt to Dealer
      */
-    public void stand() {
-        
-        while(dealer.dealerHandValue()<=Constants.DEALER_STAND)
-        {
-            if(dealer.dealerHandValue()<Constants.DEALER_STAND || (dealer.dealerHandValue()==Constants.DEALER_STAND && dealer.isSoft()))
-            {
+    public Card stand() {        
+        //while(dealer.dealerHandValue() <= Constants.DEALER_STAND){
+            //if(dealer.dealerHandValue() < Constants.DEALER_STAND || (dealer.dealerHandValue() == Constants.DEALER_STAND && dealer.isSoft())){
                 Card card = deck.dealNextCard();
-                dealer.getCards()[dealer.getNextIndex()] = card;
+                /*dealer.getCards()[dealer.getNextIndex()] = card;
+                //notify view about dealer's new card
                 dealer.setNextIndex(dealer.getNextIndex() + 1);
-                System.out.println("Dealer next card is:");
-                System.out.println(card);
-            }
-            else
-            {
+                System.out.println("Dealer next card is: " + card);
+            /*} else {
                 return;
             }
-        }  
+        }  */
+                return card;
     }
 
     /**

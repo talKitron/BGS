@@ -100,8 +100,7 @@ public class Card implements java.io.Serializable {
         }
         if (value > 1 && value < 11){
             return value + " of " + suit.name();
-        }
-        else{
+        } else{
             return str + " of " + suit.name();
         }
     }

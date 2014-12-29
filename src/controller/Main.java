@@ -1,13 +1,6 @@
 
 package controller;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import utilities.*;
-import exceptions.*;
-import model.Game;
-import model.Player;
-
 
 /**
  * Main class to run the BGS system.
@@ -25,7 +18,7 @@ public class Main  implements java.io.Serializable{
         /**
         * Backend tests Block
         */
-        
+        /*
         Player player = new Player("elad", "123");
         Game game = controller.deal(player); 
         System.out.println("player value: " + player.getCurrentHand().playerHandValue());
@@ -35,7 +28,6 @@ public class Main  implements java.io.Serializable{
             controller.hit(game);
             System.out.println("player value: " + player.getCurrentHand().playerHandValue());
         }
-        
         if(!controller.isBusted(game))
         {
            controller.stand(game);
@@ -52,7 +44,9 @@ public class Main  implements java.io.Serializable{
         if (errorCode1 != 0) try {
             throw new exceptions.CardDeckTestException("Error code "+errorCode1);
         } catch (CardDeckTestException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            if (Constants.DEBUG){
+                System.out.print(ex.getMessage());
+            }
         }
             
         int errorCode2 = test.SimpleUIVisabilityTest();     //run SimpleUIVisabilityTest

@@ -32,6 +32,7 @@ public class Deck implements java.io.Serializable {
         for(int i = 1; i < 5; i++){ //for the value
             for(int j = 1; j < 14; j++){
                 Suit suit = null;
+                
                 switch(i){
                     case 1:
                         suit = Suit.Clubs;
