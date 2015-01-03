@@ -2,7 +2,6 @@ package model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import utilities.Constants;
 
 /**
  * The class represents a Player in the system.
@@ -25,6 +24,10 @@ public class Player implements java.io.Serializable {
      * the cards that the player currently holds in is hand
      */
     private Hand currentHand;
+    /**
+     * the Player\'s image path
+     */
+    private String imagePath;
     
     /**
      * Constructor of Player.
@@ -36,6 +39,7 @@ public class Player implements java.io.Serializable {
         this.password = password;
         this.loginDate = new Date();
         currentHand = new Hand();
+        imagePath = "";
     }
     /**
      * sets Player's password.
@@ -59,6 +63,14 @@ public class Player implements java.io.Serializable {
      */
     public void setCurrentHand(Hand currentHand) {
         this.currentHand = currentHand;
+    }
+    
+    /**
+     * sets Player image\'s path.
+     * @param newImagePath 
+     */
+    public void setImagePath(String newImagePath) {
+        this.imagePath = newImagePath;
     }
     
      /**
@@ -90,6 +102,13 @@ public class Player implements java.io.Serializable {
     }
     
     /**
+     * @return Player image\'s path.
+     */
+    public String getImagePath() {
+        return imagePath;
+    }
+    
+    /**
      * The method compares given object to this Airline (key fields).
      * @return true/false if equal.
      */
@@ -116,6 +135,6 @@ public class Player implements java.io.Serializable {
     */
    @Override
    public String toString(){
-       return ("Player: " + name + " Last seen: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(loginDate));
+       return ("Player: " + name + " Last seen: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(loginDate) + ".");
    }
 }

@@ -71,12 +71,8 @@ public final class Model implements I_Model, java.io.Serializable {
                 return 1; // login successfull
             }
             else return 2; // password incorrect!
-        } else
-          {
-              currentPlayer = addPlayer(name, pass);
-                if (currentPlayer != null){
-                return 1; // new player created
-           }
+        } else if (addPlayer(name, pass) != null){
+            return 1; // new player created
         }
         return 0; 
     }
@@ -100,9 +96,9 @@ public final class Model implements I_Model, java.io.Serializable {
     }
     
     /** 
-    * The method adds player to system.
+    * The method creates a new Game in the system.
     * @param player
-    * @return true if add successful
+    * @return newly created Game
     */
     @Override
     public Game addGame(Player player) {
@@ -117,16 +113,15 @@ public final class Model implements I_Model, java.io.Serializable {
     }
     
     /**
-     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
+     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer.
      * @param game
      */
     @Override
     public void deal(Game game) {
         game.deal();
-
     }
     /**
-     * Occurs after clicking on the "Hit" button, deals one card for player
+     * Occurs after clicking on the "Hit" button, deals one card for player.
      * @param game
      */
     @Override
@@ -142,7 +137,7 @@ public final class Model implements I_Model, java.io.Serializable {
         return game.isBusted();
     }
     /**
-     * Occurs after clicking on the "Stand" button, check dealer cards
+     * Occurs after clicking on the "Stand" button, check dealer cards.
      * @param game
      * @return Dealer latest dealt card
      */
@@ -152,14 +147,14 @@ public final class Model implements I_Model, java.io.Serializable {
     }
      /**
      * @param game
-     * @return true if player win and false if not
+     * @return true if player win and false if not.
      */
     @Override
     public boolean whoWon(Game game) {
         return game.whoWon();
     }
     /**
-     * @return currentPlayer
+     * @return currentPlayer.
      */
     @Override
     public Player getCurrentPlayer() {
@@ -167,10 +162,79 @@ public final class Model implements I_Model, java.io.Serializable {
     }
     
     /**
-     * @return a random fact about Blackjack
+     * @return a random fact about Blackjack.
      */
     @Override
     public String getFact(){
         return db.getFacts()[(int)(Math.random() * 20)];
+    }
+    
+    /**
+     * @return BGS rules.
+     */
+    @Override
+    public String[] getRules(){
+        return db.getRules();
+    }
+    
+    /**
+     * The method bills the Player for fun.
+     * @param game
+     * @param drinkName
+     */
+    public void orderDrink(Game game, String drinkName){
+        switch(drinkName){
+            case "Whiskey": game.setScore(game.getScore() - 8);
+                break;
+            default: break;
+        }
+    }
+    
+    /**
+     * @return game with highest score.
+     */
+    @Override
+    public Game getHighScoreGame () {      
+        Game highGame = null;
+        int highScore = 0;
+        for (Game g : db.getGames()) {
+            if (g.getScore() > highScore) {
+                highGame = g;
+                highScore = g.getScore();
+            }
+        }
+        return highGame;
+    }
+    
+    /**
+     * @return game with most rounds won.
+     */
+    @Override
+    public Game getHighWinsGame () {      
+        Game highGame = null;
+        int highWins = 0;
+        for(Game g : db.getGames()) {
+            if (g.getWins() > highWins) {
+                highGame = g;
+                highWins = g.getWins();
+            }
+        }
+        return highGame;
+    }
+    
+    /**
+     * @return game with most rounds lost.
+     */
+    @Override
+    public Game getHighLosesGame () {      
+        Game highGame = null;
+        int highLoses = 0;
+        for(Game g : db.getGames()) {
+            if (g.getLoses() > highLoses) {
+                highGame = g;
+                highLoses = g.getLoses();
+            }
+        }
+        return highGame;
     }
 }

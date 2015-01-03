@@ -36,8 +36,8 @@ public final class Controller{
     //***************************************** Methods ***********************************************
 
     /**
-     * The method creates this class's instance & provides access to it, by returning a reference (singleton).
-     * @return reference to this class's only instance, or null if reference was already returned (singleton).
+     * The method creates this class\'s instance & provides access to it, by returning a reference (singleton).
+     * @return reference to this class\'s only instance, or null if reference was already returned (singleton).
      */
     public static Controller getInstance(){       
             if (!exists) {
@@ -74,16 +74,16 @@ public final class Controller{
     }
     
     /** 
-    * The method adds player to system.
+    * The method creates a new Game in the system.
     * @param player
-    * @return true if add successful
+    * @return newly created Game
     */
     public Game addGame(Player player) {
         return model.addGame(player);
     }
     
     /**
-     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
+     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer.
      * @param game
      */
     public void deal(Game game) {
@@ -135,6 +135,41 @@ public final class Controller{
      */
     public String getFact(){
         return model.getFact();
+    }
+    
+    /**
+     * @return BGS rules.
+     */
+    public String[] getRules(){
+        return model.getRules();
+    }
+    
+    /**
+     * The method bills the Player for fun.
+     * @param game
+     * @param drinkName
+     */
+    public void orderDrink(Game game, String drinkName){
+        model.orderDrink(game, drinkName);
+    }
+    
+    /**
+     * @return game with high score
+     */
+    public Game getHighScoreGame () {      
+        return model.getHighScoreGame();
+    }
+    /**
+     * @return game with high win
+     */
+    public Game getHighWinsGame () {      
+        return model.getHighWinsGame();
+    }
+    /**
+     * @return game with high lose
+     */
+    public Game getHighLosesGame () {      
+        return model.getHighLosesGame();
     }
     
      /**

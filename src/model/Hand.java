@@ -6,7 +6,7 @@ package model;
  */
 public class Hand implements java.io.Serializable {
     /**
-     * Hand's current Cards.
+     * Hand\'s current Cards.
      */
     private Card[] cards;
     /**
@@ -62,9 +62,7 @@ public class Hand implements java.io.Serializable {
      * remove all cards from hand.
      */
     public void resetHand() {
-        
-        for(int i = 0 ; cards[i]!=null ; i++)
-        {
+        for (int i = 0; cards[i]!=null; i++){
             cards[i] = null;
             nextIndex = 0;
         }
@@ -78,39 +76,27 @@ public class Hand implements java.io.Serializable {
         int value = 0;// hand value
         soft = false;
         
-        for(int i = 0; cards[i]!=null ; i++)//run on hand's card
-        {
-            if(cards[i].getValue()==1)//if card is Ace
-            {
+        for(int i = 0; cards[i]!=null ; i++){//run on hand's card
+            if(cards[i].getValue()==1){//if card is Ace
                numOfAce++; 
-            }
-            else
-            {
-                if(cards[i].getValue()>=11)//if card is jack, queen or king
-                {
+            } else {
+                if(cards[i].getValue()>=11){//if card is jack, queen or king
                     value += 10;
-                }
-                else
-                {
+                } else {
                     value += cards[i].getValue();//if card is beetween 2-10
                 }
             }
         }
         
-        for(int i = 0; i<numOfAce ; i++)//calculates the value of aces
-        {
-            if(value+11 > 21)//if value + 11 is over 21 add 1 else add 11
-            {
+        for (int i = 0; i<numOfAce ; i++){//calculates the value of aces
+            if (value+11 > 21){//if value + 11 is over 21 add 1 else add 11
                value+=1; 
-               
-            }
-            else
-            {
+            } else {
                 value+=11;
                 soft = true;
             }
         }
-        
+
         return value;
     }
     
@@ -118,37 +104,26 @@ public class Hand implements java.io.Serializable {
      * @return the player Hand value.
      */
     public int playerHandValue() {
-        
+
         int numOfAce = 0;//number of aces in hand
         int value = 0;// hand value
         
-        for(int i = 0; cards[i]!=null ; i++)//run on hand's card
-        {
-            if(cards[i].getValue()==1)//if card is Ace
-            {
+        for(int i = 0; cards[i]!=null ; i++){//run on hand's card
+            if(cards[i].getValue()==1){//if card is Ace
                numOfAce++; 
-            }
-            else
-            {
-                if(cards[i].getValue()>=11)//if card is jack, queen or king
-                {
+            } else {
+                if(cards[i].getValue()>=11){//if card is jack, queen or king
                     value += 10;
-                }
-                else
-                {
+                } else {
                     value += cards[i].getValue();//if card is beetween 2-10
                 }
             }
         }
         
-        for(int i = 0; i<numOfAce ; i++)//calculates the value of aces
-        {
-            if(i==0)//the first ace is 11, the others is 1
-            {
+        for(int i = 0; i<numOfAce ; i++){//calculates the value of aces
+            if(i==0){//the first ace is 11, the others is 1
                 value+=11;
-            }
-            else
-            {
+            } else {
                value+=1; 
             }
         }
@@ -162,6 +137,5 @@ public class Hand implements java.io.Serializable {
     public void setCards_debug(Card[] cards) {
         this.cards = cards;
     }
-    
     
 }

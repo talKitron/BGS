@@ -6,11 +6,11 @@ package model;
  */
 public class Card implements java.io.Serializable {
     /**
-     * Card's number (Also, Ace-1, Jack-11, Queen-12 and King-13).
+     * Card\'s number (Also, Ace-1, Jack-11, Queen-12 and King-13).
      */
     private final int value;
     /**
-     * Card's suit.
+     * Card\'s suit.
      */
     private final Suit suit;//
     
@@ -100,7 +100,7 @@ public class Card implements java.io.Serializable {
         }
         if (value > 1 && value < 11){
             return value + " of " + suit.name();
-        } else{
+        } else {
             return str + " of " + suit.name();
         }
     }

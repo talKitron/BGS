@@ -2,13 +2,13 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
-//import javafx.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -42,42 +42,34 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame(View view) {
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");        
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                    if (Constants.DEBUG){
-                        System.out.println(e.getMessage());
-                    }
-            try {
-                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                if (Constants.DEBUG){
-                    System.out.println(ex.getMessage());
-                }
+            if (Constants.DEBUG){
+                System.out.println(e.getMessage());
             }
         }
         getContentPane().setBackground( new Color(182,184,192) );
         MainFrame.view = view;
         initComponents();
-        
+        view.setFrameIcon(this);
         btnSubmit.setContentAreaFilled(false);
         btnSitDown.setVisible(false);
         pnlFacts.setVisible(false);
+        pnlHighscore.setVisible(false);
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
         addWindowListener(new MyWindowListener());
         pnlLogin.setOpaque(false);
+        btnInfo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnSitDown.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
         ActionListener actionListener = new ActionListener() {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                if(e.getSource() == btnSubmit){
+                if (e.getSource() == btnSubmit){
                     btnSubmitActionPerformed(e);
                 } else if (e.getSource() == btnSitDown) {
                     btnSitDownActionPerformed(e);
@@ -89,7 +81,6 @@ public class MainFrame extends javax.swing.JFrame {
         btnSitDown.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false);
         btnSitDown.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-    
     }
 
     public class MyWindowListener extends WindowAdapter {
@@ -109,6 +100,28 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
+    protected void sitDownLayout() {
+        ImageIcon newBackground = new ImageIcon(getClass().getResource("/resources/bgStandUp.png")); //change
+        pnlBackground.setIcon(newBackground);                                                        //background
+        pnlLogin.setVisible(false);
+        btnSitDown.setVisible(true);
+        lblPlayerImage.setIcon(new ImageIcon(getClass().getResource(view.getCurrentPlayer().getImagePath())));
+        pnlScoreBoard.setVisible(true);
+        lblFactsText.setText("<html>" + view.getFact() + "</html>");
+        lblPlayerName.setText("<html>" + txtfName.getText() + "</html>");
+        pnlFacts.setVisible(true);
+        pnlHighscore.setVisible(true);
+        try{
+            lblHighscoresText.setText("<html>Most rounds won: " + view.getHighWinsGame().getWins() + 
+                "<br>Most rounds lost: " + view.getHighLosesGame().getLoses() + 
+                "<br>Highest score: " + view.getHighScoreGame().getScore() + "</html>");
+        } catch (NullPointerException e){
+            lblHighscoresText.setText("empty");
+        }
+        btnSitDown.requestFocusInWindow();
+        view.getCurrentPlayer();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -118,6 +131,10 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlHighscore = new javax.swing.JPanel();
+        lblHighscoresTitle = new javax.swing.JLabel();
+        lblHighscoresText = new javax.swing.JLabel();
+        lblBgHighscores = new javax.swing.JLabel();
         pnlFacts = new javax.swing.JPanel();
         lblFactsTitle = new javax.swing.JLabel();
         lblFactsText = new javax.swing.JLabel();
@@ -132,26 +149,65 @@ public class MainFrame extends javax.swing.JFrame {
         lblError = new javax.swing.JLabel("<html>** You may login your last used name or just register a new one.</html>");
         btnSitDown = new javax.swing.JButton();
         pnlScoreBoard = new javax.swing.JPanel();
+        btnInfo = new javax.swing.JButton();
         lblPlayerWins = new javax.swing.JLabel();
         lblPlayerLoses = new javax.swing.JLabel();
         lblPlayerBank = new javax.swing.JLabel();
-        lblScoreBoard = new javax.swing.JLabel();
         lblPlayerName = new javax.swing.JLabel();
+        lblPlayerImage = new javax.swing.JLabel();
+        lblScoreBoard = new javax.swing.JLabel();
         pnlBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setMinimumSize(new java.awt.Dimension(1280, 720));
-        getContentPane().setLayout(null);
+
+        pnlHighscore.setOpaque(false);
+
+        lblHighscoresTitle.setBackground(new java.awt.Color(255, 255, 255));
+        lblHighscoresTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblHighscoresTitle.setForeground(new java.awt.Color(255, 255, 255));
+        lblHighscoresTitle.setText("Highscores:");
+
+        lblHighscoresText.setBackground(new java.awt.Color(255, 255, 255));
+        lblHighscoresText.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        lblHighscoresText.setForeground(new java.awt.Color(255, 255, 255));
+        lblHighscoresText.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+
+        lblBgHighscores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/bgFacts.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlHighscoreLayout = new javax.swing.GroupLayout(pnlHighscore);
+        pnlHighscore.setLayout(pnlHighscoreLayout);
+        pnlHighscoreLayout.setHorizontalGroup(
+            pnlHighscoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblBgHighscores)
+            .addGroup(pnlHighscoreLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(pnlHighscoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblHighscoresText, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblHighscoresTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        pnlHighscoreLayout.setVerticalGroup(
+            pnlHighscoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlHighscoreLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(lblHighscoresText, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblBgHighscores, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(pnlHighscoreLayout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addComponent(lblHighscoresTitle))
+        );
 
         pnlFacts.setOpaque(false);
 
+        lblFactsTitle.setBackground(new java.awt.Color(255, 255, 255));
         lblFactsTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        lblFactsTitle.setForeground(new java.awt.Color(204, 204, 204));
+        lblFactsTitle.setForeground(new java.awt.Color(255, 255, 255));
         lblFactsTitle.setText("Did you know?");
 
+        lblFactsText.setBackground(new java.awt.Color(255, 255, 255));
         lblFactsText.setFont(new java.awt.Font("Tahoma", 2, 13)); // NOI18N
-        lblFactsText.setForeground(new java.awt.Color(204, 204, 204));
+        lblFactsText.setForeground(new java.awt.Color(255, 255, 255));
         lblFactsText.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 
         lblBgFacts.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/bgFacts.png"))); // NOI18N
@@ -160,29 +216,22 @@ public class MainFrame extends javax.swing.JFrame {
         pnlFacts.setLayout(pnlFactsLayout);
         pnlFactsLayout.setHorizontalGroup(
             pnlFactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblBgFacts)
             .addGroup(pnlFactsLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(pnlFactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblFactsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFactsText, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlFactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblBgFacts, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblFactsText, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         pnlFactsLayout.setVerticalGroup(
             pnlFactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFactsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblFactsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblFactsText, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlFactsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblBgFacts, javax.swing.GroupLayout.PREFERRED_SIZE, 108, Short.MAX_VALUE))
+                .addGap(11, 11, 11)
+                .addComponent(lblFactsTitle)
+                .addGap(6, 6, 6)
+                .addComponent(lblFactsText, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblBgFacts, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-
-        getContentPane().add(pnlFacts);
-        pnlFacts.setBounds(30, 40, 390, 100);
 
         pnlLogin.setOpaque(false);
 
@@ -212,6 +261,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Submit.png"))); // NOI18N
+        btnSubmit.setBorderPainted(false);
         btnSubmit.setContentAreaFilled(false);
         btnSubmit.setMaximumSize(new java.awt.Dimension(154, 39));
         btnSubmit.setMinimumSize(new java.awt.Dimension(154, 39));
@@ -246,22 +296,17 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(pnlLoginLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblLogin)
                     .addGroup(pnlLoginLayout.createSequentialGroup()
-                        .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                        .addContainerGap())
+                        .addComponent(lblName)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlLoginLayout.createSequentialGroup()
-                        .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblLogin)
-                            .addGroup(pnlLoginLayout.createSequentialGroup()
-                                .addComponent(lblName)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlLoginLayout.createSequentialGroup()
-                                .addComponent(lblPassword)
-                                .addGap(32, 32, 32)
-                                .addComponent(txtfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18))))
+                        .addComponent(lblPassword)
+                        .addGap(32, 32, 32)
+                        .addComponent(txtfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         pnlLoginLayout.setVerticalGroup(
             pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,15 +327,12 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(txtfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
                 .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(6, 6, 6)
+                .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        getContentPane().add(pnlLogin);
-        pnlLogin.setBounds(10, 440, 200, 230);
-
         btnSitDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_SitDown.png"))); // NOI18N
+        btnSitDown.setBorderPainted(false);
         btnSitDown.setContentAreaFilled(false);
         btnSitDown.setMaximumSize(new java.awt.Dimension(154, 39));
         btnSitDown.setMinimumSize(new java.awt.Dimension(154, 39));
@@ -314,11 +356,19 @@ public class MainFrame extends javax.swing.JFrame {
                 btnSitDownActionPerformed(evt);
             }
         });
-        getContentPane().add(btnSitDown);
-        btnSitDown.setBounds(560, 600, 154, 39);
 
         pnlScoreBoard.setOpaque(false);
         pnlScoreBoard.setVisible(false);
+
+        btnInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/btnInfo.png"))); // NOI18N
+        btnInfo.setBorderPainted(false);
+        btnInfo.setContentAreaFilled(false);
+        btnInfo.setOpaque(false);
+        btnInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInfoActionPerformed(evt);
+            }
+        });
 
         lblPlayerWins.setFont(new java.awt.Font("GadMFW", 1, 15)); // NOI18N
         lblPlayerWins.setForeground(new java.awt.Color(255, 255, 255));
@@ -332,13 +382,13 @@ public class MainFrame extends javax.swing.JFrame {
         lblPlayerBank.setForeground(new java.awt.Color(255, 255, 255));
         lblPlayerBank.setText("" + Constants.STARTING_AMOUNT);
 
-        lblScoreBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ScoreBoard.png"))); // NOI18N
-
         lblPlayerName.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblPlayerName.setForeground(new java.awt.Color(255, 255, 255));
         lblPlayerName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPlayerName.setText("Player");
         lblPlayerName.setToolTipText("");
+
+        lblScoreBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ScoreBoard.png"))); // NOI18N
 
         javax.swing.GroupLayout pnlScoreBoardLayout = new javax.swing.GroupLayout(pnlScoreBoard);
         pnlScoreBoard.setLayout(pnlScoreBoardLayout);
@@ -355,7 +405,12 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(lblPlayerLoses, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(100, 100, 100)
-                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(btnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(lblPlayerImage, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(lblScoreBoard)
         );
         pnlScoreBoardLayout.setVerticalGroup(
@@ -368,18 +423,58 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lblPlayerLoses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17)
-                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(lblPlayerImage, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addComponent(lblScoreBoard))
         );
 
-        getContentPane().add(pnlScoreBoard);
-        pnlScoreBoard.setBounds(1060, 0, 220, 410);
-
         pnlBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/login.png"))); // NOI18N
-        getContentPane().add(pnlBackground);
-        pnlBackground.setBounds(0, 0, 1280, 720);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(pnlHighscore, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(pnlLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(pnlFacts, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(1060, 1060, 1060)
+                .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(560, 560, 560)
+                .addComponent(btnSitDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(pnlBackground)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(152, 152, 152)
+                .addComponent(pnlHighscore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(168, 168, 168)
+                .addComponent(pnlLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(pnlFacts, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(600, 600, 600)
+                .addComponent(btnSitDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(pnlBackground)
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -394,15 +489,13 @@ public class MainFrame extends javax.swing.JFrame {
                 lblError.setText("General error.");
                 break;
             case 1: //login succeeded
-                ImageIcon newIcon = new ImageIcon(getClass().getResource("/resources/bgStandUp.png")); //change
-                pnlBackground.setIcon(newIcon);                                                        //background
-                pnlLogin.setVisible(false);
-                btnSitDown.setVisible(true);
-                pnlScoreBoard.setVisible(true);
-                lblFactsText.setText("<html>" + view.getFact() + "</html>");
-                lblPlayerName.setText("<html>" + txtfName.getText() + "</html>");
-                pnlFacts.setVisible(true);
-                view.getCurrentPlayer();
+                if (view.getCurrentPlayer().getImagePath().isEmpty()){ //Player doesn't have a Player image yet (Creation)
+                    PlayerImageFrame playerImagePicker = new PlayerImageFrame(view, this);
+                    //playerImagePicker.setUndecorated(true);
+                    playerImagePicker.setVisible(true);
+                } else { //player already have a Player image
+                    sitDownLayout();
+                }
                 break;
             case 2: //user already exist & password is incorrect for login
                 lblError.setText("Incorrect password.");
@@ -414,7 +507,7 @@ public class MainFrame extends javax.swing.JFrame {
                 break;
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
-
+    
     private void txtfNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtfNameKeyPressed
         if (firstTimeNameType){
            txtfName.setText("");
@@ -433,7 +526,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnSitDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSitDownActionPerformed
         Game game = view.addGame(view.getCurrentPlayer());
-        TableFrame tableFrame = new TableFrame(view, game);      
+        TableFrame tableFrame = new TableFrame(view, game);
         tableFrame.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_btnSitDownActionPerformed
@@ -470,23 +563,34 @@ public class MainFrame extends javax.swing.JFrame {
         btnSitDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_SitDown.png")));
     }//GEN-LAST:event_btnSitDownMouseReleased
 
+    private void btnInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfoActionPerformed
+        InfoFrame frmRules = new InfoFrame(view);
+        frmRules.setVisible(true);
+    }//GEN-LAST:event_btnInfoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnInfo;
     private javax.swing.JButton btnSitDown;
     private javax.swing.JButton btnSubmit;
     private javax.swing.JLabel lblBgFacts;
+    private javax.swing.JLabel lblBgHighscores;
     private javax.swing.JLabel lblError;
     private javax.swing.JLabel lblFactsText;
     private javax.swing.JLabel lblFactsTitle;
+    private javax.swing.JLabel lblHighscoresText;
+    private javax.swing.JLabel lblHighscoresTitle;
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblPlayerBank;
+    private javax.swing.JLabel lblPlayerImage;
     private javax.swing.JLabel lblPlayerLoses;
     private javax.swing.JLabel lblPlayerName;
     private javax.swing.JLabel lblPlayerWins;
     private javax.swing.JLabel lblScoreBoard;
     private javax.swing.JLabel pnlBackground;
     private javax.swing.JPanel pnlFacts;
+    private javax.swing.JPanel pnlHighscore;
     private javax.swing.JPanel pnlLogin;
     private javax.swing.JPanel pnlScoreBoard;
     private javax.swing.JTextField txtfName;

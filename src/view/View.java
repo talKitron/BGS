@@ -4,11 +4,16 @@ package view;
 //*************************************************** Imports *****************************************************//
 
 import controller.Controller;
+import java.awt.Image;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import model.Card;
 import model.Game;
 import model.Player;
@@ -50,9 +55,9 @@ public final class View{
 //*************************************************** Methods *************************************************
 
     /**
-     * The method creates this class's instance & provides access to it, by returning a reference (singleton).
+     * The method creates this class\'s instance & provides access to it, by returning a reference (singleton).
      * @param ins
-     * @return reference to this class's only instance, or null if reference was already returned (singleton).
+     * @return reference to this class\'s only instance, or null if reference was already returned (singleton).
      */
     public static View getInstance(Controller ins) {
         if (!exist) {
@@ -70,17 +75,36 @@ public final class View{
      */
     public void executeLoginView() {
         mainFrame = new MainFrame(instance);      // create new login frame
+        try {
+            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");        
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            if (Constants.DEBUG){
+                System.out.println(e.getMessage());
+            }
+        }
     }
      
-     /**
-     * the method gets address of sound file and return the sound for play.
-     * @param soundAddress
-     * @return 
-     */
+    /**
+    * the method gets address of sound file and return the sound for play.
+    * @param soundAddress
+    * @return 
+    */
     public SoundClass sound(String soundAddress) {          ///////// sound method
         SoundClass sound = new SoundClass(soundAddress);
         return sound;
     }
+    
+    protected void setFrameIcon(JFrame frm){
+        try {
+            Image i = ImageIO.read(getClass().getResource(Constants.BGS_ICON_PATH));
+            frm.setIconImage(i);
+        } catch (IOException ex) {
+            if (Constants.DEBUG){
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+    
     /**
      * the methods clear all fields that she get
      * using ellipsis
@@ -102,6 +126,7 @@ public final class View{
     protected int loginProcess(String name, String password){
         return controller.loginProcess(name, password);
     }
+    
     /** 
      * The method adds player to system.
      * @param name
@@ -113,15 +138,16 @@ public final class View{
     }
     
     /** 
-    * The method adds player to system.
+    * The method creates a new Game in the system.
     * @param player
-    * @return true if add successful
+    * @return newly created game
     */
     public Game addGame(Player player) {
         return controller.addGame(player);
     }
+    
    /**
-     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer
+     * Occurs after clicking on the "Deal" button, deals two cards for player and dealer.
      * @param game
      */
     protected void deal(Game game) {
@@ -184,6 +210,41 @@ public final class View{
      */
     public String getFact(){
         return controller.getFact();
+    }
+    
+    /**
+     * @return BGS rules.
+     */
+    public String[] getRules(){
+        return controller.getRules();
+    }
+    
+    /**
+     * The method bills the Player for fun.
+     * @param game
+     * @param drinkName
+     */
+    public void orderDrink(Game game, String drinkName){
+        controller.orderDrink(game, drinkName);
+    }
+    
+    /**
+     * @return game with high score
+     */
+    public Game getHighScoreGame () {      
+        return controller.getHighScoreGame();
+    }
+    /**
+     * @return game with high win
+     */
+    public Game getHighWinsGame () {      
+        return controller.getHighWinsGame();
+    }
+    /**
+     * @return game with high lose
+     */
+    public Game getHighLosesGame () {      
+        return controller.getHighLosesGame();
     }
     
      /**

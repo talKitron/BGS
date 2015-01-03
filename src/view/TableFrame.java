@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
@@ -12,7 +13,6 @@ import model.Card;
 import model.Game;
 import model.Hand;
 import utilities.Constants;
-import AppPackage.AnimationClass;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -20,6 +20,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import utilities.SwingAnimation;
 
 /**
  * TableFrame frame for the game.
@@ -38,7 +41,7 @@ public class TableFrame extends javax.swing.JFrame{
     /**Current Deck of Cards JLabels*/
     private static ArrayList<JLabel> deckOfCards;
     /**Animation manager object*/
-    public static AnimationClass ac;
+    public static SwingAnimation sa;
     
     /**
      * Creates new form TableFrame
@@ -47,17 +50,34 @@ public class TableFrame extends javax.swing.JFrame{
      */
     public TableFrame(View view, Game game) {
         this.view = view;
-        TableFrame.currentGame = game;
+        currentGame = game;
         dealerHand = new ArrayList<>();
         playerHand = new ArrayList<>();
         deckOfCards = new ArrayList<>();
-        ac = new AnimationClass();
+        sa = new SwingAnimation();
         initComponents();
+        try {
+            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");        
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            if (Constants.DEBUG){
+                System.out.println(e.getMessage());
+            }
+        }
         setLocationRelativeTo(null);
+        addWindowListener(new MyWindowListener());
         pnlMenuInGame.setVisible(false);
         pnlMenu.setOpaque(false);
         pnlShowWinner.setVisible(false);
+        lblShuffling.setVisible(false);
         updateScoreBoard();
+        view.setFrameIcon(this);
+        btnDeal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnHit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnInfo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnQuit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnStand.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnSurrender.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblWhiskey.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
         ActionListener actionListener = new ActionListener() {
             @Override
@@ -111,20 +131,21 @@ public class TableFrame extends javax.swing.JFrame{
     private void clearGUI(){
         pnlShowWinner.setVisible(false);
         for(JLabel l : playerHand){
-            l.setVisible(false);
+            mainDesktopPane.remove(l);
             l = null;
         }
         playerHand = new ArrayList<>();
         for(JLabel l : dealerHand){
-            l.setVisible(false);
+            mainDesktopPane.remove(l);
             l = null;
         }
         dealerHand = new ArrayList<>();
         for(JLabel l : deckOfCards){
-            l.setVisible(false);
+            mainDesktopPane.remove(l);
             l = null;
         }
         deckOfCards = new ArrayList<>();
+        System.gc();
     }
     
     /**
@@ -132,21 +153,48 @@ public class TableFrame extends javax.swing.JFrame{
      */
     private void animateDeck(){
         clearGUI(); //clear earlier events of in-game animation
-        JLabel label;
-        int i = 0, x = 0;
         
-        for (Card c : currentGame.getDeck().getCardDeck()){
-            if (i%5==0){
-                label = new JLabel(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
-                label.setBounds(Constants.DeckX+x, -200, 117, 170);
-                deckOfCards.add(label);
-                mainDesktopPane.add(label, -1);
-                ac.jLabelYDown(-200, Constants.DeckY+x-2, 1, 2, label);
-                x+=4;
+        final int[][] xy = new int[30][3];
+        
+        for (int k = 0; k < 11; k++){
+            if (k == 0){
+                xy[k][0] = Constants.DeckX;
+                xy[k][1] = Constants.DeckY;
+                xy[k][2] = xy[k][0]-100;
+            } else {
+                xy[k][0] = xy[k-1][0] + 2;
+                xy[k][1] = xy[k-1][1] + 2;
+                if (k%2==0){
+                    xy[k][2] = xy[k][0]+100;
+                } else {
+                    xy[k][2] = xy[k][0]-100;
+                }
             }
-            i+=1;
         }
-        //animateShuffle();
+        
+        new java.util.Timer().schedule( 
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        int i = 0, y = 0;
+                        JLabel label;
+
+                        for (Card c : currentGame.getDeck().getCardDeck()){
+                            if (i%5==0){
+                                label = new JLabel(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+                                label.setBounds(xy[y][0], -200, 117, 170);
+                                deckOfCards.add(label);
+                                mainDesktopPane.add(label, -1);
+                                sa.jLabelYDown(-200, xy[y][1], 1, 1, label);
+                                //y+=4;
+                                y++;
+                            }
+                            i+=1;
+                        }
+                    }
+                }, 
+                2500
+        );
     }
     
     /**
@@ -154,38 +202,55 @@ public class TableFrame extends javax.swing.JFrame{
      * NOTICE: NOT YET FUNCTION
      */
     private void animateShuffle(){
-        final int[] x = new int[deckOfCards.size()];
+        //final int[] x = new int[deckOfCards.size()];
+        //System.out.println("animateDivide");
+        //animateDivide(deckXY);
+        lblShuffling.setVisible(true);
         
-        animateDivide(x);
-        System.out.println("Spreading complete, now gathering...");
-        animateJoin(x);
+        new java.util.Timer().schedule( 
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        lblShuffling.setVisible(false);
+                    }
+                }, 
+                2500 
+        );
+        //animateJoin(x);
     }
     
     /**
      * NOTICE: NOT YET FUNCTIONAL
      * @param x 
      */
-    private void animateDivide(int[] x){
-        AnimationClass ac1 = new AnimationClass();
+    private void animateDivide(int[][] deckXY){
         int i = 0;
 
-        for(JLabel l : deckOfCards){
+        for (JLabel l : deckOfCards){
+            if (i%2==0){
+                sa.jLabelXLeft(deckXY[i][0], deckXY[i][2], 1, 1, l);
+            } else {
+                sa.jLabelXRight(deckXY[i][0], deckXY[i][2], 1, 1, l);
+            }
+            i++;
+        }
+        /*for(JLabel l : deckOfCards){
             x[i] = l.getLocation().x;
             if (i%2==0){ //is going left
-                ac1.jLabelXLeft(l.getLocation().x, l.getLocation().x-100, 1, 1, l);
+                ac1.jLabelXLeft(l.getLocation().x, l.getLocation().x-100, 5, 5, l);
                 System.out.println("currently at x: " + l.getLocation() + " ia going left to x: " + (l.getLocation().x-100));
             } else { //is going right
-                ac1.jLabelXRight(l.getLocation().x, l.getLocation().x+100, 1, 1, l);
+                ac1.jLabelXRight(l.getLocation().x, l.getLocation().x+100, 5, 5, l);
                 System.out.println("currently at x: " + l.getLocation() + " is going right to x: " + (l.getLocation().x+100));
             }
-            ac1.jLabelYDown(-100, Constants.DeckY, 1, 1, l);
+            ac1.jLabelYDown(-100, Constants.DeckY, 5, 5, l);
             i++;
             try {
                 Thread.sleep(120);
             } catch (InterruptedException ex) {
                 Logger.getLogger(TableFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }*/
     }
     
     /**
@@ -193,18 +258,18 @@ public class TableFrame extends javax.swing.JFrame{
      * @param x 
      */
     private void animateJoin(int[] x){
-        AnimationClass ac1 = new AnimationClass();
+        //AnimationClass ac1 = new AnimationClass();
         int i = 0;
             
         for(JLabel l : deckOfCards){
             if (i%2==0){ //is at left
                 System.out.println("Is left at x: " + (x[i]-150) + " going right to " + x[i]);
-                ac1.jLabelXRight(l.getLocation().x-150, x[i], 1, 1, l);
+                sa.jLabelXRight(l.getLocation().x-150, x[i], 1, 1, l);
             } else { //is at right
                 System.out.println("Is right at x: " + (x[i]+150) + " going left to " + x[i]);
-                ac1.jLabelXLeft(l.getLocation().x+150, x[i], 1, 1, l);
+                sa.jLabelXLeft(l.getLocation().x+150, x[i], 1, 1, l);
             }
-            ac1.jLabelYDown(-100, Constants.DeckY, 1, 1, l);
+            sa.jLabelYDown(-100, Constants.DeckY, 1, 1, l);
             i++;
         }
     }
@@ -220,29 +285,33 @@ public class TableFrame extends javax.swing.JFrame{
         switch (player) {
             case "Player":
                 if (hit){
+                    JLabel cardFromDeck = deckOfCards.get(deckOfCards.size()-1);
+                    deckOfCards.remove(cardFromDeck);
+                    mainDesktopPane.remove(cardFromDeck);
                     label = dealCard(playerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Player");
                 } else {
                     JLabel firstCard = dealCard(null, hand.getCards()[hand.getNextIndex()-2], "Player");
                     playerHand.add(firstCard);
                     mainDesktopPane.add(firstCard, 1);
-                    //animateDealCard(firstCard, Constants.PlayerX, Constants.PlayerY);
                     label = dealCard(playerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Player");
-                }   playerHand.add(label);
+                }
+                playerHand.add(label);
                 mainDesktopPane.add(label, 1);
-                //animateDealCard(label, Constants.PlayerX + 25, Constants.PlayerY);
                 break;
             case "Dealer":
                 if (hit){
+                    JLabel cardFromDeck = deckOfCards.get(deckOfCards.size()-1);
+                    deckOfCards.remove(cardFromDeck);
+                    mainDesktopPane.remove(cardFromDeck);
                     label = dealCard(dealerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Dealer");
                 } else {
-                    JLabel firstCard = dealCard(null, hand.getCards()[hand.getNextIndex()-2], "Dealer");
-                    dealerHand.add(firstCard);
-                    mainDesktopPane.add(firstCard, 1);
-                    //animateDealCard(firstCard, Constants.DealerX, Constants.DealerY);
-                    label = dealCard(dealerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Dealer");         
-                }   dealerHand.add(label);
+                    label = dealCard(null, hand.getCards()[hand.getNextIndex()-2], "Dealer");
+                    dealerHand.add(label);
+                    mainDesktopPane.add(label, 1);
+                    label = dealCard(dealerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Hidden");
+                }
+                dealerHand.add(label);
                 mainDesktopPane.add(label, 1);
-                //animateDealCard(label, dealerHand.get(hand.getNextIndex()-1).getLocation().x + 25, Constants.DealerY);
                 break;
         }
     }
@@ -255,7 +324,7 @@ public class TableFrame extends javax.swing.JFrame{
      */
     private void animateDealCard(JLabel cardToDeal, int x, int y){
         //System.out.println(cardToDeal.getIcon().toString() + " x: " + x  + " y: " + y);
-        AnimationClass acDealer = new AnimationClass();
+        SwingAnimation acDealer = new SwingAnimation();
         if (x > y){ //dealt to Player
             acDealer.jLabelYDown(Constants.DeckY, y, 1, 1, cardToDeal);
             acDealer.jLabelXLeft(Constants.DeckX, x, 1, 1, cardToDeal);
@@ -272,10 +341,10 @@ public class TableFrame extends javax.swing.JFrame{
      * @param player
      * @return the moved JLabel card.
      */
-    private JLabel dealCard(JLabel lastCard, Card cardToDeal, String player){
+    private JLabel dealCard(JLabel lastCard, Card cardToDeal, String type){
         JLabel dealtCard = new JLabel(new ImageIcon(getClass().getResource(view.getCardImage(cardToDeal))));
         
-        switch (player) {
+        switch (type) {
             case "Player":
                 if (lastCard == null){ //first card
                     dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
@@ -285,14 +354,14 @@ public class TableFrame extends javax.swing.JFrame{
                     animateDealCard(dealtCard, Constants.PlayerX + (playerHand.size()* 25), Constants.PlayerY);
                 }   break;
             case "Dealer":
-                if (lastCard == null){ //first card
-                    dealtCard.setIcon(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
-                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
-                    animateDealCard(dealtCard, Constants.DealerX, Constants.DealerY);
-                } else { //any other card
                     dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
                     animateDealCard(dealtCard, Constants.DealerX + (dealerHand.size()* 25), Constants.DealerY);
-                }   break;
+                    break;
+            case "Hidden":
+                    dealtCard.setIcon(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
+                    animateDealCard(dealtCard, Constants.DealerX + (dealerHand.size()* 25), Constants.DealerY);
+                    break;
         }
         return dealtCard;
     }
@@ -301,18 +370,43 @@ public class TableFrame extends javax.swing.JFrame{
      * The method represents the Stand process of the Player and imitates Dealer\'s actions.
      */
     private void stand(){
-        while(currentGame.getDealer().dealerHandValue() <= Constants.DEALER_STAND){
-            if(currentGame.getDealer().dealerHandValue() < Constants.DEALER_STAND 
-                    || (currentGame.getDealer().dealerHandValue() == Constants.DEALER_STAND && currentGame.getDealer().isSoft())){
-                Card card = view.stand(currentGame);
-                currentGame.getDealer().getCards()[currentGame.getDealer().getNextIndex()] = card;
-                currentGame.getDealer().setNextIndex(currentGame.getDealer().getNextIndex() + 1);
-                dealCards(currentGame.getDealer(), true, "Dealer");
-                System.out.println("Dealer next card is: " + card);
-            } else {
-                return;
+        view.drawCard(dealerHand.get(1), currentGame.getDealer().getCards()[1]);
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while(currentGame.getDealer().dealerHandValue() <= Constants.DEALER_STAND){
+                    if (currentGame.getDealer().dealerHandValue() < Constants.DEALER_STAND 
+                            || (currentGame.getDealer().dealerHandValue() == Constants.DEALER_STAND && currentGame.getDealer().isSoft())){
+                        Card card = view.stand(currentGame);
+                        currentGame.getDealer().getCards()[currentGame.getDealer().getNextIndex()] = card;
+                        currentGame.getDealer().setNextIndex(currentGame.getDealer().getNextIndex() + 1);
+                        dealCards(currentGame.getDealer(), true, "Dealer");
+                        if (Constants.DEBUG){
+                            System.out.println("Dealer next card is: " + card);
+                        }
+                        try {
+                            Thread.sleep(Constants.STAND_DELAY);
+                        } catch (InterruptedException ex) {
+                            if (Constants.DEBUG){
+                                System.out.println(ex.getMessage());
+                            }
+                        }
+                    } else {
+                        showWinner(false);
+                        return;
+                    }
+                }
+                showWinner(false);
             }
-        }  
+        }).start();
+    }
+    
+    /**
+     * 
+     */
+    private void surrender(){
+        showWinner(true);
     }
     
     /**
@@ -334,36 +428,47 @@ public class TableFrame extends javax.swing.JFrame{
      * The method retrieves the most updated scores from the current Game and updates the ScoreBoard accordingly
      */
     private void updateScoreBoard(){
+        lblPlayerImage.setIcon(new ImageIcon(getClass().getResource(view.getCurrentPlayer().getImagePath())));
         if (currentGame != null){
             lblPlayerWins.setText("" + currentGame.getWins());
             lblPlayerLoses.setText("" + currentGame.getLoses());
+            lblPlayerBank.setText("" + currentGame.getScore());
+            lblRoundNumber.setText("" + currentGame.getRound());
         }
-        lblPlayerBank.setText("" + currentGame.getScore());
     }
     
     /**
      * The method deals with what happens in the UI when a Game is won.
      */
-    private void showWinner(){
-        /** TODO **/
+    private void showWinner(boolean surrendered){
+        final int dealersHandValue = currentGame.getDealer().dealerHandValue();
+        final int playersHandValue = currentGame.getPlayer().getCurrentHand().playerHandValue();
+        final String result;
+        if (surrendered){
+            result = "GAVE-UP";
+            currentGame.playerLose();
+        } else {
+            result = gameWon(currentGame.whoWon());
+        }
         pnlMenuInGame.setVisible(false);
-        pnlMenu.setVisible(true);
-        
-        lblPlayerResult.setText("You " + gameWon(currentGame.whoWon()) + "!");
         updateScoreBoard();
-        pnlShowWinner.setVisible(true);
-        /*
-        hide pnlInGame (Hit/Stand/... buttons)
-        show pnlMenu (Deal/Quit buttons)
-        run updateScoreBoard();
-            //create a new Panel (opaque=false) with a JLabel of the same size to be used as background (resources/showWinner.png).
-            //make the Panel layout Absolute to be able to put labels upon eachother.
-            //add labels to the panel to represent "You win/Lose" messages, make use of gameWon(boolean playerWon).
-        show that panel to the user
         
-        check logic for btnStandActionPerformed() and btnHitActionPerformed(). both are checking for win/loss and updating scoreboard, maybe no need for this way anymore.
-            *** if you have time, try to add sounds to the application, you have the sound class you've used in the past (package: Sounds).
-        */
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep((dealerHand.size()-2) * Constants.STAND_DELAY);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TableFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                pnlMenu.setVisible(true);
+                lblPlayerResult.setText("You " + result + "!");
+                lblDealersHand.setText("    Dealer's Hand: " + dealersHandValue + ".");
+                lblPlayersHand.setText("    Player's Hand: " + playersHandValue + ".");
+                pnlShowWinner.setVisible(true);
+            }
+        }).start();
     }
     
     /**
@@ -391,15 +496,22 @@ public class TableFrame extends javax.swing.JFrame{
                 }
             }
         };
-        pnlShowWinner = new javax.swing.JPanel();
-        lblPlayerResult = new javax.swing.JLabel();
-        lblShowWinner = new javax.swing.JLabel();
+        lblShuffling = new javax.swing.JLabel();
+        lblWhiskey = new javax.swing.JLabel();
         pnlScoreBoard = new javax.swing.JPanel();
+        btnInfo = new javax.swing.JButton();
         lblPlayerWins = new javax.swing.JLabel();
         lblPlayerLoses = new javax.swing.JLabel();
         lblPlayerBank = new javax.swing.JLabel();
-        lblScoreBoard = new javax.swing.JLabel();
         lblPlayerName = new javax.swing.JLabel();
+        lblPlayerImage = new javax.swing.JLabel();
+        lblRoundNumber = new javax.swing.JLabel();
+        lblScoreBoard = new javax.swing.JLabel();
+        pnlShowWinner = new javax.swing.JPanel();
+        lblPlayerResult = new javax.swing.JLabel();
+        lblDealersHand = new javax.swing.JLabel();
+        lblPlayersHand = new javax.swing.JLabel();
+        lblShowWinner = new javax.swing.JLabel();
         pnlMenu = new javax.swing.JPanel();
         btnDeal = new javax.swing.JButton();
         btnQuit = new javax.swing.JButton();
@@ -408,37 +520,32 @@ public class TableFrame extends javax.swing.JFrame{
         btnStand = new javax.swing.JButton();
         btnSurrender = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
 
+        mainDesktopPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         mainDesktopPane.setPreferredSize(new java.awt.Dimension(1280, 850));
 
-        pnlShowWinner.setOpaque(false);
+        lblShuffling.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/shuffling.gif"))); // NOI18N
 
-        lblPlayerResult.setFont(new java.awt.Font("GadMFW", 0, 24)); // NOI18N
-        lblPlayerResult.setForeground(new java.awt.Color(255, 255, 255));
-        lblPlayerResult.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        lblShowWinner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/showWinner.png"))); // NOI18N
-
-        javax.swing.GroupLayout pnlShowWinnerLayout = new javax.swing.GroupLayout(pnlShowWinner);
-        pnlShowWinner.setLayout(pnlShowWinnerLayout);
-        pnlShowWinnerLayout.setHorizontalGroup(
-            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lblShowWinner)
-        );
-        pnlShowWinnerLayout.setVerticalGroup(
-            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lblShowWinner)
-        );
+        lblWhiskey.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/whiskey.png"))); // NOI18N
+        lblWhiskey.setText("jLabel1");
+        lblWhiskey.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblWhiskeyMouseClicked(evt);
+            }
+        });
 
         pnlScoreBoard.setOpaque(false);
+
+        btnInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/btnInfo.png"))); // NOI18N
+        btnInfo.setBorderPainted(false);
+        btnInfo.setContentAreaFilled(false);
+        btnInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInfoActionPerformed(evt);
+            }
+        });
 
         lblPlayerWins.setFont(new java.awt.Font("GadMFW", 1, 15)); // NOI18N
         lblPlayerWins.setForeground(new java.awt.Color(255, 255, 255));
@@ -452,54 +559,121 @@ public class TableFrame extends javax.swing.JFrame{
         lblPlayerBank.setForeground(new java.awt.Color(255, 255, 255));
         lblPlayerBank.setText("" + Constants.STARTING_AMOUNT);
 
-        lblScoreBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ScoreBoard.png"))); // NOI18N
-
         lblPlayerName.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblPlayerName.setForeground(new java.awt.Color(255, 255, 255));
         lblPlayerName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPlayerName.setText(view.getCurrentPlayer().getName());
         lblPlayerName.setToolTipText("");
 
+        lblRoundNumber.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
+        lblRoundNumber.setForeground(new java.awt.Color(255, 255, 255));
+        lblRoundNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblRoundNumber.setPreferredSize(new java.awt.Dimension(80, 13));
+
+        lblScoreBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ScoreBoard.png"))); // NOI18N
+
         javax.swing.GroupLayout pnlScoreBoardLayout = new javax.swing.GroupLayout(pnlScoreBoard);
         pnlScoreBoard.setLayout(pnlScoreBoardLayout);
         pnlScoreBoardLayout.setHorizontalGroup(
             pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(165, 165, 165)
+                .addComponent(btnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(lblPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(100, 100, 100)
-                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lblPlayerLoses, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(127, 127, 127)
+                .addComponent(lblRoundNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(100, 100, 100)
-                .addComponent(lblPlayerLoses, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lblPlayerWins, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(lblPlayerWins, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addComponent(lblPlayerImage, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(lblScoreBoard)
         );
         pnlScoreBoardLayout.setVerticalGroup(
             pnlScoreBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(340, 340, 340)
+                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addComponent(lblPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(270, 270, 270)
-                .addComponent(lblPlayerBank, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lblPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(303, 303, 303)
                 .addComponent(lblPlayerLoses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(lblRoundNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(265, 265, 265)
                 .addComponent(lblPlayerWins, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlScoreBoardLayout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(lblPlayerImage, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlScoreBoardLayout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addComponent(lblScoreBoard))
+        );
+
+        pnlShowWinner.setOpaque(false);
+        pnlShowWinner.setPreferredSize(new java.awt.Dimension(1280, 740));
+
+        lblPlayerResult.setFont(new java.awt.Font("Agency FB", 0, 48)); // NOI18N
+        lblPlayerResult.setForeground(new java.awt.Color(255, 255, 255));
+        lblPlayerResult.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        lblDealersHand.setFont(new java.awt.Font("Agency FB", 0, 36)); // NOI18N
+        lblDealersHand.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblPlayersHand.setFont(new java.awt.Font("Agency FB", 0, 36)); // NOI18N
+        lblPlayersHand.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblShowWinner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/showWinner.png"))); // NOI18N
+
+        javax.swing.GroupLayout pnlShowWinnerLayout = new javax.swing.GroupLayout(pnlShowWinner);
+        pnlShowWinner.setLayout(pnlShowWinnerLayout);
+        pnlShowWinnerLayout.setHorizontalGroup(
+            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
+                .addGap(452, 452, 452)
+                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
+                .addGap(452, 452, 452)
+                .addComponent(lblPlayersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
+                .addGap(452, 452, 452)
+                .addComponent(lblDealersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblShowWinner)
+        );
+        pnlShowWinnerLayout.setVerticalGroup(
+            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
+                .addGap(140, 140, 140)
+                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(lblPlayersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
+                .addGap(240, 240, 240)
+                .addComponent(lblDealersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(lblShowWinner)
         );
 
         pnlMenu.setOpaque(false);
         pnlMenu.setPreferredSize(new java.awt.Dimension(1116, 150));
 
         btnDeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Deal.png"))); // NOI18N
+        btnDeal.setBorderPainted(false);
         btnDeal.setContentAreaFilled(false);
         btnDeal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -522,6 +696,7 @@ public class TableFrame extends javax.swing.JFrame{
         });
 
         btnQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Quit.png"))); // NOI18N
+        btnQuit.setBorderPainted(false);
         btnQuit.setContentAreaFilled(false);
         btnQuit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -547,27 +722,26 @@ public class TableFrame extends javax.swing.JFrame{
         pnlMenu.setLayout(pnlMenuLayout);
         pnlMenuLayout.setHorizontalGroup(
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuLayout.createSequentialGroup()
-                .addContainerGap(423, Short.MAX_VALUE)
+            .addGroup(pnlMenuLayout.createSequentialGroup()
+                .addGap(475, 475, 475)
                 .addComponent(btnDeal, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(375, 375, 375))
+                .addGap(6, 6, 6)
+                .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnlMenuLayout.setVerticalGroup(
-            pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMenuLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
+            pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlMenuLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnDeal, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         pnlMenuInGame.setOpaque(false);
         pnlMenuInGame.setPreferredSize(new java.awt.Dimension(1116, 150));
 
         btnHit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Hit.png"))); // NOI18N
+        btnHit.setBorderPainted(false);
         btnHit.setContentAreaFilled(false);
         btnHit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -590,6 +764,7 @@ public class TableFrame extends javax.swing.JFrame{
         });
 
         btnStand.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Stand.png"))); // NOI18N
+        btnStand.setBorderPainted(false);
         btnStand.setContentAreaFilled(false);
         btnStand.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -612,6 +787,7 @@ public class TableFrame extends javax.swing.JFrame{
         });
 
         btnSurrender.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Surrender.png"))); // NOI18N
+        btnSurrender.setBorderPainted(false);
         btnSurrender.setContentAreaFilled(false);
         btnSurrender.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -637,24 +813,22 @@ public class TableFrame extends javax.swing.JFrame{
         pnlMenuInGame.setLayout(pnlMenuInGameLayout);
         pnlMenuInGameLayout.setHorizontalGroup(
             pnlMenuInGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuInGameLayout.createSequentialGroup()
-                .addContainerGap(418, Short.MAX_VALUE)
+            .addGroup(pnlMenuInGameLayout.createSequentialGroup()
+                .addGap(395, 395, 395)
                 .addComponent(btnHit, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(btnStand, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSurrender, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(220, 220, 220))
+                .addGap(6, 6, 6)
+                .addComponent(btnSurrender, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnlMenuInGameLayout.setVerticalGroup(
             pnlMenuInGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMenuInGameLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addGap(17, 17, 17)
                 .addGroup(pnlMenuInGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSurrender, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnStand, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(btnStand, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSurrender, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout mainDesktopPaneLayout = new javax.swing.GroupLayout(mainDesktopPane);
@@ -662,40 +836,39 @@ public class TableFrame extends javax.swing.JFrame{
         mainDesktopPaneLayout.setHorizontalGroup(
             mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(168, Short.MAX_VALUE))
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(148, 148, 148)
+                .addGap(1063, 1063, 1063)
                 .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(pnlMenuInGame, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(160, Short.MAX_VALUE)))
+            .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                .addGap(700, 700, 700)
+                .addComponent(lblShuffling))
+            .addComponent(pnlMenuInGame, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                .addGap(240, 240, 240)
+                .addComponent(lblWhiskey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         mainDesktopPaneLayout.setVerticalGroup(
-            mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                        .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainDesktopPaneLayout.createSequentialGroup()
-                        .addGap(0, 220, Short.MAX_VALUE)
-                        .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69)))
-                .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainDesktopPaneLayout.createSequentialGroup()
-                    .addContainerGap(654, Short.MAX_VALUE)
-                    .addComponent(pnlMenuInGame, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+                .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(268, 268, 268)
+                .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                .addGap(140, 140, 140)
+                .addComponent(lblShuffling))
+            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                .addGap(675, 675, 675)
+                .addComponent(pnlMenuInGame, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
+                .addGap(510, 510, 510)
+                .addComponent(lblWhiskey))
+            .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-        mainDesktopPane.setLayer(pnlShowWinner, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainDesktopPane.setLayer(lblShuffling, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainDesktopPane.setLayer(lblWhiskey, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlScoreBoard, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainDesktopPane.setLayer(pnlShowWinner, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlMenu, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainDesktopPane.setLayer(pnlMenuInGame, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -716,9 +889,8 @@ public class TableFrame extends javax.swing.JFrame{
 
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
         //are you sure? if yes, open MainFrame; if Not, do nothing
-        int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to stand-up and quit the table?", "Stand-Up", JOptionPane.YES_NO_OPTION);
+        int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to stand-up the table and quit?", "Stand-Up", JOptionPane.YES_NO_OPTION);
         if (question == JOptionPane.YES_OPTION) { // if clicked YES
-            System.out.println("Bye.");
             view.executeSysExit(false);
         }
     }//GEN-LAST:event_btnQuitActionPerformed
@@ -736,9 +908,19 @@ public class TableFrame extends javax.swing.JFrame{
         pnlMenu.setVisible(false);
         view.deal(currentGame);
         pnlMenuInGame.setVisible(true);
+        animateShuffle();
         animateDeck();
-        dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
-        dealCards(currentGame.getDealer(), false, "Dealer");
+        
+        new java.util.Timer().schedule( 
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        dealCards(currentGame.getDealer(), false, "Dealer");
+                        dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
+                    }
+                }, 
+                2505
+        );
     }//GEN-LAST:event_btnDealActionPerformed
 
     private void btnDealMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDealMouseExited
@@ -750,7 +932,10 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnDealMouseEntered
 
     private void btnSurrenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSurrenderActionPerformed
-        System.out.println("Never surrender!!!");
+        int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to surrender and lose the round?", "Give-Up", JOptionPane.YES_NO_OPTION);
+        if (question == JOptionPane.YES_OPTION) { // if clicked YES
+            surrender();
+        }
     }//GEN-LAST:event_btnSurrenderActionPerformed
 
     private void btnSurrenderMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSurrenderMouseExited
@@ -762,12 +947,8 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnSurrenderMouseEntered
 
     private void btnStandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStandActionPerformed
-        System.out.println("I'm still standing you just fade away.");
         if(!view.isBusted(currentGame)){
            stand();
-           //gameWon(view.whoWon(currentGame));
-           //updateScoreBoard();
-           showWinner();
         }
     }//GEN-LAST:event_btnStandActionPerformed
 
@@ -780,13 +961,10 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnStandMouseEntered
 
     private void btnHitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitActionPerformed
-        System.out.println("Hit me baby, one more time!");
         currentGame.hit();
         dealCards(currentGame.getPlayer().getCurrentHand(), true, "Player");
         if (currentGame.isBusted()){
-            //gameWon(currentGame.whoWon());
-            //updateScoreBoard();
-            showWinner();
+            showWinner(false);
         }
     }//GEN-LAST:event_btnHitActionPerformed
 
@@ -837,20 +1015,37 @@ public class TableFrame extends javax.swing.JFrame{
     private void btnQuitMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitMouseReleased
         btnQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/buttons/gameButton_Quit.png")));
     }//GEN-LAST:event_btnQuitMouseReleased
+
+    private void btnInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfoActionPerformed
+        InfoFrame frmRules = new InfoFrame(view);
+        frmRules.setVisible(true);
+    }//GEN-LAST:event_btnInfoActionPerformed
+
+    private void lblWhiskeyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblWhiskeyMouseClicked
+        view.orderDrink(currentGame, "Whiskey");
+        updateScoreBoard();
+    }//GEN-LAST:event_lblWhiskeyMouseClicked
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeal;
     private javax.swing.JButton btnHit;
+    private javax.swing.JButton btnInfo;
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnStand;
     private javax.swing.JButton btnSurrender;
+    private javax.swing.JLabel lblDealersHand;
     private javax.swing.JLabel lblPlayerBank;
+    private javax.swing.JLabel lblPlayerImage;
     private javax.swing.JLabel lblPlayerLoses;
     private javax.swing.JLabel lblPlayerName;
     private javax.swing.JLabel lblPlayerResult;
     private javax.swing.JLabel lblPlayerWins;
+    private javax.swing.JLabel lblPlayersHand;
+    private javax.swing.JLabel lblRoundNumber;
     private javax.swing.JLabel lblScoreBoard;
     private javax.swing.JLabel lblShowWinner;
+    private javax.swing.JLabel lblShuffling;
+    private javax.swing.JLabel lblWhiskey;
     private javax.swing.JDesktopPane mainDesktopPane;
     private javax.swing.JPanel pnlMenu;
     private javax.swing.JPanel pnlMenuInGame;

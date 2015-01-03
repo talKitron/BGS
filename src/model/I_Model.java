@@ -1,6 +1,6 @@
  package model;
 
-/**I_Model interface*/
+/**Model interface*/
 public interface I_Model {
 	
     public Player addPlayer(String name, String password);
@@ -22,4 +22,13 @@ public interface I_Model {
     public boolean whoWon(Game game);
     
     public String getFact();
+    
+    public String[] getRules();
+    
+    public Game getHighScoreGame ();
+    
+    public Game getHighWinsGame ();
+    
+    public Game getHighLosesGame ();
+
 }
