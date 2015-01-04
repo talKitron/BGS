@@ -285,7 +285,7 @@ public class TableFrame extends javax.swing.JFrame {
     }
 
     /**
-     * NOTICE: NOT YET FUNCTIONAL
+     * NOTICE: NOT IN USE, better implementation at utilities/SwingAnimation
      *
      * @param x
      */
@@ -304,7 +304,7 @@ public class TableFrame extends javax.swing.JFrame {
     }
 
     /**
-     * NOTICE: NOT YET FUNCTIONAL
+     * NOTICE: NOT IN USE, better implementation at utilities/SwingAnimation
      *
      * @param x
      */
@@ -724,18 +724,18 @@ public class TableFrame extends javax.swing.JFrame {
         pnlShowWinner.setPreferredSize(new java.awt.Dimension(1280, 740));
         pnlShowWinner.setLayout(null);
 
-        lblPlayerResult.setFont(new java.awt.Font("Agency FB", 0, 48)); // NOI18N
+        lblPlayerResult.setFont(new java.awt.Font("GadMFW", 0, 48)); // NOI18N
         lblPlayerResult.setForeground(new java.awt.Color(255, 255, 255));
         lblPlayerResult.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pnlShowWinner.add(lblPlayerResult);
         lblPlayerResult.setBounds(452, 140, 380, 100);
 
-        lblDealersHand.setFont(new java.awt.Font("Agency FB", 0, 36)); // NOI18N
+        lblDealersHand.setFont(new java.awt.Font("GadMFW", 0, 36)); // NOI18N
         lblDealersHand.setForeground(new java.awt.Color(255, 255, 255));
         pnlShowWinner.add(lblDealersHand);
         lblDealersHand.setBounds(452, 240, 380, 50);
 
-        lblPlayersHand.setFont(new java.awt.Font("Agency FB", 0, 36)); // NOI18N
+        lblPlayersHand.setFont(new java.awt.Font("GadMFW", 0, 36)); // NOI18N
         lblPlayersHand.setForeground(new java.awt.Color(255, 255, 255));
         pnlShowWinner.add(lblPlayersHand);
         lblPlayersHand.setBounds(452, 290, 380, 50);
@@ -995,15 +995,15 @@ public class TableFrame extends javax.swing.JFrame {
         );
 
         new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        dealCards(currentGame.getDealer(), false, "Dealer");
-                        dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
-                        pnlMenuInGame.setVisible(true);
-                    }
-                },
-                4000
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    dealCards(currentGame.getDealer(), false, "Dealer");
+                    dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
+                    pnlMenuInGame.setVisible(true);
+                }
+            },
+            4000
         );
     }//GEN-LAST:event_btnDealActionPerformed
 
@@ -1051,7 +1051,17 @@ public class TableFrame extends javax.swing.JFrame {
         currentGame.hit();
         dealCards(currentGame.getPlayer().getCurrentHand(), true, "Player");
         if (currentGame.isBusted()) {
-            showWinner(false);
+            view.drawCard(dealerHand.get(1), currentGame.getDealer().getCards()[1]);
+            
+            new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        showWinner(false);
+                    }
+                },
+                500
+            );
         }
     }//GEN-LAST:event_btnHitActionPerformed
 
