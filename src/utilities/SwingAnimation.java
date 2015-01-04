@@ -1,130 +1,261 @@
 package utilities;
 
+import java.util.ArrayList;
 import javax.swing.JLabel;
 
 /**
  * The class creates animations for Swing Components
+ *
  * @author Tal
  */
 public class SwingAnimation {
-    
+
     /**
      * @param start - The pixel value where the component will start the animation from.
      * @param stop - The pixel value where the component will stop moving.
      * @param delay - Delay between each pixel increment.
      * @param increment - The number of pixels to move.
-     * @param jLabel - The variable name of the JLabel you want to move.
+     * @param label - The variable name of the JLabel you want to move.
      */
-    public void jLabelYUp(final int start, final int stop, final int delay, final int increment, final JLabel jLabel) {
-    if (jLabel.getY() == start) {
-      new Thread() {
-        @Override
-        public void run() {
-          while (jLabel.getY() > stop) {
-            for (int i = start; i >= stop; i -= increment) {
-              try{
-                Thread.sleep(delay);
-                jLabel.setLocation(jLabel.getX(), i);
-              } catch (InterruptedException e) {
-                  if (Constants.DEBUG){
-                    System.out.println("Error Thread Interrupted: " + e);
-                  }
-              }
-            }
-          }
-          jLabel.setLocation(jLabel.getX(), stop);
-        }
-      }.start();
+    public void jLabelYUp(final int start, final int stop, final int delay, final int increment, final JLabel label) {
+        JLabelYUp jxf = new JLabelYUp(start, stop, delay, increment, start, label);
+        jxf.start();
     }
-  }
-  
-  /**
-   * @param start - The pixel value where the component will start the animation from.
-   * @param stop - The pixel value where the component will stop moving.
-   * @param delay - Delay between each pixel increment.
-   * @param increment - The number of pixels to move.
-   * @param jLabel - The variable name of the JLabel you want to move.
-   */
-  public void jLabelYDown(final int start, final int stop, final int delay, final int increment, final JLabel jLabel) {
-    if (jLabel.getY() == start) {
-      new Thread() {
-        @Override
-        public void run() {
-          while (jLabel.getY() <= start) {
-            for (int i = start; i <= stop; i += increment) {
-              try{
-                Thread.sleep(delay);
-                jLabel.setLocation(jLabel.getX(), i);
-              } catch (InterruptedException e) {
-                  if (Constants.DEBUG){
-                    System.out.println("Error Thread Interrupted: " + e);
-                  }
-              }
-            }
-          }
-          jLabel.setLocation(jLabel.getX(), stop);
-        }
-      }.start();
+
+    /**
+     * @param start - The pixel value where the component will start the animation from.
+     * @param stop - The pixel value where the component will stop moving.
+     * @param delay - Delay between each pixel increment.
+     * @param increment - The number of pixels to move.
+     * @param label - The variable name of the JLabel you want to move.
+     */
+    public void jLabelYDown(final int start, final int stop, final int delay, final int increment, final JLabel label) {
+        JLabelYDown jxf = new JLabelYDown(start, stop, delay, increment, start, label);
+        jxf.start();
     }
-  }
-  
-  /**
-   * @param start - The pixel value where the component will start the animation from.
-   * @param stop - The pixel value where the component will stop moving.
-   * @param delay - Delay between each pixel increment.
-   * @param increment - The number of pixels to move.
-   * @param jLabel - The variable name of the JLabel you want to move. 
-   */
-  public void jLabelXLeft(final int start, final int stop, final int delay, final int increment, final JLabel jLabel) {
-    if (jLabel.getX() == start) {
-      new Thread() {
+
+    /**
+     * @param start - The pixel value where the component will start the animation from.
+     * @param stop - The pixel value where the component will stop moving.
+     * @param delay - Delay between each pixel increment.
+     * @param increment - The number of pixels to move.
+     * @param label - The variable name of the JLabel you want to move.
+     */
+    public void jLabelXLeft(int start, int stop, int delay, int increment, JLabel label) {
+        JLabelXLeft jxf = new JLabelXLeft(start, stop, delay, increment, start, label);
+        jxf.start();
+    }
+
+    /**
+     * @param start - The pixel value where the component will start the animation from.
+     * @param stop - The pixel value where the component will stop moving.
+     * @param delay - Delay between each pixel increment.
+     * @param increment - The number of pixels to move.
+     * @param label - The variable name of the JLabel you want to move.
+     */
+    public void jLabelXRight(final int start, final int stop, final int delay, final int increment, final JLabel label) {
+        JLabelXRight jxf = new JLabelXRight(start, stop, delay, increment, start, label);
+        jxf.start();
+    }
+
+    public class JLabelYUp extends Thread implements Runnable {
+
+        private int start;
+        private int stop;
+        private int delay;
+        private int increment;
+        private int startOffset;
+        private JLabel label;
+
+        public JLabelYUp(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+            this.start = start;
+            this.stop = stop;
+            this.delay = delay;
+            this.increment = increment;
+            this.startOffset = startOffset;
+            this.label = label;
+        }
+
         @Override
         public void run() {
-          while (jLabel.getX() > stop) {
-            for (int i = start; i >= stop; i -= increment) {
-              try{
-                Thread.sleep(delay);
-                jLabel.setLocation(i, jLabel.getY());
-              } catch (InterruptedException e) {
-                    if (Constants.DEBUG){
-                        System.out.println("Error Thread Interrupted: " + e);
+            super.run();
+            if (label.getY() == start) {
+                for (int i = start; i >= stop; i -= increment) {
+                    try {
+                        label.setLocation(label.getX(), i);
+                        Thread.sleep(delay);
+                    } catch (InterruptedException e) {
+                        if (Constants.DEBUG) {
+                            System.out.println("Error Thread Interrupted: " + e);
+                        }
                     }
-              }
+                }
             }
-          }
-          jLabel.setLocation(stop, jLabel.getY());
         }
-      }.start();
+
     }
-  }
-  
-  /**
-   * @param start - The pixel value where the component will start the animation from.
-   * @param stop - The pixel value where the component will stop moving.
-   * @param delay - Delay between each pixel increment.
-   * @param increment - The number of pixels to move.
-   * @param jLabel - The variable name of the JLabel you want to move. 
-   */
-  public void jLabelXRight(final int start, final int stop, final int delay, final int increment, final JLabel jLabel) {
-    if (jLabel.getX() == start) {
-      new Thread() {
+
+    public class JLabelYDown extends Thread implements Runnable {
+
+        private int start;
+        private int stop;
+        private int delay;
+        private int increment;
+        private int startOffset;
+        private JLabel label;
+
+        public JLabelYDown(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+            this.start = start;
+            this.stop = stop;
+            this.delay = delay;
+            this.increment = increment;
+            this.startOffset = startOffset;
+            this.label = label;
+        }
+
         @Override
         public void run() {
-          while (jLabel.getX() <= start) {
-            for (int i = start; i <= stop; i += increment) {
-              try{
-                Thread.sleep(delay);            
-                jLabel.setLocation(i, jLabel.getY());
-              } catch (InterruptedException e) {
-                  if (Constants.DEBUG){
-                    System.out.println("Error Thread Interrupted: " + e);
-                  }
-              }
+            
+            if (label.getY() == start) {
+                for (int i = start; i <= stop; i += increment) {
+                    try{
+                        label.setLocation(label.getX(), i);
+                        Thread.sleep(delay);
+                    } catch (InterruptedException e) {
+                        if (Constants.DEBUG){
+                          System.out.println("Error Thread Interrupted: " + e);
+                        }
+                    }
+                }
             }
-          }
-          jLabel.setLocation(stop, jLabel.getY());
         }
-      }.start();
     }
-  }
+
+    public class JLabelXLeft extends Thread implements Runnable {
+
+        private int start;
+        private int stop;
+        private int delay;
+        private int increment;
+        private int startOffset;
+        private JLabel label;
+
+        public JLabelXLeft(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+            this.start = start;
+            this.stop = stop;
+            this.delay = delay;
+            this.increment = increment;
+            this.startOffset = startOffset;
+            this.label = label;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            if (label.getX() == start) {
+                for (int i = start; i >= stop; i -= increment) {
+                    try {
+                        label.setLocation(i, label.getY());
+                        Thread.sleep(delay);
+                    } catch (InterruptedException e) {
+                        if (Constants.DEBUG) {
+                            System.out.println("Error Thread Interrupted: " + e);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public class JLabelXRight extends Thread implements Runnable {
+
+        private int start;
+        private int stop;
+        private int delay;
+        private int increment;
+        private int startOffset;
+        private JLabel label;
+
+        public JLabelXRight(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+            this.start = start;
+            this.stop = stop;
+            this.delay = delay;
+            this.increment = increment;
+            this.startOffset = startOffset;
+            this.label = label;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            if (label.getX() == start) {
+                for (int i = start; i <= stop; i += increment) {
+                    try {
+                        label.setLocation(i, label.getY());
+                        Thread.sleep(delay);
+                    } catch (InterruptedException e) {
+                        if (Constants.DEBUG) {
+                            System.out.println("Error Thread Interrupted: " + e);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void jLabelXSideAndReturn(int stop, int delay, int increment, ArrayList< JLabel> cardsArray, boolean startToRight) {
+        new JLabelXSideAndReturn(stop, delay, increment, startToRight, cardsArray).start();
+    }
+
+    public class JLabelXSideAndReturn extends Thread implements Runnable {
+
+        private int stop;
+        private int delay;
+        private int increment;
+        private ArrayList< JLabel> cardsArray;
+        private boolean startToRight;
+
+        public JLabelXSideAndReturn(int stop, int delay, int increment, boolean startToRight, ArrayList< JLabel> label) {
+            this.stop = stop;
+            this.delay = delay;
+            this.increment = increment;
+            this.startToRight = startToRight;
+            this.cardsArray = label;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            if (startToRight) {
+                for (JLabel jl : cardsArray) {
+                    new JLabelXRight(jl.getLocation().x, jl.getLocation().x + stop, delay, increment, jl.getLocation().x, jl).start();
+                }
+                try {
+                    Thread.sleep(stop * delay * cardsArray.size() /2);
+                } catch (InterruptedException ex) {
+                    if (Constants.DEBUG) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+                for (JLabel jl : cardsArray) {
+                    new JLabelXLeft(jl.getLocation().x, jl.getLocation().x - stop, delay, increment, jl.getLocation().x, jl).start();
+                }
+            } else {
+                for (JLabel jl : cardsArray) {
+                    new JLabelXLeft(jl.getLocation().x, jl.getLocation().x - stop, delay, increment, jl.getLocation().x, jl).start();
+                }
+                try {
+                    Thread.sleep(stop * delay * cardsArray.size() /2);
+                } catch (InterruptedException ex) {
+                    if (Constants.DEBUG) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+                for (JLabel jl : cardsArray) {
+                    new JLabelXRight(jl.getLocation().x, jl.getLocation().x + stop, delay, increment, jl.getLocation().x, jl).start();
+                }
+            }
+        }
+    }
 }

@@ -68,7 +68,7 @@ public final class DataBase implements java.io.Serializable {
         
         "- Reaching a final score higher than the dealer, without exceeding 21, will reward you with XXX points. " + "\n" + 
         "- Drawing cards exceeding the score of 21 will result in a loss." + "\n" + 
-        "- Having the a final score equal to the Dealer's score will result in a loss. Also, Blackjack beats \"regular\" 21." + "\n\n" + 
+        "- Having the final score equal to the Dealer's score will result in a loss. Also, Blackjack beats \"regular\" 21." + "\n\n" + 
         
         "Score calculation:" + "\n\n" +
         "- If the round is odd, score is doubled, if the round is even, score is multiplied by 3." + "\n" +
@@ -79,9 +79,9 @@ public final class DataBase implements java.io.Serializable {
         "Hit (H)       - Draws a Card for the Player." + "\n" + 
         "Stand (S)     - Player is on hold, Dealer will then draw cards." + "\n" + 
         "Surrender (E) - Give up on the current round, will result in a loss." + "\n" + 
-        "Quit (Q)      - Quits the Blackjack Game System application, allowing to save progress." + "\n\n" +
+        "Quit (Q)      - Quits the Blackjack Game System application, allowing saving progress." + "\n\n" +
             
-        "** Beer costs 5$ from your bank but does not help you play the game, only a fun feature."
+        "** Whiskey costs 8$ from your bank but does not help you play the game, only a fun feature."
     };
    
 
@@ -168,6 +168,8 @@ public final class DataBase implements java.io.Serializable {
         try {
             try (FileOutputStream fileOut = new FileOutputStream("BGS.ser"); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
                 out.writeObject(instance);
+                out.close();
+                fileOut.close();
             }
             if (!save) {
                 System.exit(0);

@@ -170,12 +170,14 @@ public class PlayerImageFrame extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        view.playSound("Button");
         view.getCurrentPlayer().setImagePath(playerCirlceImagePaths.get(counter));
         dispose();
         mainFrame.sitDownLayout();
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
+        view.playSound("Button");
         if (counter == Constants.NUMBER_OF_PLAYER_IMAGES-1) {
             counter = 0;
             lblCharacterImage.setIcon(new ImageIcon(getClass().getResource(playerImagePaths.get(counter))));
@@ -187,14 +189,15 @@ public class PlayerImageFrame extends javax.swing.JDialog {
     }//GEN-LAST:event_btnPreviousActionPerformed
 
     private void btnPreviousMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPreviousMouseEntered
-        btnPrevious.setIcon(new ImageIcon(getClass().getResource("/resources/left_arrow_hover.png")));
+        btnPrevious.setIcon(new ImageIcon(getClass().getResource("/resources/buttons/left_arrow_hover.png")));
     }//GEN-LAST:event_btnPreviousMouseEntered
 
     private void btnPreviousMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPreviousMouseExited
-        btnPrevious.setIcon(new ImageIcon(getClass().getResource("/resources/left_arrow.png")));
+        btnPrevious.setIcon(new ImageIcon(getClass().getResource("/resources/buttons/left_arrow.png")));
     }//GEN-LAST:event_btnPreviousMouseExited
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        view.playSound("Button");
         if (counter == Constants.NUMBER_OF_PLAYER_IMAGES-1) {
             counter = 0;
             lblCharacterImage.setIcon(new ImageIcon(getClass().getResource(playerImagePaths.get(counter))));
@@ -206,11 +209,11 @@ public class PlayerImageFrame extends javax.swing.JDialog {
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnNextMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNextMouseEntered
-        btnNext.setIcon(new ImageIcon(getClass().getResource("/resources/right_arrow_hover.png")));
+        btnNext.setIcon(new ImageIcon(getClass().getResource("/resources/buttons/right_arrow_hover.png")));
     }//GEN-LAST:event_btnNextMouseEntered
 
     private void btnNextMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNextMouseExited
-        btnNext.setIcon(new ImageIcon(getClass().getResource("/resources/right_arrow.png")));
+        btnNext.setIcon(new ImageIcon(getClass().getResource("/resources/buttons/right_arrow.png")));
     }//GEN-LAST:event_btnNextMouseExited
 
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost

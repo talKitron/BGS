@@ -26,25 +26,44 @@ import utilities.SwingAnimation;
 
 /**
  * TableFrame frame for the game.
+ *
  * @author BGS Team
  */
-public class TableFrame extends javax.swing.JFrame{
+public class TableFrame extends javax.swing.JFrame {
+
     private Image image;
-    /**ViewLogic field*/
+    /**
+     * ViewLogic field
+     */
     private final View view;
-    /**Current game object*/
+    /**
+     * Current game object
+     */
     private static Game currentGame;
-    /**Current Dealer Hand JLabels*/
+    /**
+     * Current Dealer Hand JLabels
+     */
     private static ArrayList<JLabel> dealerHand;
-    /**Current Player Hand JLabels*/
+    /**
+     * Current Player Hand JLabels
+     */
     private static ArrayList<JLabel> playerHand;
-    /**Current Deck of Cards JLabels*/
+    /**
+     * Current Deck of Cards JLabels
+     */
     private static ArrayList<JLabel> deckOfCards;
-    /**Animation manager object*/
+    /**
+     * Animation manager object
+     */
     public static SwingAnimation sa;
-    
+    /**
+     * Current score watcher for score update effect
+     */
+    private static int currentScore = 0;
+
     /**
      * Creates new form TableFrame
+     *
      * @param view
      * @param game
      */
@@ -57,9 +76,9 @@ public class TableFrame extends javax.swing.JFrame{
         sa = new SwingAnimation();
         initComponents();
         try {
-            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");        
+            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            if (Constants.DEBUG){
+            if (Constants.DEBUG) {
                 System.out.println(e.getMessage());
             }
         }
@@ -78,24 +97,24 @@ public class TableFrame extends javax.swing.JFrame{
         btnStand.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSurrender.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblWhiskey.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        
+
         ActionListener actionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == btnStand){
+                if (e.getSource() == btnStand) {
                     btnStandActionPerformed(e);
-                } else if (e.getSource() == btnHit){
+                } else if (e.getSource() == btnHit) {
                     btnHitActionPerformed(e);
-                } else if (e.getSource() == btnSurrender){
+                } else if (e.getSource() == btnSurrender) {
                     btnSurrenderActionPerformed(e);
-                } else if (e.getSource() == btnDeal){
+                } else if (e.getSource() == btnDeal) {
                     btnDealActionPerformed(e);
-                } else if (e.getSource() == btnQuit){
+                } else if (e.getSource() == btnQuit) {
                     btnQuitActionPerformed(e);
                 }
             }
         };
-        
+
         KeyStroke keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false);
         btnStand.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_H, 0, false);
@@ -107,7 +126,7 @@ public class TableFrame extends javax.swing.JFrame{
         keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, false);
         btnQuit.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
-    
+
     public class MyWindowListener extends WindowAdapter {
 
         @Override
@@ -115,217 +134,248 @@ public class TableFrame extends javax.swing.JFrame{
             int question = JOptionPane.showConfirmDialog(null, "Save changes before exit?", "Save", JOptionPane.YES_NO_CANCEL_OPTION);
             if (question == JOptionPane.NO_OPTION) { // if user clicked NO, exit
                 System.exit(0);
-            }
-            if (question == JOptionPane.YES_OPTION) {
+            } else if (question == JOptionPane.YES_OPTION) {
                 view.executeSysExit(false);
-            }
-            if (question == JOptionPane.CANCEL_OPTION) {
+            } else if (question == JOptionPane.CANCEL_OPTION) {
                 //do nothing
             }
         }
     }
-    
+
     /**
      * The method resets the in-game UI components
      */
-    private void clearGUI(){
+    private void clearGUI() {
         pnlShowWinner.setVisible(false);
-        for(JLabel l : playerHand){
+        for (JLabel l : playerHand) {
             mainDesktopPane.remove(l);
             l = null;
         }
         playerHand = new ArrayList<>();
-        for(JLabel l : dealerHand){
+        for (JLabel l : dealerHand) {
             mainDesktopPane.remove(l);
             l = null;
         }
         dealerHand = new ArrayList<>();
-        for(JLabel l : deckOfCards){
+        for (JLabel l : deckOfCards) {
             mainDesktopPane.remove(l);
             l = null;
         }
         deckOfCards = new ArrayList<>();
         System.gc();
     }
-    
+
     /**
      * The method creates a deck of card animation and presents it to the UI
      */
-    private void animateDeck(){
+    private void animateDeck() {
         clearGUI(); //clear earlier events of in-game animation
-        
+
         final int[][] xy = new int[30][3];
-        
-        for (int k = 0; k < 11; k++){
-            if (k == 0){
+
+        for (int k = 0; k < 11; k++) {
+            if (k == 0) {
                 xy[k][0] = Constants.DeckX;
                 xy[k][1] = Constants.DeckY;
-                xy[k][2] = xy[k][0]-100;
+                xy[k][2] = xy[k][0] - 100;
             } else {
-                xy[k][0] = xy[k-1][0] + 2;
-                xy[k][1] = xy[k-1][1] + 2;
-                if (k%2==0){
-                    xy[k][2] = xy[k][0]+100;
+                xy[k][0] = xy[k - 1][0] + 2;
+                xy[k][1] = xy[k - 1][1] + 2;
+                if (k % 2 == 0) {
+                    xy[k][2] = xy[k][0] + 100;
                 } else {
-                    xy[k][2] = xy[k][0]-100;
+                    xy[k][2] = xy[k][0] - 100;
                 }
             }
         }
-        
-        new java.util.Timer().schedule( 
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        int i = 0, y = 0;
-                        JLabel label;
 
-                        for (Card c : currentGame.getDeck().getCardDeck()){
-                            if (i%5==0){
-                                label = new JLabel(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
-                                label.setBounds(xy[y][0], -200, 117, 170);
-                                deckOfCards.add(label);
-                                mainDesktopPane.add(label, -1);
-                                sa.jLabelYDown(-200, xy[y][1], 1, 1, label);
-                                //y+=4;
-                                y++;
-                            }
-                            i+=1;
+        int i = 0, y = 0;
+        JLabel label;
+
+        for (Card c : currentGame.getDeck().getCardDeck()) {
+            if (i % 5 == 0) {
+                label = new JLabel(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+                label.setBounds(xy[y][0], -200, 117, 170);
+                deckOfCards.add(label);
+                mainDesktopPane.add(label, -1);
+                sa.jLabelYDown(-200, xy[y][1], Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_SLOW, label);
+                y++;
+            }
+            i += 1;
+        }
+
+        /*new java.util.Timer().schedule( 
+         new java.util.TimerTask() {
+         @Override
+         public void run() {
+         int i = 0, y = 0;
+         JLabel label;
+
+         for (Card c : currentGame.getDeck().getCardDeck()){
+         if (i%5==0){
+         label = new JLabel(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+         label.setBounds(xy[y][0], -200, 117, 170);
+         deckOfCards.add(label);
+         mainDesktopPane.add(label, -1);
+         sa.jLabelYDown(-200, xy[y][1], Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_SLOW, label);
+         y++;
+         }
+         i+=1;
+         }
+         }
+         }, 
+         2500
+         );*/
+    }
+
+    /**
+     * The method creates a shuffling GIF animation and presents it to the UI while also playing a sound.
+     */
+    private void animateGIFShuffle() {
+        view.playSound("Shuffle");
+        lblShuffling.setVisible(true);
+
+        new java.util.Timer().schedule(
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    lblShuffling.setVisible(false);
+                }
+            },
+            2500
+        );
+    }
+
+    /**
+     * The method creates a deck of card shuffle animation and presents it to the UI NOTICE: NOT YET FUNCTION
+     */
+    private void animateShuffle() {
+        view.playSound("GameStart");
+        //animateDivide();
+        //animateJoin();
+        final ArrayList<JLabel> left = new ArrayList<>();
+        final ArrayList<JLabel> right = new ArrayList<>();
+        int i = 0;
+        for (JLabel jl : deckOfCards) {
+            if (i % 2 == 0) {
+                left.add(jl);
+            } else {
+                right.add(jl);
+            }
+            i++;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int i = 0;
+                while (i < Constants.DECK_SHUFFLE_ANIMATION) {
+                    sa.jLabelXSideAndReturn(Constants.CARDS_SHUFFLE_PDISTANCE, Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_FAST, left, false);
+                    sa.jLabelXSideAndReturn(Constants.CARDS_SHUFFLE_PDISTANCE, Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_FAST, right, true);
+                    i++;
+                    try {
+                        Thread.sleep(deckOfCards.size() * 2 * Constants.CARDS_SHUFFLE_PDISTANCE);
+                    } catch (InterruptedException ex) {
+                        if (Constants.DEBUG) {
+                            System.out.println(ex.getMessage());
                         }
                     }
-                }, 
-                2500
-        );
+                }
+            }
+        }).start();
     }
-    
-    /**
-     * The method creates a deck of card shuffle animation and presents it to the UI
-     * NOTICE: NOT YET FUNCTION
-     */
-    private void animateShuffle(){
-        //final int[] x = new int[deckOfCards.size()];
-        //System.out.println("animateDivide");
-        //animateDivide(deckXY);
-        lblShuffling.setVisible(true);
-        
-        new java.util.Timer().schedule( 
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        lblShuffling.setVisible(false);
-                    }
-                }, 
-                2500 
-        );
-        //animateJoin(x);
-    }
-    
+
     /**
      * NOTICE: NOT YET FUNCTIONAL
-     * @param x 
+     *
+     * @param x
      */
-    private void animateDivide(int[][] deckXY){
+    private void animateDivide() {
+        System.out.println("animateDivide");
         int i = 0;
 
-        for (JLabel l : deckOfCards){
-            if (i%2==0){
-                sa.jLabelXLeft(deckXY[i][0], deckXY[i][2], 1, 1, l);
+        for (JLabel l : deckOfCards) {
+            if (i % 2 == 0) {
+                sa.jLabelXLeft(l.getLocation().x, l.getLocation().x - 100, 1, 1, l);
             } else {
-                sa.jLabelXRight(deckXY[i][0], deckXY[i][2], 1, 1, l);
+                sa.jLabelXRight(l.getLocation().x, l.getLocation().x + 100, 1, 1, l);
             }
             i++;
         }
-        /*for(JLabel l : deckOfCards){
-            x[i] = l.getLocation().x;
-            if (i%2==0){ //is going left
-                ac1.jLabelXLeft(l.getLocation().x, l.getLocation().x-100, 5, 5, l);
-                System.out.println("currently at x: " + l.getLocation() + " ia going left to x: " + (l.getLocation().x-100));
-            } else { //is going right
-                ac1.jLabelXRight(l.getLocation().x, l.getLocation().x+100, 5, 5, l);
-                System.out.println("currently at x: " + l.getLocation() + " is going right to x: " + (l.getLocation().x+100));
-            }
-            ac1.jLabelYDown(-100, Constants.DeckY, 5, 5, l);
-            i++;
-            try {
-                Thread.sleep(120);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TableFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
     }
-    
+
     /**
      * NOTICE: NOT YET FUNCTIONAL
-     * @param x 
+     *
+     * @param x
      */
-    private void animateJoin(int[] x){
-        //AnimationClass ac1 = new AnimationClass();
+    private void animateJoin() {
+        System.out.println("animateJoin");
         int i = 0;
-            
-        for(JLabel l : deckOfCards){
-            if (i%2==0){ //is at left
-                System.out.println("Is left at x: " + (x[i]-150) + " going right to " + x[i]);
-                sa.jLabelXRight(l.getLocation().x-150, x[i], 1, 1, l);
-            } else { //is at right
-                System.out.println("Is right at x: " + (x[i]+150) + " going left to " + x[i]);
-                sa.jLabelXLeft(l.getLocation().x+150, x[i], 1, 1, l);
+
+        for (JLabel l : deckOfCards) {
+            if (i % 2 == 0) {
+                sa.jLabelXRight(l.getLocation().x, l.getLocation().x + 100, 1, 1, l);
+            } else {
+                sa.jLabelXLeft(l.getLocation().x, l.getLocation().x - 100, 1, 1, l);
             }
-            sa.jLabelYDown(-100, Constants.DeckY, 1, 1, l);
             i++;
         }
     }
-    
+
     /**
      * Deals cards to current Hand
+     *
      * @param hand (Player's Hand / Dealer)
      * @param hit (true if it's a Hit, false if it's initial cards)
      * @param player (String to represent the user)
      */
-    private void dealCards(Hand hand, boolean hit, String player){
+    private void dealCards(Hand hand, boolean hit, String player) {
         JLabel label;
         switch (player) {
             case "Player":
-                if (hit){
-                    JLabel cardFromDeck = deckOfCards.get(deckOfCards.size()-1);
+                if (hit) {
+                    JLabel cardFromDeck = deckOfCards.get(deckOfCards.size() - 1);
                     deckOfCards.remove(cardFromDeck);
                     mainDesktopPane.remove(cardFromDeck);
-                    label = dealCard(playerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Player");
+                    label = dealCard(playerHand.get(hand.getNextIndex() - 2), hand.getCards()[hand.getNextIndex() - 1], "Player");
                 } else {
-                    JLabel firstCard = dealCard(null, hand.getCards()[hand.getNextIndex()-2], "Player");
+                    JLabel firstCard = dealCard(null, hand.getCards()[hand.getNextIndex() - 2], "Player");
                     playerHand.add(firstCard);
                     mainDesktopPane.add(firstCard, 1);
-                    label = dealCard(playerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Player");
+                    label = dealCard(playerHand.get(hand.getNextIndex() - 2), hand.getCards()[hand.getNextIndex() - 1], "Player");
                 }
                 playerHand.add(label);
                 mainDesktopPane.add(label, 1);
                 break;
             case "Dealer":
-                if (hit){
-                    JLabel cardFromDeck = deckOfCards.get(deckOfCards.size()-1);
+                if (hit) {
+                    JLabel cardFromDeck = deckOfCards.get(deckOfCards.size() - 1);
                     deckOfCards.remove(cardFromDeck);
                     mainDesktopPane.remove(cardFromDeck);
-                    label = dealCard(dealerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Dealer");
+                    label = dealCard(dealerHand.get(hand.getNextIndex() - 2), hand.getCards()[hand.getNextIndex() - 1], "Dealer");
                 } else {
-                    label = dealCard(null, hand.getCards()[hand.getNextIndex()-2], "Dealer");
+                    label = dealCard(null, hand.getCards()[hand.getNextIndex() - 2], "Dealer");
                     dealerHand.add(label);
                     mainDesktopPane.add(label, 1);
-                    label = dealCard(dealerHand.get(hand.getNextIndex()-2), hand.getCards()[hand.getNextIndex()-1], "Hidden");
+                    label = dealCard(dealerHand.get(hand.getNextIndex() - 2), hand.getCards()[hand.getNextIndex() - 1], "Hidden");
                 }
                 dealerHand.add(label);
                 mainDesktopPane.add(label, 1);
                 break;
         }
     }
-    
+
     /**
      * Creates an animation of a JLabel card from x to y.
+     *
      * @param cardToDeal
      * @param x
-     * @param y 
+     * @param y
      */
-    private void animateDealCard(JLabel cardToDeal, int x, int y){
+    private void animateDealCard(JLabel cardToDeal, int x, int y) {
         //System.out.println(cardToDeal.getIcon().toString() + " x: " + x  + " y: " + y);
         SwingAnimation acDealer = new SwingAnimation();
-        if (x > y){ //dealt to Player
+        if (x > y) { //dealt to Player
             acDealer.jLabelYDown(Constants.DeckY, y, 1, 1, cardToDeal);
             acDealer.jLabelXLeft(Constants.DeckX, x, 1, 1, cardToDeal);
         } else { //dealt to Dealer
@@ -333,62 +383,65 @@ public class TableFrame extends javax.swing.JFrame{
             acDealer.jLabelYDown(Constants.DeckY, y, 1, 1, cardToDeal);
         }
     }
-    
+
     /**
      * The method is a utility method for dealCards(), it creates a new JLabel and animates movement from Deck of Cards to the current player.
+     *
      * @param lastCard
      * @param cardToDeal
      * @param player
      * @return the moved JLabel card.
      */
-    private JLabel dealCard(JLabel lastCard, Card cardToDeal, String type){
+    private JLabel dealCard(JLabel lastCard, Card cardToDeal, String type) {
         JLabel dealtCard = new JLabel(new ImageIcon(getClass().getResource(view.getCardImage(cardToDeal))));
-        
+
         switch (type) {
             case "Player":
-                if (lastCard == null){ //first card
+                if (lastCard == null) { //first card
                     dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
                     animateDealCard(dealtCard, Constants.PlayerX, Constants.PlayerY);
                 } else { //any other card
                     dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
-                    animateDealCard(dealtCard, Constants.PlayerX + (playerHand.size()* 25), Constants.PlayerY);
-                }   break;
+                    animateDealCard(dealtCard, Constants.PlayerX + (playerHand.size() * 25), Constants.PlayerY);
+                }
+                break;
             case "Dealer":
-                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
-                    animateDealCard(dealtCard, Constants.DealerX + (dealerHand.size()* 25), Constants.DealerY);
-                    break;
+                dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
+                animateDealCard(dealtCard, Constants.DealerX + (dealerHand.size() * 25), Constants.DealerY);
+                break;
             case "Hidden":
-                    dealtCard.setIcon(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
-                    dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
-                    animateDealCard(dealtCard, Constants.DealerX + (dealerHand.size()* 25), Constants.DealerY);
-                    break;
+                dealtCard.setIcon(new ImageIcon(getClass().getResource("/resources/cards/HiddenCard.png")));
+                dealtCard.setBounds(Constants.DeckX, Constants.DeckY, 117, 170);
+                animateDealCard(dealtCard, Constants.DealerX + (dealerHand.size() * 25), Constants.DealerY);
+                break;
         }
+        view.playSound("DealCard");
         return dealtCard;
     }
-    
+
     /**
      * The method represents the Stand process of the Player and imitates Dealer\'s actions.
      */
-    private void stand(){
+    private void stand() {
         view.drawCard(dealerHand.get(1), currentGame.getDealer().getCards()[1]);
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                while(currentGame.getDealer().dealerHandValue() <= Constants.DEALER_STAND){
-                    if (currentGame.getDealer().dealerHandValue() < Constants.DEALER_STAND 
-                            || (currentGame.getDealer().dealerHandValue() == Constants.DEALER_STAND && currentGame.getDealer().isSoft())){
+                while (currentGame.getDealer().dealerHandValue() <= Constants.DEALER_STAND) {
+                    if (currentGame.getDealer().dealerHandValue() < Constants.DEALER_STAND
+                            || (currentGame.getDealer().dealerHandValue() == Constants.DEALER_STAND && currentGame.getDealer().isSoft())) {
                         Card card = view.stand(currentGame);
                         currentGame.getDealer().getCards()[currentGame.getDealer().getNextIndex()] = card;
                         currentGame.getDealer().setNextIndex(currentGame.getDealer().getNextIndex() + 1);
                         dealCards(currentGame.getDealer(), true, "Dealer");
-                        if (Constants.DEBUG){
+                        if (Constants.DEBUG) {
                             System.out.println("Dealer next card is: " + card);
                         }
                         try {
                             Thread.sleep(Constants.STAND_DELAY);
                         } catch (InterruptedException ex) {
-                            if (Constants.DEBUG){
+                            if (Constants.DEBUG) {
                                 System.out.println(ex.getMessage());
                             }
                         }
@@ -401,50 +454,81 @@ public class TableFrame extends javax.swing.JFrame{
             }
         }).start();
     }
-    
+
     /**
-     * 
+     * The method represents the Surrender process for the Player.
      */
-    private void surrender(){
+    private void surrender() {
         showWinner(true);
     }
-    
+
     /**
      * The method is a utility method to update GUI about the game\'s victor.
      * @param playerWon (true if Player won, false if Dealer did).
-     * @return 
+     * @return
      */
-    private String gameWon(boolean playerWon){
-        if (playerWon){
+    private String gameWon(boolean playerWon) {
+        if (playerWon) {
+            view.playSound("Win");
             pnlMenuInGame.setVisible(false);
             return "WON";
         } else { //Dealer won
+            view.playSound("Lose");
             pnlMenuInGame.setVisible(false);
             return "LOST";
         }
     }
-    
+
     /**
      * The method retrieves the most updated scores from the current Game and updates the ScoreBoard accordingly
      */
-    private void updateScoreBoard(){
+    private void updateScoreBoard() {
         lblPlayerImage.setIcon(new ImageIcon(getClass().getResource(view.getCurrentPlayer().getImagePath())));
-        if (currentGame != null){
+        if (currentGame != null) {
             lblPlayerWins.setText("" + currentGame.getWins());
             lblPlayerLoses.setText("" + currentGame.getLoses());
-            lblPlayerBank.setText("" + currentGame.getScore());
-            lblRoundNumber.setText("" + currentGame.getRound());
+            if (currentScore != currentGame.getScore()) {
+                view.playSound("Coins");
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        int newScore = currentGame.getScore();
+                        System.out.println("New score: " + newScore);
+                        int difference = Math.abs(currentScore - newScore);
+                        for (int i = 0; i <= difference; i++) {
+                            if (currentScore > newScore) {
+                                lblPlayerBank.setText("" + (currentScore - i));
+                            } else {
+                                lblPlayerBank.setText("" + (currentScore + i));
+                            }
+                            try {
+                                Thread.sleep(70);
+                            } catch (InterruptedException ex) {
+                                if (Constants.DEBUG) {
+                                    System.out.println(ex.getMessage());
+                                }
+                            }
+                        }
+                        currentScore = newScore;
+                    }
+                }).start();
+            }
+            //lblPlayerBank.setText("" + currentGame.getScore());
+            if (currentGame.getRound() > 0) {
+                lblRoundNumber.setText("Round " + currentGame.getRound());
+            }
         }
     }
-    
+
     /**
      * The method deals with what happens in the UI when a Game is won.
      */
-    private void showWinner(boolean surrendered){
+    private void showWinner(boolean surrendered) {
         final int dealersHandValue = currentGame.getDealer().dealerHandValue();
         final int playersHandValue = currentGame.getPlayer().getCurrentHand().playerHandValue();
         final String result;
-        if (surrendered){
+        if (surrendered) {
             result = "GAVE-UP";
             currentGame.playerLose();
         } else {
@@ -452,25 +536,27 @@ public class TableFrame extends javax.swing.JFrame{
         }
         pnlMenuInGame.setVisible(false);
         updateScoreBoard();
-        
+
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try {
-                    Thread.sleep((dealerHand.size()-2) * Constants.STAND_DELAY);
+                    Thread.sleep((dealerHand.size() - 2) * Constants.STAND_DELAY);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(TableFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    if (Constants.DEBUG){
+                        System.out.println(ex.getMessage());
+                    }
                 }
                 pnlMenu.setVisible(true);
                 lblPlayerResult.setText("You " + result + "!");
                 lblDealersHand.setText("    Dealer's Hand: " + dealersHandValue + ".");
-                lblPlayersHand.setText("    Player's Hand: " + playersHandValue + ".");
+                lblPlayersHand.setText("    " + currentGame.getPlayer().getName() + "'s Hand: " + playersHandValue + ".");
                 pnlShowWinner.setVisible(true);
             }
         }).start();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
      */
@@ -519,6 +605,8 @@ public class TableFrame extends javax.swing.JFrame{
         btnHit = new javax.swing.JButton();
         btnStand = new javax.swing.JButton();
         btnSurrender = new javax.swing.JButton();
+        pnlSettings = new javax.swing.JPanel();
+        chkboxSound = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -527,14 +615,17 @@ public class TableFrame extends javax.swing.JFrame{
         mainDesktopPane.setPreferredSize(new java.awt.Dimension(1280, 850));
 
         lblShuffling.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/shuffling.gif"))); // NOI18N
+        mainDesktopPane.add(lblShuffling);
+        lblShuffling.setBounds(700, 140, 336, 189);
 
         lblWhiskey.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/whiskey.png"))); // NOI18N
-        lblWhiskey.setText("jLabel1");
         lblWhiskey.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblWhiskeyMouseClicked(evt);
             }
         });
+        mainDesktopPane.add(lblWhiskey);
+        lblWhiskey.setBounds(240, 510, 95, 100);
 
         pnlScoreBoard.setOpaque(false);
 
@@ -626,48 +717,35 @@ public class TableFrame extends javax.swing.JFrame{
                 .addComponent(lblScoreBoard))
         );
 
+        mainDesktopPane.add(pnlScoreBoard);
+        pnlScoreBoard.setBounds(1063, 0, 217, 407);
+
         pnlShowWinner.setOpaque(false);
         pnlShowWinner.setPreferredSize(new java.awt.Dimension(1280, 740));
+        pnlShowWinner.setLayout(null);
 
         lblPlayerResult.setFont(new java.awt.Font("Agency FB", 0, 48)); // NOI18N
         lblPlayerResult.setForeground(new java.awt.Color(255, 255, 255));
         lblPlayerResult.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnlShowWinner.add(lblPlayerResult);
+        lblPlayerResult.setBounds(452, 140, 380, 100);
 
         lblDealersHand.setFont(new java.awt.Font("Agency FB", 0, 36)); // NOI18N
         lblDealersHand.setForeground(new java.awt.Color(255, 255, 255));
+        pnlShowWinner.add(lblDealersHand);
+        lblDealersHand.setBounds(452, 240, 380, 50);
 
         lblPlayersHand.setFont(new java.awt.Font("Agency FB", 0, 36)); // NOI18N
         lblPlayersHand.setForeground(new java.awt.Color(255, 255, 255));
+        pnlShowWinner.add(lblPlayersHand);
+        lblPlayersHand.setBounds(452, 290, 380, 50);
 
         lblShowWinner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/showWinner.png"))); // NOI18N
+        pnlShowWinner.add(lblShowWinner);
+        lblShowWinner.setBounds(0, 0, 1280, 740);
 
-        javax.swing.GroupLayout pnlShowWinnerLayout = new javax.swing.GroupLayout(pnlShowWinner);
-        pnlShowWinner.setLayout(pnlShowWinnerLayout);
-        pnlShowWinnerLayout.setHorizontalGroup(
-            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
-                .addGap(452, 452, 452)
-                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
-                .addGap(452, 452, 452)
-                .addComponent(lblPlayersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
-                .addGap(452, 452, 452)
-                .addComponent(lblDealersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lblShowWinner)
-        );
-        pnlShowWinnerLayout.setVerticalGroup(
-            pnlShowWinnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
-                .addGap(140, 140, 140)
-                .addComponent(lblPlayerResult, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
-                .addComponent(lblPlayersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(pnlShowWinnerLayout.createSequentialGroup()
-                .addGap(240, 240, 240)
-                .addComponent(lblDealersHand, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lblShowWinner)
-        );
+        mainDesktopPane.add(pnlShowWinner);
+        pnlShowWinner.setBounds(0, 0, 1280, 740);
 
         pnlMenu.setOpaque(false);
         pnlMenu.setPreferredSize(new java.awt.Dimension(1116, 150));
@@ -736,6 +814,9 @@ public class TableFrame extends javax.swing.JFrame{
                     .addComponent(btnDeal, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
+
+        mainDesktopPane.add(pnlMenu);
+        pnlMenu.setBounds(0, 675, 1112, 62);
 
         pnlMenuInGame.setOpaque(false);
         pnlMenuInGame.setPreferredSize(new java.awt.Dimension(1116, 150));
@@ -831,46 +912,39 @@ public class TableFrame extends javax.swing.JFrame{
                     .addComponent(btnSurrender, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        javax.swing.GroupLayout mainDesktopPaneLayout = new javax.swing.GroupLayout(mainDesktopPane);
-        mainDesktopPane.setLayout(mainDesktopPaneLayout);
-        mainDesktopPaneLayout.setHorizontalGroup(
-            mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGap(1063, 1063, 1063)
-                .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGap(700, 700, 700)
-                .addComponent(lblShuffling))
-            .addComponent(pnlMenuInGame, javax.swing.GroupLayout.PREFERRED_SIZE, 1112, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGap(240, 240, 240)
-                .addComponent(lblWhiskey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        mainDesktopPane.add(pnlMenuInGame);
+        pnlMenuInGame.setBounds(0, 675, 1112, 62);
+
+        pnlSettings.setOpaque(false);
+
+        chkboxSound.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        chkboxSound.setForeground(new java.awt.Color(255, 255, 255));
+        chkboxSound.setSelected(true);
+        chkboxSound.setText("Sound");
+        chkboxSound.setContentAreaFilled(false);
+        chkboxSound.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkboxSoundActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
+        pnlSettings.setLayout(pnlSettingsLayout);
+        pnlSettingsLayout.setHorizontalGroup(
+            pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettingsLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(chkboxSound))
         );
-        mainDesktopPaneLayout.setVerticalGroup(
-            mainDesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addComponent(pnlScoreBoard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(268, 268, 268)
-                .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGap(140, 140, 140)
-                .addComponent(lblShuffling))
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGap(675, 675, 675)
-                .addComponent(pnlMenuInGame, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(mainDesktopPaneLayout.createSequentialGroup()
-                .addGap(510, 510, 510)
-                .addComponent(lblWhiskey))
-            .addComponent(pnlShowWinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        pnlSettingsLayout.setVerticalGroup(
+            pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettingsLayout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(chkboxSound))
         );
-        mainDesktopPane.setLayer(lblShuffling, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(lblWhiskey, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(pnlScoreBoard, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(pnlShowWinner, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(pnlMenu, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainDesktopPane.setLayer(pnlMenuInGame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        mainDesktopPane.add(pnlSettings);
+        pnlSettings.setBounds(1140, 590, 120, 71);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -904,22 +978,32 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnQuitMouseEntered
 
     private void btnDealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDealActionPerformed
+        view.playSound("Button");
         clearGUI();
         pnlMenu.setVisible(false);
         view.deal(currentGame);
-        pnlMenuInGame.setVisible(true);
-        animateShuffle();
         animateDeck();
-        
-        new java.util.Timer().schedule( 
+
+        new java.util.Timer().schedule(
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    animateShuffle();
+                }
+            },
+            850
+        );
+
+        new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
                         dealCards(currentGame.getDealer(), false, "Dealer");
                         dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
+                        pnlMenuInGame.setVisible(true);
                     }
-                }, 
-                2505
+                },
+                4000
         );
     }//GEN-LAST:event_btnDealActionPerformed
 
@@ -932,6 +1016,7 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnDealMouseEntered
 
     private void btnSurrenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSurrenderActionPerformed
+        view.playSound("Button");
         int question = JOptionPane.showConfirmDialog(null, "Are you sure you want to surrender and lose the round?", "Give-Up", JOptionPane.YES_NO_OPTION);
         if (question == JOptionPane.YES_OPTION) { // if clicked YES
             surrender();
@@ -947,8 +1032,9 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnSurrenderMouseEntered
 
     private void btnStandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStandActionPerformed
-        if(!view.isBusted(currentGame)){
-           stand();
+        view.playSound("Button");
+        if (!view.isBusted(currentGame)) {
+            stand();
         }
     }//GEN-LAST:event_btnStandActionPerformed
 
@@ -961,9 +1047,10 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnStandMouseEntered
 
     private void btnHitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitActionPerformed
+        view.playSound("Button");
         currentGame.hit();
         dealCards(currentGame.getPlayer().getCurrentHand(), true, "Player");
-        if (currentGame.isBusted()){
+        if (currentGame.isBusted()) {
             showWinner(false);
         }
     }//GEN-LAST:event_btnHitActionPerformed
@@ -1017,15 +1104,25 @@ public class TableFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_btnQuitMouseReleased
 
     private void btnInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfoActionPerformed
+        view.playSound("Button");
         InfoFrame frmRules = new InfoFrame(view);
         frmRules.setVisible(true);
     }//GEN-LAST:event_btnInfoActionPerformed
 
     private void lblWhiskeyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblWhiskeyMouseClicked
+        view.playSound("OrderDrink");
         view.orderDrink(currentGame, "Whiskey");
         updateScoreBoard();
     }//GEN-LAST:event_lblWhiskeyMouseClicked
-    
+
+    private void chkboxSoundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkboxSoundActionPerformed
+        if (chkboxSound.isSelected()){
+            View.soundON = true;
+        } else {
+            View.soundON = false;
+        }
+    }//GEN-LAST:event_chkboxSoundActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeal;
     private javax.swing.JButton btnHit;
@@ -1033,6 +1130,7 @@ public class TableFrame extends javax.swing.JFrame{
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnStand;
     private javax.swing.JButton btnSurrender;
+    private javax.swing.JCheckBox chkboxSound;
     private javax.swing.JLabel lblDealersHand;
     private javax.swing.JLabel lblPlayerBank;
     private javax.swing.JLabel lblPlayerImage;
@@ -1050,6 +1148,7 @@ public class TableFrame extends javax.swing.JFrame{
     private javax.swing.JPanel pnlMenu;
     private javax.swing.JPanel pnlMenuInGame;
     private javax.swing.JPanel pnlScoreBoard;
+    private javax.swing.JPanel pnlSettings;
     private javax.swing.JPanel pnlShowWinner;
     // End of variables declaration//GEN-END:variables
 }

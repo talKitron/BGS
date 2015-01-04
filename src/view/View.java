@@ -6,9 +6,12 @@ package view;
 import controller.Controller;
 import java.awt.Image;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -46,6 +49,10 @@ public final class View{
      * Holds current player details
      */
     public static Player currentPlayer;
+    /**
+     * Indicates sound status to play audio
+     */
+    public static boolean soundON = true;
 //*************************************************** Constructors *************************************************
     /**
      * empty constructor.
@@ -245,6 +252,49 @@ public final class View{
      */
     public Game getHighLosesGame () {      
         return controller.getHighLosesGame();
+    }
+    
+    /**
+     * The method plays the requested sound if exists in the switch.
+     * @param sound 
+     */
+    public void playSound(String sound){
+        if (soundON){
+            sound = sound.replaceAll("/^[A-Z][a-z]$/", sound);
+            String resourcePath = "/resources/";
+            switch(sound){
+                case "Button": resourcePath += "button.au";
+                    break;
+                case "CasinoAtmosphere": resourcePath += "casinoAtmosphere.au";
+                    break;
+                case "Coins": resourcePath += "coins.au";
+                    break;
+                case "Shuffle": resourcePath += "shuffle.au";
+                    break;
+                case "DealCard": resourcePath += "dealCard.au";
+                    break;
+                case "Win": resourcePath += "won.au";
+                    break;
+                case "Lose": resourcePath += "loss.au";
+                    break;
+                case "OrderDrink": resourcePath += "pouring.au";
+                    break;
+                case "GameStart": resourcePath += "initialDeal.au";
+                    break;
+            }
+            try{
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(resourcePath));
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clip.start();
+            }
+            catch(UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                if (Constants.DEBUG){
+                    System.out.println(resourcePath);
+                    System.out.println(ex.getMessage());
+                }
+            }
+        }
     }
     
      /**

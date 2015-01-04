@@ -47,48 +47,8 @@
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JDesktopPane(){&#xa;    @Override&#xa;    protected void paintComponent(Graphics g) {&#xa;        try {&#xa;            image = new javax.swing.ImageIcon(getClass().getResource(&quot;/resources/tableFrame.png&quot;)).getImage();&#xa;&#xa;            if (g != null) {&#xa;                g.drawImage(image,&#xa;                    (this.getSize().width - image.getWidth(null)) / 2,       // set the frame at the center of the screen&#xa;                    (this.getSize().height - image.getHeight(null)) / 2,&#xa;                    null);&#xa;            }&#xa;        } catch (NullPointerException npe) {&#xa;            if (Constants.DEBUG)&#xa;            System.out.println(&quot;Can&apos;t find file!! Continue without the original background&quot;);&#xa;        }&#xa;    }&#xa;}"/>
       </AuxValues>
 
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="1063" pref="1063" max="-2" attributes="0"/>
-                  <Component id="pnlScoreBoard" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Component id="pnlMenu" min="-2" pref="1112" max="-2" attributes="0"/>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="700" pref="700" max="-2" attributes="0"/>
-                  <Component id="lblShuffling" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Component id="pnlMenuInGame" min="-2" pref="1112" max="-2" attributes="0"/>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="240" pref="240" max="-2" attributes="0"/>
-                  <Component id="lblWhiskey" min="-2" pref="77" max="-2" attributes="0"/>
-              </Group>
-              <Component id="pnlShowWinner" min="-2" max="-2" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Component id="pnlScoreBoard" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="268" pref="268" max="-2" attributes="0"/>
-                  <Component id="pnlMenu" min="-2" pref="62" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="140" pref="140" max="-2" attributes="0"/>
-                  <Component id="lblShuffling" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="675" pref="675" max="-2" attributes="0"/>
-                  <Component id="pnlMenuInGame" min="-2" pref="62" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="510" pref="510" max="-2" attributes="0"/>
-                  <Component id="lblWhiskey" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Component id="pnlShowWinner" min="-2" max="-2" attributes="0"/>
-          </Group>
-        </DimensionLayout>
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblShuffling">
@@ -97,22 +57,36 @@
               <Image iconType="3" name="/resources/shuffling.gif"/>
             </Property>
           </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="700" y="140" width="-1" height="-1"/>
+            </Constraint>
+          </Constraints>
         </Component>
         <Component class="javax.swing.JLabel" name="lblWhiskey">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/resources/whiskey.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="jLabel1"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblWhiskeyMouseClicked"/>
           </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="240" y="510" width="-1" height="-1"/>
+            </Constraint>
+          </Constraints>
         </Component>
         <Container class="javax.swing.JPanel" name="pnlScoreBoard">
           <Properties>
             <Property name="opaque" type="boolean" value="false"/>
           </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="1063" y="0" width="-1" height="-1"/>
+            </Constraint>
+          </Constraints>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -278,40 +252,14 @@
               <Dimension value="[1280, 740]"/>
             </Property>
           </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="0" width="-1" height="-1"/>
+            </Constraint>
+          </Constraints>
 
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="452" pref="452" max="-2" attributes="0"/>
-                      <Component id="lblPlayerResult" min="-2" pref="380" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="452" pref="452" max="-2" attributes="0"/>
-                      <Component id="lblPlayersHand" min="-2" pref="380" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="452" pref="452" max="-2" attributes="0"/>
-                      <Component id="lblDealersHand" min="-2" pref="380" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="lblShowWinner" min="-2" max="-2" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="140" pref="140" max="-2" attributes="0"/>
-                      <Component id="lblPlayerResult" min="-2" pref="100" max="-2" attributes="0"/>
-                      <EmptySpace min="50" pref="50" max="-2" attributes="0"/>
-                      <Component id="lblPlayersHand" min="-2" pref="50" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="240" pref="240" max="-2" attributes="0"/>
-                      <Component id="lblDealersHand" min="-2" pref="50" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="lblShowWinner" min="-2" max="-2" attributes="0"/>
-              </Group>
-            </DimensionLayout>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+            <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JLabel" name="lblPlayerResult">
@@ -324,6 +272,11 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="452" y="140" width="380" height="100"/>
+                </Constraint>
+              </Constraints>
             </Component>
             <Component class="javax.swing.JLabel" name="lblDealersHand">
               <Properties>
@@ -334,6 +287,11 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
               </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="452" y="240" width="380" height="50"/>
+                </Constraint>
+              </Constraints>
             </Component>
             <Component class="javax.swing.JLabel" name="lblPlayersHand">
               <Properties>
@@ -344,6 +302,11 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
               </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="452" y="290" width="380" height="50"/>
+                </Constraint>
+              </Constraints>
             </Component>
             <Component class="javax.swing.JLabel" name="lblShowWinner">
               <Properties>
@@ -351,6 +314,11 @@
                   <Image iconType="3" name="/resources/showWinner.png"/>
                 </Property>
               </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="0" y="0" width="-1" height="-1"/>
+                </Constraint>
+              </Constraints>
             </Component>
           </SubComponents>
         </Container>
@@ -361,6 +329,11 @@
               <Dimension value="[1116, 150]"/>
             </Property>
           </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="675" width="1112" height="62"/>
+            </Constraint>
+          </Constraints>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -427,6 +400,11 @@
               <Dimension value="[1116, 150]"/>
             </Property>
           </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="675" width="1112" height="62"/>
+            </Constraint>
+          </Constraints>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -501,6 +479,53 @@
                 <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSurrenderMousePressed"/>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSurrenderMouseReleased"/>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSurrenderActionPerformed"/>
+              </Events>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="pnlSettings">
+          <Properties>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="1140" y="590" width="120" height="-1"/>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="35" pref="35" max="-2" attributes="0"/>
+                      <Component id="chkboxSound" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="48" pref="48" max="-2" attributes="0"/>
+                      <Component id="chkboxSound" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JCheckBox" name="chkboxSound">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="12" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="text" type="java.lang.String" value="Sound"/>
+                <Property name="contentAreaFilled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkboxSoundActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

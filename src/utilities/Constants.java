@@ -25,13 +25,17 @@ public final class Constants {
     /**Player Hand y axis*/
     public static final int PlayerY = 420;
     /**Deck of Cards x axis*/
-    public static final int DeckX = 985;
+    public static final int DeckX = 880;
     /**Deck of Cards y axis*/
     public static final int DeckY = 80;
+    /**Distance between cards on shuffle animation*/
+    public static final int CARDS_SHUFFLE_PDISTANCE = 100;
     /**Deck of Cards dealing speed: Fast*/
-    public static final int DECK_DEAL_FAST = 1;
+    public static final int DECK_DEAL_FAST = 3;
     /**Deck of Cards dealing speed: Slow*/
     public static final int DECK_DEAL_SLOW = 1;
+    /**The number of times Deck of Cards shuffle animation will happen*/
+    public static final int DECK_SHUFFLE_ANIMATION = 2;
     /**Stand\'s Dealer card animation delay*/
     public static final int STAND_DELAY = 750;
     /**Number of Player images to load*/

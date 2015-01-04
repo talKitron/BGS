@@ -25,6 +25,7 @@ public class InfoFrame extends javax.swing.JFrame {
     public InfoFrame(View view) {
         this.view = view;
         initComponents();
+        setLocationRelativeTo(null);
         txtaRulesArea.setEditable(false);
         setIconImage(getDefaultToolkit().getImage(getClass().getResource(INFO_ICON_PATH)));
         btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -109,6 +110,7 @@ public class InfoFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        view.playSound("Button");
         this.dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
 
