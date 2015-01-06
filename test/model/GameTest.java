@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import static model.Suit.*;
@@ -13,30 +8,28 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
  * @author BGS Team
  */
 public class GameTest {
-    private Object targetClass;
-    
+
     public GameTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -195,10 +188,8 @@ public class GameTest {
     }
 
     /**
-     * Test of resetGame method, of class Game.
-     * This test need testResetHand and testShuffle to pass in order to pass
+     * Test of resetGame method, of class Game. This test need testResetHand and testShuffle to pass in order to pass
      */
-    
     @Test
     public void testResetGame() {
         System.out.println("Testing resetGame() Method...");
@@ -220,23 +211,23 @@ public class GameTest {
         Card playerCard2 = testPlayer.getCurrentHand().getCards()[1];
         Card dealerCard1 = instance.getDealer().getCards()[0];
         Card dealerCard2 = instance.getDealer().getCards()[0];
-        
-        assertTrue(playerCard1==null);
-        assertTrue(playerCard2==null);
-        assertTrue(dealerCard1==null);
-        assertTrue(dealerCard2==null);
-        
+
+        assertTrue(playerCard1 == null);
+        assertTrue(playerCard2 == null);
+        assertTrue(dealerCard1 == null);
+        assertTrue(dealerCard2 == null);
+
         instance.deal();
-        
+
         playerCard1 = testPlayer.getCurrentHand().getCards()[0];
         playerCard2 = testPlayer.getCurrentHand().getCards()[1];
         dealerCard1 = testPlayer.getCurrentHand().getCards()[0];
         dealerCard2 = testPlayer.getCurrentHand().getCards()[1];
-       
-        assertTrue(playerCard1!=null);
-        assertTrue(playerCard2!=null);
-        assertTrue(dealerCard1!=null);
-        assertTrue(dealerCard2!=null);
+
+        assertTrue(playerCard1 != null);
+        assertTrue(playerCard2 != null);
+        assertTrue(dealerCard1 != null);
+        assertTrue(dealerCard2 != null);
     }
 
     /**
@@ -248,10 +239,10 @@ public class GameTest {
         Player testPlayer = new Player("elad", "123");
         Game instance = new Game(testPlayer);
         Card playerCard1 = testPlayer.getCurrentHand().getCards()[0];
-        assertTrue(playerCard1==null);
+        assertTrue(playerCard1 == null);
         instance.deal();
         playerCard1 = testPlayer.getCurrentHand().getCards()[0];
-        assertTrue(playerCard1!=null);
+        assertTrue(playerCard1 != null);
     }
 
     /**
@@ -264,21 +255,21 @@ public class GameTest {
         Player testPlayer = new Player("elad", "123");
         Game instance = new Game(testPlayer);
 
-        cards[0] = new Card(8,Spades);
-        cards[1] = new Card(11,Hearts);
-        cards[2] = new Card(2,Diamonds);
-        instance.getPlayer().getCurrentHand().setCards_debug(cards);
+        cards[0] = new Card(8, Spades);
+        cards[1] = new Card(11, Hearts);
+        cards[2] = new Card(2, Diamonds);
+        instance.getPlayer().getCurrentHand().setCardsDebug(cards);
         boolean result1 = instance.isBusted();
-        
-        cards[0] = new Card(8,Spades);
-        cards[1] = new Card(13,Hearts);
-        cards[2] = new Card(4,Diamonds);
-        instance.getPlayer().getCurrentHand().setCards_debug(cards);
+
+        cards[0] = new Card(8, Spades);
+        cards[1] = new Card(13, Hearts);
+        cards[2] = new Card(4, Diamonds);
+        instance.getPlayer().getCurrentHand().setCardsDebug(cards);
         boolean result2 = instance.isBusted();
 
         boolean expResult1 = false;
         boolean expResult2 = true;
-        
+
         assertEquals(expResult1, result1);
         assertEquals(expResult2, result2);
     }
@@ -292,15 +283,15 @@ public class GameTest {
         Card[] cards = new Card[11];
         Player testPlayer = new Player("elad", "123");
         Game instance = new Game(testPlayer);
-        cards[0] = new Card(8,Spades);
-        cards[1] = new Card(11,Hearts);
-        cards[2] = new Card(2,Diamonds);
-        instance.getPlayer().getCurrentHand().setCards_debug(cards);
+        cards[0] = new Card(8, Spades);
+        cards[1] = new Card(11, Hearts);
+        cards[2] = new Card(2, Diamonds);
+        instance.getPlayer().getCurrentHand().setCardsDebug(cards);
         instance.setRound(2);
         int expResult1 = 60;
         int result1 = instance.calculateScore();
         assertEquals(expResult1, result1);
-        
+
         instance.setRound(3);
         int expResult2 = 40;
         int result2 = instance.calculateScore();
@@ -319,12 +310,12 @@ public class GameTest {
 
         Player testPlayer = new Player("elad", "123");
         Game instance = new Game(testPlayer);
-        cards[0] = new Card(8,Spades);
-        cards[1] = new Card(11,Hearts);
-        cards[2] = new Card(2,Diamonds);
+        cards[0] = new Card(8, Spades);
+        cards[1] = new Card(11, Hearts);
+        cards[2] = new Card(2, Diamonds);
         instance.setScore(score);
         instance.setWins(wins);
-        instance.getPlayer().getCurrentHand().setCards_debug(cards);
+        instance.getPlayer().getCurrentHand().setCardsDebug(cards);
         instance.playerWin();
         assertTrue(score < instance.getScore());
         assertThat(instance.getWins(), is(3));
@@ -342,12 +333,12 @@ public class GameTest {
 
         Player testPlayer = new Player("elad", "123");
         Game instance = new Game(testPlayer);
-        cards[0] = new Card(8,Spades);
-        cards[1] = new Card(11,Hearts);
-        cards[2] = new Card(2,Diamonds);
+        cards[0] = new Card(8, Spades);
+        cards[1] = new Card(11, Hearts);
+        cards[2] = new Card(2, Diamonds);
         instance.setScore(score);
         instance.setLoses(loses);
-        instance.getPlayer().getCurrentHand().setCards_debug(cards);
+        instance.getPlayer().getCurrentHand().setCardsDebug(cards);
         instance.playerLose();
         assertTrue(score > instance.getScore());
         assertThat(instance.getLoses(), is(3));
@@ -366,88 +357,87 @@ public class GameTest {
         Game instance = new Game(testPlayer);
         Card[] playerCards = new Card[11];
         Card[] dealerCards = new Card[11];
-        
-        playerCards[0] = new Card(8,Spades);      //player cards
-        playerCards[1] = new Card(11,Hearts);
-        playerCards[2] = new Card(2,Diamonds);
-        instance.getPlayer().getCurrentHand().setCards_debug(playerCards);
-        
-        dealerCards[0] = new Card(8,Spades);      //dealer cards
-        dealerCards[1] = new Card(11,Hearts);
-        dealerCards[2] = new Card(4,Diamonds);
-        testDealer.setCards_debug(dealerCards);
-        instance.setDealer_debug(testDealer);
-        
+
+        playerCards[0] = new Card(8, Spades);      //player cards
+        playerCards[1] = new Card(11, Hearts);
+        playerCards[2] = new Card(2, Diamonds);
+        instance.getPlayer().getCurrentHand().setCardsDebug(playerCards);
+
+        dealerCards[0] = new Card(8, Spades);      //dealer cards
+        dealerCards[1] = new Card(11, Hearts);
+        dealerCards[2] = new Card(4, Diamonds);
+        testDealer.setCardsDebug(dealerCards);
+        instance.setDealerDebug(testDealer);
+
         playerValue = instance.getPlayer().getCurrentHand().playerHandValue();  //check value using breakpoint
         dealerValue = instance.getDealer().dealerHandValue();                   //check value using breakpoint
-        
+
         boolean expResult1 = true;     // 1st case: dealer's hand > 21, player should win
         boolean result1 = instance.whoWon();
         assertEquals(expResult1, result1);
-        
-        playerCards[0] = new Card(7,Spades);      //player cards
-        playerCards[1] = new Card(9,Hearts);
-        playerCards[2] = new Card(3,Diamonds);
-        instance.getPlayer().getCurrentHand().setCards_debug(playerCards);
-        
-        dealerCards[0] = new Card(8,Spades);      //dealer cards
-        dealerCards[1] = new Card(2,Hearts);
-        dealerCards[2] = new Card(4,Diamonds);
-        testDealer.setCards_debug(dealerCards);
-        instance.setDealer_debug(testDealer);
-        
+
+        playerCards[0] = new Card(7, Spades);      //player cards
+        playerCards[1] = new Card(9, Hearts);
+        playerCards[2] = new Card(3, Diamonds);
+        instance.getPlayer().getCurrentHand().setCardsDebug(playerCards);
+
+        dealerCards[0] = new Card(8, Spades);      //dealer cards
+        dealerCards[1] = new Card(2, Hearts);
+        dealerCards[2] = new Card(4, Diamonds);
+        testDealer.setCardsDebug(dealerCards);
+        instance.setDealerDebug(testDealer);
+
         playerValue = instance.getPlayer().getCurrentHand().playerHandValue();  //check value using breakpoint
         dealerValue = instance.getDealer().dealerHandValue();                   //check value using breakpoint
-        
+
         boolean expResult2 = true;     // 2nd case: player's hand > dealer's hand, player should win
         boolean result2 = instance.whoWon();
         assertEquals(expResult2, result2);
-        
-        playerCards[0] = new Card(9,Spades);      //player cards
-        playerCards[1] = new Card(2,Hearts);
-        playerCards[2] = new Card(3,Diamonds);
-        instance.getPlayer().getCurrentHand().setCards_debug(playerCards);
-        
-        dealerCards[0] = new Card(8,Spades);      //dealer cards
-        dealerCards[1] = new Card(12,Hearts);
-        dealerCards[2] = new Card(2,Diamonds);
-        testDealer.setCards_debug(dealerCards);
-        instance.setDealer_debug(testDealer);
-        
+
+        playerCards[0] = new Card(9, Spades);      //player cards
+        playerCards[1] = new Card(2, Hearts);
+        playerCards[2] = new Card(3, Diamonds);
+        instance.getPlayer().getCurrentHand().setCardsDebug(playerCards);
+
+        dealerCards[0] = new Card(8, Spades);      //dealer cards
+        dealerCards[1] = new Card(12, Hearts);
+        dealerCards[2] = new Card(2, Diamonds);
+        testDealer.setCardsDebug(dealerCards);
+        instance.setDealerDebug(testDealer);
+
         playerValue = instance.getPlayer().getCurrentHand().playerHandValue();  //check value using breakpoint
         dealerValue = instance.getDealer().dealerHandValue();                   //check value using breakpoint
-        
+
         boolean expResult3 = false;     // 3rd case: dealer's hand > player's hand and dealer's hand < 21, player should lose
         boolean result3 = instance.whoWon();
         assertEquals(expResult3, result3);
     }
 
-    /**
-     * Test of stand method, of class Game.
-     */
-    @Ignore("needs to be adjust to 3rd iterarion changes")
-    @Test
-    public void testStand() {
-        System.out.println("stand");
-        Hand testDealer = new Hand();
-        Card[] dealerCards = new Card[11];
-        Player testPlayer = new Player("elad", "123");
-        Game instance = new Game(testPlayer);
-        
-        dealerCards[0] = new Card(7,Spades);      //dealer cards
-        dealerCards[1] = new Card(7,Hearts);
-        dealerCards[2] = new Card(2,Diamonds);
-        
-        assertTrue(dealerCards[3]==null);         //make sure dealer has only 3 cards
-        testDealer.setNextIndex(3);
-        testDealer.setCards_debug(dealerCards);
-        instance.setDealer_debug(testDealer);
-       
-        instance.stand();
-        assertTrue(instance.getDealer().getCards()[3]!=null);   //make sure dealer took a card
-        
-        instance.stand();                          
-        assertTrue(instance.getDealer().getCards()[4]==null);   //dealer has 17 cards. make sure he doesn't take another card.
-    }
-    
+//    /**
+//     * Test of stand method, of class Game.
+//     */
+//    @Ignore("needs to be adjust to 3rd iterarion changes")
+//    @Test
+//    public void testStand() {
+//        System.out.println("stand");
+//        Hand testDealer = new Hand();
+//        Card[] dealerCards = new Card[11];
+//        Player testPlayer = new Player("elad", "123");
+//        Game instance = new Game(testPlayer);
+//
+//        dealerCards[0] = new Card(7, Spades);      //dealer cards
+//        dealerCards[1] = new Card(7, Hearts);
+//        dealerCards[2] = new Card(2, Diamonds);
+//
+//        assertTrue(dealerCards[3] == null);         //make sure dealer has only 3 cards
+//        testDealer.setNextIndex(3);
+//        testDealer.setCardsDebug(dealerCards);
+//        instance.setDealerDebug(testDealer);
+//
+//        instance.stand();
+//        assertTrue(instance.getDealer().getCards()[3] != null);   //make sure dealer took a card
+//
+//        instance.stand();
+//        assertTrue(instance.getDealer().getCards()[4] == null);   //dealer has 17 cards. make sure he doesn't take another card.
+//    }
 }

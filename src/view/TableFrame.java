@@ -16,8 +16,6 @@ import utilities.Constants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -136,8 +134,9 @@ public class TableFrame extends javax.swing.JFrame {
                 System.exit(0);
             } else if (question == JOptionPane.YES_OPTION) {
                 view.executeSysExit(false);
-            } else if (question == JOptionPane.CANCEL_OPTION) {
+            /*} else if (question == JOptionPane.CANCEL_OPTION) {
                 //do nothing
+            }*/
             }
         }
     }
@@ -230,19 +229,20 @@ public class TableFrame extends javax.swing.JFrame {
 
     /**
      * The method creates a shuffling GIF animation and presents it to the UI while also playing a sound.
+     * NOTICE: NOT IN USE, animateShuffle() instead.
      */
     private void animateGIFShuffle() {
         view.playSound("Shuffle");
         lblShuffling.setVisible(true);
 
         new java.util.Timer().schedule(
-            new java.util.TimerTask() {
-                @Override
-                public void run() {
-                    lblShuffling.setVisible(false);
-                }
-            },
-            2500
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        lblShuffling.setVisible(false);
+                    }
+                },
+                2500
         );
     }
 
@@ -273,7 +273,7 @@ public class TableFrame extends javax.swing.JFrame {
                     sa.jLabelXSideAndReturn(Constants.CARDS_SHUFFLE_PDISTANCE, Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_FAST, right, true);
                     i++;
                     try {
-                        Thread.sleep(deckOfCards.size() * 2 * Constants.CARDS_SHUFFLE_PDISTANCE);
+                        Thread.sleep(deckOfCards.size() * 2 * Constants.CARDS_SHUFFLE_PDISTANCE / 2);
                     } catch (InterruptedException ex) {
                         if (Constants.DEBUG) {
                             System.out.println(ex.getMessage());
@@ -290,7 +290,6 @@ public class TableFrame extends javax.swing.JFrame {
      * @param x
      */
     private void animateDivide() {
-        System.out.println("animateDivide");
         int i = 0;
 
         for (JLabel l : deckOfCards) {
@@ -309,7 +308,6 @@ public class TableFrame extends javax.swing.JFrame {
      * @param x
      */
     private void animateJoin() {
-        System.out.println("animateJoin");
         int i = 0;
 
         for (JLabel l : deckOfCards) {
@@ -373,14 +371,13 @@ public class TableFrame extends javax.swing.JFrame {
      * @param y
      */
     private void animateDealCard(JLabel cardToDeal, int x, int y) {
-        //System.out.println(cardToDeal.getIcon().toString() + " x: " + x  + " y: " + y);
         SwingAnimation acDealer = new SwingAnimation();
         if (x > y) { //dealt to Player
-            acDealer.jLabelYDown(Constants.DeckY, y, 1, 1, cardToDeal);
-            acDealer.jLabelXLeft(Constants.DeckX, x, 1, 1, cardToDeal);
+            acDealer.jLabelYDown(Constants.DeckY, y, Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_SLOW, cardToDeal);
+            acDealer.jLabelXLeft(Constants.DeckX, x, Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_SLOW, cardToDeal);
         } else { //dealt to Dealer
-            acDealer.jLabelXLeft(Constants.DeckX, x, 1, 1, cardToDeal);
-            acDealer.jLabelYDown(Constants.DeckY, y, 1, 1, cardToDeal);
+            acDealer.jLabelXLeft(Constants.DeckX, x, Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_SLOW, cardToDeal);
+            acDealer.jLabelYDown(Constants.DeckY, y, Constants.DECK_DEAL_SLOW, Constants.DECK_DEAL_SLOW, cardToDeal);
         }
     }
 
@@ -464,13 +461,22 @@ public class TableFrame extends javax.swing.JFrame {
 
     /**
      * The method is a utility method to update GUI about the game\'s victor.
+     *
      * @param playerWon (true if Player won, false if Dealer did).
      * @return
      */
     private String gameWon(boolean playerWon) {
         if (playerWon) {
-            view.playSound("Win");
             pnlMenuInGame.setVisible(false);
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            view.playSound("Win");
+                        }
+                    },
+                    1000
+            );
             return "WON";
         } else { //Dealer won
             view.playSound("Lose");
@@ -531,6 +537,7 @@ public class TableFrame extends javax.swing.JFrame {
         if (surrendered) {
             result = "GAVE-UP";
             currentGame.playerLose();
+            view.playSound("Lose");
         } else {
             result = gameWon(currentGame.whoWon());
         }
@@ -544,7 +551,7 @@ public class TableFrame extends javax.swing.JFrame {
                 try {
                     Thread.sleep((dealerHand.size() - 2) * Constants.STAND_DELAY);
                 } catch (InterruptedException ex) {
-                    if (Constants.DEBUG){
+                    if (Constants.DEBUG) {
                         System.out.println(ex.getMessage());
                     }
                 }
@@ -979,31 +986,31 @@ public class TableFrame extends javax.swing.JFrame {
 
     private void btnDealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDealActionPerformed
         view.playSound("Button");
-        clearGUI();
         pnlMenu.setVisible(false);
         view.deal(currentGame);
+        clearGUI();
         animateDeck();
 
         new java.util.Timer().schedule(
-            new java.util.TimerTask() {
-                @Override
-                public void run() {
-                    animateShuffle();
-                }
-            },
-            850
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        animateShuffle();
+                    }
+                },
+                1100
         );
 
         new java.util.Timer().schedule(
-            new java.util.TimerTask() {
-                @Override
-                public void run() {
-                    dealCards(currentGame.getDealer(), false, "Dealer");
-                    dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
-                    pnlMenuInGame.setVisible(true);
-                }
-            },
-            4000
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        dealCards(currentGame.getDealer(), false, "Dealer");
+                        dealCards(currentGame.getPlayer().getCurrentHand(), false, "Player");
+                        pnlMenuInGame.setVisible(true);
+                    }
+                },
+                4000
         );
     }//GEN-LAST:event_btnDealActionPerformed
 
@@ -1052,15 +1059,15 @@ public class TableFrame extends javax.swing.JFrame {
         dealCards(currentGame.getPlayer().getCurrentHand(), true, "Player");
         if (currentGame.isBusted()) {
             view.drawCard(dealerHand.get(1), currentGame.getDealer().getCards()[1]);
-            
+
             new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        showWinner(false);
-                    }
-                },
-                500
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            showWinner(false);
+                        }
+                    },
+                    500
             );
         }
     }//GEN-LAST:event_btnHitActionPerformed
@@ -1126,11 +1133,7 @@ public class TableFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_lblWhiskeyMouseClicked
 
     private void chkboxSoundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkboxSoundActionPerformed
-        if (chkboxSound.isSelected()){
-            View.soundON = true;
-        } else {
-            View.soundON = false;
-        }
+        View.soundON = chkboxSound.isSelected();
     }//GEN-LAST:event_chkboxSoundActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

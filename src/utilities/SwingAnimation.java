@@ -18,7 +18,7 @@ public class SwingAnimation {
      * @param label - The variable name of the JLabel you want to move.
      */
     public void jLabelYUp(final int start, final int stop, final int delay, final int increment, final JLabel label) {
-        JLabelYUp jxf = new JLabelYUp(start, stop, delay, increment, start, label);
+        JLabelYUp jxf = new JLabelYUp(start, stop, delay, increment, label);
         jxf.start();
     }
 
@@ -30,7 +30,7 @@ public class SwingAnimation {
      * @param label - The variable name of the JLabel you want to move.
      */
     public void jLabelYDown(final int start, final int stop, final int delay, final int increment, final JLabel label) {
-        JLabelYDown jxf = new JLabelYDown(start, stop, delay, increment, start, label);
+        JLabelYDown jxf = new JLabelYDown(start, stop, delay, increment, label);
         jxf.start();
     }
 
@@ -42,7 +42,7 @@ public class SwingAnimation {
      * @param label - The variable name of the JLabel you want to move.
      */
     public void jLabelXLeft(int start, int stop, int delay, int increment, JLabel label) {
-        JLabelXLeft jxf = new JLabelXLeft(start, stop, delay, increment, start, label);
+        JLabelXLeft jxf = new JLabelXLeft(start, stop, delay, increment, label);
         jxf.start();
     }
 
@@ -54,7 +54,7 @@ public class SwingAnimation {
      * @param label - The variable name of the JLabel you want to move.
      */
     public void jLabelXRight(final int start, final int stop, final int delay, final int increment, final JLabel label) {
-        JLabelXRight jxf = new JLabelXRight(start, stop, delay, increment, start, label);
+        JLabelXRight jxf = new JLabelXRight(start, stop, delay, increment, label);
         jxf.start();
     }
 
@@ -64,15 +64,13 @@ public class SwingAnimation {
         private int stop;
         private int delay;
         private int increment;
-        private int startOffset;
         private JLabel label;
 
-        public JLabelYUp(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+        public JLabelYUp(int start, int stop, int delay, int increment, JLabel label) {
             this.start = start;
             this.stop = stop;
             this.delay = delay;
             this.increment = increment;
-            this.startOffset = startOffset;
             this.label = label;
         }
 
@@ -101,29 +99,27 @@ public class SwingAnimation {
         private int stop;
         private int delay;
         private int increment;
-        private int startOffset;
         private JLabel label;
 
-        public JLabelYDown(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+        public JLabelYDown(int start, int stop, int delay, int increment, JLabel label) {
             this.start = start;
             this.stop = stop;
             this.delay = delay;
             this.increment = increment;
-            this.startOffset = startOffset;
             this.label = label;
         }
 
         @Override
         public void run() {
-            
+
             if (label.getY() == start) {
                 for (int i = start; i <= stop; i += increment) {
-                    try{
+                    try {
                         label.setLocation(label.getX(), i);
                         Thread.sleep(delay);
                     } catch (InterruptedException e) {
-                        if (Constants.DEBUG){
-                          System.out.println("Error Thread Interrupted: " + e);
+                        if (Constants.DEBUG) {
+                            System.out.println("Error Thread Interrupted: " + e);
                         }
                     }
                 }
@@ -137,15 +133,13 @@ public class SwingAnimation {
         private int stop;
         private int delay;
         private int increment;
-        private int startOffset;
         private JLabel label;
 
-        public JLabelXLeft(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+        public JLabelXLeft(int start, int stop, int delay, int increment, JLabel label) {
             this.start = start;
             this.stop = stop;
             this.delay = delay;
             this.increment = increment;
-            this.startOffset = startOffset;
             this.label = label;
         }
 
@@ -174,15 +168,13 @@ public class SwingAnimation {
         private int stop;
         private int delay;
         private int increment;
-        private int startOffset;
         private JLabel label;
 
-        public JLabelXRight(int start, int stop, int delay, int increment, int startOffset, JLabel label) {
+        public JLabelXRight(int start, int stop, int delay, int increment, JLabel label) {
             this.start = start;
             this.stop = stop;
             this.delay = delay;
             this.increment = increment;
-            this.startOffset = startOffset;
             this.label = label;
         }
 
@@ -229,31 +221,31 @@ public class SwingAnimation {
             super.run();
             if (startToRight) {
                 for (JLabel jl : cardsArray) {
-                    new JLabelXRight(jl.getLocation().x, jl.getLocation().x + stop, delay, increment, jl.getLocation().x, jl).start();
+                    new JLabelXRight(jl.getLocation().x, jl.getLocation().x + stop, delay, increment, jl).start();
                 }
                 try {
-                    Thread.sleep(stop * delay * cardsArray.size() /2);
+                    Thread.sleep(stop * delay * cardsArray.size() / 2);
                 } catch (InterruptedException ex) {
                     if (Constants.DEBUG) {
                         System.out.println(ex.getMessage());
                     }
                 }
                 for (JLabel jl : cardsArray) {
-                    new JLabelXLeft(jl.getLocation().x, jl.getLocation().x - stop, delay, increment, jl.getLocation().x, jl).start();
+                    new JLabelXLeft(jl.getLocation().x, jl.getLocation().x - stop, delay, increment, jl).start();
                 }
             } else {
                 for (JLabel jl : cardsArray) {
-                    new JLabelXLeft(jl.getLocation().x, jl.getLocation().x - stop, delay, increment, jl.getLocation().x, jl).start();
+                    new JLabelXLeft(jl.getLocation().x, jl.getLocation().x - stop, delay, increment, jl).start();
                 }
                 try {
-                    Thread.sleep(stop * delay * cardsArray.size() /2);
+                    Thread.sleep(stop * delay * cardsArray.size() / 2);
                 } catch (InterruptedException ex) {
                     if (Constants.DEBUG) {
                         System.out.println(ex.getMessage());
                     }
                 }
                 for (JLabel jl : cardsArray) {
-                    new JLabelXRight(jl.getLocation().x, jl.getLocation().x + stop, delay, increment, jl.getLocation().x, jl).start();
+                    new JLabelXRight(jl.getLocation().x, jl.getLocation().x + stop, delay, increment, jl).start();
                 }
             }
         }

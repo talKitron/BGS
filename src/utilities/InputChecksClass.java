@@ -4,20 +4,24 @@ import exceptions.*;
 
 /**
  * Utility class for input checks.
+ *
  * @author BGS Team
  */
 public class InputChecksClass {
+
     /**
      * method for checking if the string is start with letter.
+     *
      * @param string
      * @return true if start with space else return false
      */
-    public static boolean startWithLetter(String string){
+    public static boolean startWithLetter(String string) {
         return !string.matches("^[A-Za-z].*$");
     }
-    
+
     /**
      * method for checking text input. the method throw exceptions if the text contains numbers.
+     *
      * @param text
      * @param label
      * @throws CheckIntException
@@ -34,6 +38,7 @@ public class InputChecksClass {
 
     /**
      * method for checking text input. the method throw exceptions if the text contains letters.
+     *
      * @param text
      * @param label
      * @throws CheckLettersException

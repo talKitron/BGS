@@ -13,14 +13,19 @@ import static utilities.Constants.INFO_ICON_PATH;
 
 /**
  * Information and Game rules frame for the game.
+ *
  * @author BGS Team
  */
 public class InfoFrame extends javax.swing.JFrame {
-    /**ViewLogic field*/
+
+    /**
+     * ViewLogic field
+     */
     private final View view;
-    
+
     /**
      * Creates new form NewJFrame
+     * @param view
      */
     public InfoFrame(View view) {
         this.view = view;

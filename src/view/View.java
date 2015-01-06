@@ -4,8 +4,13 @@ package view;
 //*************************************************** Imports *****************************************************//
 
 import controller.Controller;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -81,6 +86,7 @@ public final class View{
      * create new MainFrame
      */
     public void executeLoginView() {
+        loadFonts();
         mainFrame = new MainFrame(instance);      // create new login frame
         try {
             UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");        
@@ -90,17 +96,11 @@ public final class View{
             }
         }
     }
-     
-    /**
-    * the method gets address of sound file and return the sound for play.
-    * @param soundAddress
-    * @return 
-    */
-    public SoundClass sound(String soundAddress) {          ///////// sound method
-        SoundClass sound = new SoundClass(soundAddress);
-        return sound;
-    }
     
+    /**
+     * The method sets BGS icon to the given Frame.
+     * @param frm 
+     */
     protected void setFrameIcon(JFrame frm){
         try {
             Image i = ImageIO.read(getClass().getResource(Constants.BGS_ICON_PATH));
@@ -130,7 +130,7 @@ public final class View{
      * @param password
      * @return 1-logged in; 2-password incorrect;
      */
-    protected int loginProcess(String name, String password){
+    int loginProcess(String name, String password){
         return controller.loginProcess(name, password);
     }
     
@@ -157,7 +157,7 @@ public final class View{
      * Occurs after clicking on the "Deal" button, deals two cards for player and dealer.
      * @param game
      */
-    protected void deal(Game game) {
+    void deal(Game game) {
         controller.deal(game);
     }
     
@@ -255,14 +255,14 @@ public final class View{
     }
     
     /**
-     * The method plays the requested sound if exists in the switch.
-     * @param sound 
+     * The method plays the requested sound if exists in the switch. 
+     * @param type
      */
-    public void playSound(String sound){
+    public void playSound(String type){
         if (soundON){
-            sound = sound.replaceAll("/^[A-Z][a-z]$/", sound);
+            String sound = type.replaceAll("/^[A-Z][a-z]$/", type);
             String resourcePath = "/resources/";
-            switch(sound){
+            switch(type){
                 case "Button": resourcePath += "button.au";
                     break;
                 case "CasinoAtmosphere": resourcePath += "casinoAtmosphere.au";
@@ -281,6 +281,8 @@ public final class View{
                     break;
                 case "GameStart": resourcePath += "initialDeal.au";
                     break;
+                default:
+                    break;
             }
             try{
                 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(resourcePath));
@@ -290,12 +292,35 @@ public final class View{
             }
             catch(UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                 if (Constants.DEBUG){
-                    System.out.println(resourcePath);
                     System.out.println(ex.getMessage());
                 }
             }
         }
     }
+    
+    /**
+     * The method load fonts required for the BGS
+     */
+    private void loadFonts() {
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        ArrayList<InputStream> fontInputStreams = new ArrayList<>();
+        fontInputStreams.add(View.class.getResourceAsStream("/resources/fonts/Gad-Medium_MFW.ttf"));
+        fontInputStreams.add(View.class.getResourceAsStream("/resources/fonts/HelveticaNeue-ThinExtObl.otf"));
+        fontInputStreams.add(View.class.getResourceAsStream("/resources/fonts/HelveticaNeue-ThinItalic.otf"));
+        Font font;
+        try {
+            for (InputStream is : fontInputStreams){
+                font = Font.createFont(Font.TRUETYPE_FONT, is);
+                ge.registerFont(font);
+            }
+        } catch (FontFormatException | IOException ex) {
+            if (Constants.DEBUG){
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
     
      /**
      * The method handle the exit from system.

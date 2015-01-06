@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.text.SimpleDateFormat;
@@ -20,22 +15,22 @@ import static org.junit.Assert.*;
  * @author BGS Team
  */
 public class PlayerTest {
-    
+
     public PlayerTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -60,8 +55,8 @@ public class PlayerTest {
     @Test
     public void testSetLoginDate() {
         System.out.println("Testing setLoginDate() Method...");
-        SimpleDateFormat df = new SimpleDateFormat ("dd/MM/yyyy HH:mm:ss");
-        Date loginDate = Calendar.getInstance().getTime(); 
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date loginDate = Calendar.getInstance().getTime();
         Player instance = new Player("elad", "aba123bab");
         instance.setLoginDate(loginDate);
         String expResult = df.format(loginDate);
@@ -73,17 +68,16 @@ public class PlayerTest {
      * Test of setBank method, of class Player.
      */
     /*
-    @Test
-    public void testSetBank() {
-        System.out.println("Testing setBank() Method...");
-        int bank = 16464871;
-        Player instance = new Player("elad", "aba123bab");
-        instance.setBank(bank);
-        int expResult = 16464871;
-        int result = instance.getBank();
-        assertEquals(expResult, result);
-    }*/
-
+     @Test
+     public void testSetBank() {
+     System.out.println("Testing setBank() Method...");
+     int bank = 16464871;
+     Player instance = new Player("elad", "aba123bab");
+     instance.setBank(bank);
+     int expResult = 16464871;
+     int result = instance.getBank();
+     assertEquals(expResult, result);
+     }*/
     /**
      * Test of setCurrentHand method, of class Player.
      */
@@ -141,16 +135,15 @@ public class PlayerTest {
      * Test of getBank method, of class Player.
      */
     /*
-    @Test
-    public void testGetBank() {
-        System.out.println("Testing getBank() Method...");
-        Player instance = new Player("elad", "aba123bab");
-        instance.setBank(6544644);
-        int expResult = 6544644;
-        int result = instance.getBank();
-        assertEquals(expResult, result);
-    }*/
-
+     @Test
+     public void testGetBank() {
+     System.out.println("Testing getBank() Method...");
+     Player instance = new Player("elad", "aba123bab");
+     instance.setBank(6544644);
+     int expResult = 6544644;
+     int result = instance.getBank();
+     assertEquals(expResult, result);
+     }*/
     /**
      * Test of getCurrentHand method, of class Player.
      */
@@ -198,17 +191,16 @@ public class PlayerTest {
      * Test of toString method, of class Player.
      */
     /*
-    @Test
-    public void testToString() {
-        System.out.println("Testing toString() Method...");
-        Player instance = new Player("elad", "aba123bab");
-        Date testDate = new Date();
-        int testBank = 12312321;
-        instance.setLoginDate(testDate);
-        instance.setBank(testBank);
-        String expResult = "Player: " + "elad" + " Last seen: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(testDate) + " with " + testBank + " in the bank.";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-    }*/
-    
+     @Test
+     public void testToString() {
+     System.out.println("Testing toString() Method...");
+     Player instance = new Player("elad", "aba123bab");
+     Date testDate = new Date();
+     int testBank = 12312321;
+     instance.setLoginDate(testDate);
+     instance.setBank(testBank);
+     String expResult = "Player: " + "elad" + " Last seen: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(testDate) + " with " + testBank + " in the bank.";
+     String result = instance.toString();
+     assertEquals(expResult, result);
+     }*/
 }

@@ -2,6 +2,7 @@ package exceptions;
 
 /**
  * Exception for Deck of Cards test.
+ *
  * @author BGS Team
  */
 public class CardDeckTestException extends Exception {

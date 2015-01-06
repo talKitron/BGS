@@ -35,6 +35,10 @@ public class Game implements Serializable{
      * Current Game\'s round.
      */
     private int round;
+    /**
+     * Serializable object version number.
+     */
+    private static final long serialVersionUID = 44L;
     
     /**
      * Constructor for Card.
@@ -257,16 +261,15 @@ public class Game implements Serializable{
      * Occurs after clicking on the "Stand" button, check dealer cards
      * @return The last Card dealt to Dealer
      */
-    public Card stand() {        
-        Card card = deck.dealNextCard();
-        return card;
+    public Card stand() {
+        return deck.dealNextCard();
     }
 
     /**
      * Sets dealer. Used for GameTest unit test.
      * @param dealer the dealer to set
      */
-    public void setDealer_debug(Hand dealer) {
+    public void setDealerDebug(Hand dealer) {
         this.dealer = dealer;
     }    
 }

@@ -1,9 +1,7 @@
-
 package view;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -20,35 +18,34 @@ import utilities.Constants;
 
 /**
  * MainFrame frame for the game.
+ *
  * @author BGS Team
  */
 public class MainFrame extends javax.swing.JFrame {
 
     //***************************************** Variables *********************************************
-    /**Login approval*/
-    private boolean loginApproved = false;
-    /**Flag variable*/
-    private int flag = 0;
-    /**ViewLogic field*/
+    /**
+     * ViewLogic field
+     */
     private static View view;
-    private Image image;
     boolean firstTimeNameType = true;
     boolean firstTimePassType = true;
-    
+
     /**
      * Creates new form MainFrame
+     *
      * @param view
      */
     public MainFrame(View view) {
         try {
-            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");        
+            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            if (Constants.DEBUG){
+            if (Constants.DEBUG) {
                 System.out.println(e.getMessage());
             }
         }
-        getContentPane().setBackground( new Color(182,184,192) );
-        MainFrame.view = view;
+        getContentPane().setBackground(new Color(182, 184, 192));
+        this.view = view;
         initComponents();
         view.setFrameIcon(this);
         btnSubmit.setContentAreaFilled(false);
@@ -63,12 +60,12 @@ public class MainFrame extends javax.swing.JFrame {
         btnInfo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSitDown.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSubmit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        
+
         ActionListener actionListener = new ActionListener() {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                if (e.getSource() == btnSubmit){
+                if (e.getSource() == btnSubmit) {
                     btnSubmitActionPerformed(e);
                 } else if (e.getSource() == btnSitDown) {
                     btnSitDownActionPerformed(e);
@@ -80,7 +77,7 @@ public class MainFrame extends javax.swing.JFrame {
         btnSitDown.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false);
         btnSitDown.registerKeyboardAction(actionListener, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        
+
     }
 
     public class MyWindowListener extends WindowAdapter {
@@ -92,12 +89,10 @@ public class MainFrame extends javax.swing.JFrame {
                 System.exit(0);
             } else if (question == JOptionPane.YES_OPTION) {
                 view.executeSysExit(false);
-            } else if (question == JOptionPane.CANCEL_OPTION) {
-                //do nothing
             }
         }
     }
-    
+
     protected void sitDownLayout() {
         ImageIcon newBackground = new ImageIcon(getClass().getResource("/resources/bgStandUp.png")); //change
         pnlBackground.setIcon(newBackground);                                                        //background
@@ -109,22 +104,23 @@ public class MainFrame extends javax.swing.JFrame {
         lblPlayerName.setText("<html>" + txtfName.getText() + "</html>");
         pnlFacts.setVisible(true);
         pnlHighscore.setVisible(true);
-        try{
-            lblHighscoresText.setText("<html>Most rounds won: " + view.getHighWinsGame().getWins() + 
-                "<br>Most rounds lost: " + view.getHighLosesGame().getLoses() + 
-                "<br>Highest score: " + view.getHighScoreGame().getScore() + "</html>");
-        } catch (NullPointerException e){
+        try {
+            lblHighscoresText.setText("<html>Most rounds won: " + view.getHighLosesGame().getPlayer() + " (" + view.getHighWinsGame().getWins() + ")"
+                    + "<br>Most rounds lost: " + view.getHighLosesGame().getPlayer() + " (" + view.getHighLosesGame().getLoses() + ")"
+                    + "<br>Highest score: " + view.getHighLosesGame().getPlayer() + " (" + view.getHighScoreGame().getScore() + ")</html>");
+        } catch (NullPointerException e) {
             lblHighscoresText.setText("<html>Currently empty.<br>You need to play more games to have Highscores. :)</html>");
+            if (Constants.DEBUG) {
+                System.out.println(e.getMessage());
+            }
         }
         btnSitDown.requestFocusInWindow();
         view.getCurrentPlayer();
         view.playSound("CasinoAtmosphere");
     }
-    
+
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -451,19 +447,18 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         view.playSound("Button");
-        if ((txtfName.getText().equals("Your name") && String.valueOf(txtfPassword.getPassword()).equals("Password")) || (txtfName.getText().isEmpty() || Arrays.toString(txtfPassword.getPassword()).isEmpty())){
+        if ((txtfName.getText().equals("Your name") && String.valueOf(txtfPassword.getPassword()).equals("Password")) || (txtfName.getText().isEmpty() || Arrays.toString(txtfPassword.getPassword()).isEmpty())) {
             lblError.setText("Please fill in all the fields.");
             return;
         }
-        switch(view.loginProcess(txtfName.getText(), String.valueOf(txtfPassword.getPassword()))){
+        switch (view.loginProcess(txtfName.getText(), String.valueOf(txtfPassword.getPassword()))) {
             case 0: //general error
                 lblError.setText("General error.");
                 break;
             case 1: //login succeeded
-                if (view.getCurrentPlayer().getImagePath().isEmpty()){ //Player doesn't have a Player image yet (Creation)
+                if (view.getCurrentPlayer().getImagePath().isEmpty()) { //Player doesn't have a Player image yet (Creation)
                     PlayerImageFrame playerImagePicker = new PlayerImageFrame(view, this);
                     playerImagePicker.setModal(true);
-                    //playerImagePicker.setUndecorated(true);
                     playerImagePicker.setVisible(true);
                 } else { //player already have a Player image
                     sitDownLayout();
@@ -475,21 +470,21 @@ public class MainFrame extends javax.swing.JFrame {
             case 3: //entered name is illegal
                 lblError.setText("Illegal name.");
                 break;
-            default: 
+            default:
                 break;
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
-    
+
     private void txtfNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtfNameKeyPressed
-        if (firstTimeNameType){
-           txtfName.setText("");
-           txtfName.setForeground(Color.BLACK);
-           firstTimeNameType = false;
+        if (firstTimeNameType) {
+            txtfName.setText("");
+            txtfName.setForeground(Color.BLACK);
+            firstTimeNameType = false;
         }
     }//GEN-LAST:event_txtfNameKeyPressed
 
     private void txtfPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtfPasswordKeyPressed
-        if(firstTimePassType){
+        if (firstTimePassType) {
             txtfPassword.setText("");
             txtfPassword.setForeground(Color.BLACK);
             firstTimePassType = false;

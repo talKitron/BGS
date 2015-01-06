@@ -1,4 +1,5 @@
 package model;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,9 +12,11 @@ import utilities.Constants;
 
 /**
  * Database class - Holds BGS data.
+ *
  * @author BGS Team
  */
 public final class DataBase implements java.io.Serializable {
+
     //***************************************** Variables *********************************************
     /**
      * Singleton instance of this class, loaded on the first execution of SysData.getInstance()
@@ -23,6 +26,10 @@ public final class DataBase implements java.io.Serializable {
      * Boolean flag for class instance existence (singleton)
      */
     private static boolean exists = false;
+    /**
+     * Serializable object version number.
+     */
+    private static final long serialVersionUID = 42L;
     /**
      * Stores all the players
      */
@@ -57,33 +64,29 @@ public final class DataBase implements java.io.Serializable {
         "House rules are important. They dictate what your advantage or disadvantage is.",
         "It takes at least 7 shuffles to completely randomize a new deck of cards."
     };
-    
+    /**
+     * Stores the BGS Rules.
+     */
     private final String[] rules = {
-        "Blackjack, also known as twenty-one, is the most widely played casino banking game in the world. Blackjack is a comparing card game between a player and dealer, meaning that players compete against the dealer but not against any other players. It is played with one deck of 52 cards." + "\n\n" +
-
-        "The object of the game is to beat the dealer, which can be done in a number of ways:" + "\n" + 
-        "• Get 21 points on the player's first two cards (called a Blackjack), without a dealer Blackjack;" + "\n" + 
-        "• Reach a final score higher than the dealer without exceeding 21; or" + "\n" + 
-        "• Let the dealer draw additional cards until his or her hand exceeds 21." + "\n\n" +
-        
-        "- Reaching a final score higher than the dealer, without exceeding 21, will reward you with XXX points. " + "\n" + 
-        "- Drawing cards exceeding the score of 21 will result in a loss." + "\n" + 
-        "- Having the final score equal to the Dealer's score will result in a loss. Also, Blackjack beats \"regular\" 21." + "\n\n" + 
-        
-        "Score calculation:" + "\n\n" +
-        "- If the round is odd, score is doubled, if the round is even, score is multiplied by 3." + "\n" +
-        "- Winning\\Losing will update your Bank accordingly." + "\n\n" +    
-        
-        "Controls (Hot-Key):" + "\n" + 
-        "Deal (D)      - Shuffles the Deck of Cards and initiates a round." + "\n" + 
-        "Hit (H)       - Draws a Card for the Player." + "\n" + 
-        "Stand (S)     - Player is on hold, Dealer will then draw cards." + "\n" + 
-        "Surrender (E) - Give up on the current round, will result in a loss." + "\n" + 
-        "Quit (Q)      - Quits the Blackjack Game System application, allowing saving progress." + "\n\n" +
-            
-        "** Whiskey costs 8$ from your bank but does not help you play the game, only a fun feature."
+        "Blackjack, also known as twenty-one, is the most widely played casino banking game in the world. Blackjack is a comparing card game between a player and dealer, meaning that players compete against the dealer but not against any other players. It is played with one deck of 52 cards." + "\n\n"
+        + "The object of the game is to beat the dealer, which can be done in a number of ways:" + "\n"
+        + "• Get 21 points on the player's first two cards (called a Blackjack), without a dealer Blackjack;" + "\n"
+        + "• Reach a final score higher than the dealer without exceeding 21; or" + "\n"
+        + "• Let the dealer draw additional cards until his or her hand exceeds 21." + "\n\n"
+        + "- Reaching a final score higher than the dealer, without exceeding 21, will reward you with XXX points. " + "\n"
+        + "- Drawing cards exceeding the score of 21 will result in a loss." + "\n"
+        + "- Having the final score equal to the Dealer's score will result in a loss. Also, Blackjack beats \"regular\" 21." + "\n\n"
+        + "Score calculation:" + "\n\n"
+        + "- If the round is odd, score is doubled, if the round is even, score is multiplied by 3." + "\n"
+        + "- Winning\\Losing will update your Bank accordingly." + "\n\n"
+        + "Controls (Hot-Key):" + "\n"
+        + "Deal (D)      - Shuffles the Deck of Cards and initiates a round." + "\n"
+        + "Hit (H)       - Draws a Card for the Player." + "\n"
+        + "Stand (S)     - Player is on hold, Dealer will then draw cards." + "\n"
+        + "Surrender (E) - Give up on the current round, will result in a loss." + "\n"
+        + "Quit (Q)      - Quits the Blackjack Game System application, allowing saving progress." + "\n\n"
+        + "** Whiskey costs 8$ from your bank but does not help you play the game, only a fun feature."
     };
-   
 
     //***************************************** Constructors ******************************************
     private DataBase() {
@@ -97,40 +100,42 @@ public final class DataBase implements java.io.Serializable {
     /**
      * @return the players
      */
-    protected HashMap<String, Player> getPlayers() {
+    HashMap<String, Player> getPlayers() {
         return players;
     }
+
     /**
      * @return the games
      */
-    protected HashSet<Game> getGames() {
+    HashSet<Game> getGames() {
         return games;
     }
-    
+
     /**
      * @return the facts about Blackjack
      */
-    protected String[] getFacts(){
+    String[] getFacts() {
         return facts;
     }
-    
+
     /**
      * @return the BGS rules.
      */
-    protected String[] getRules() {
+    String[] getRules() {
         return rules;
     }
     //***************************************** Methods ***********************************************
 
-    protected static void setInstance(DataBase sysData) {
+    static void setInstance(DataBase sysData) {
         instance = sysData;
     }
 
     /**
      * The method creates the class instance & provides access to it, by returning a reference (singleton).
+     *
      * @return reference to the class only instance, or null if reference was already returned (singleton).
      */
-    protected static DataBase getInstance() {
+    static DataBase getInstance() {
         executeInput();
         if (!exists) {
             exists = true;
@@ -139,44 +144,46 @@ public final class DataBase implements java.io.Serializable {
         }
         return instance;
     }
-    
+
     /**
      * the methods execute the input from file.
      */
     public static void executeInput() {
         try {
-            try (FileInputStream fileIn = new FileInputStream("BGS.ser"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
-                setInstance(((DataBase) in.readObject()));
-                exists = true;
-            }
+            FileInputStream fis = new FileInputStream("BGS.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            setInstance(((DataBase) ois.readObject()));
+            ois.close();
+            exists = true;
         } catch (FileNotFoundException e) {
-            if (Constants.DEBUG){
+            if (Constants.DEBUG) {
                 System.out.println(e.getMessage());
             }
         } catch (IOException | ClassNotFoundException e) {
-            if (Constants.DEBUG){
-                 System.out.println(e.getMessage());
+            if (Constants.DEBUG) {
+                System.out.println(e.getMessage());
             }
         }
     }
-    
+
     /**
      * the methods execute the output to file.
+     *
      * @param save
      */
-    protected void executeOutput(boolean save) {
+    void executeOutput(boolean save) {
         try {
-            try (FileOutputStream fileOut = new FileOutputStream("BGS.ser"); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-                out.writeObject(instance);
-                out.close();
-                fileOut.close();
-            }
+            FileOutputStream fos = new FileOutputStream("BGS.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(instance);
+            oos.close();
+            fos.close();
             if (!save) {
                 System.exit(0);
             }
         } catch (IOException e) {
-            if (Constants.DEBUG){
-                 System.out.println(e.getMessage());
+            if (Constants.DEBUG) {
+                System.out.println(e.getMessage());
             }
         }
     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import static model.Suit.*;
@@ -18,22 +13,22 @@ import static org.junit.Assert.*;
  * @author Roie
  */
 public class HandTest {
-    
+
     public HandTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -46,26 +41,26 @@ public class HandTest {
         System.out.println("Testing resetHand() Method...");
         Hand instance = new Hand();
         Card[] cards = new Card[11];
-        cards[0] = new Card(2,Spades);
-        cards[1] = new Card(13,Hearts);
-        cards[2] = new Card(2,Clubs);
-        cards[3] = new Card(8,Spades);
-        cards[4] = new Card(4,Clubs);
-        cards[5] = new Card(6,Diamonds);
-        cards[6] = new Card(7,Spades);
-        cards[7] = new Card(11,Hearts);
-        cards[8] = new Card(12,Diamonds);
-        cards[9] = new Card(2,Clubs);
+        cards[0] = new Card(2, Spades);
+        cards[1] = new Card(13, Hearts);
+        cards[2] = new Card(2, Clubs);
+        cards[3] = new Card(8, Spades);
+        cards[4] = new Card(4, Clubs);
+        cards[5] = new Card(6, Diamonds);
+        cards[6] = new Card(7, Spades);
+        cards[7] = new Card(11, Hearts);
+        cards[8] = new Card(12, Diamonds);
+        cards[9] = new Card(2, Clubs);
         cards[10] = null;                   //marks end of array
 
-        instance.setCards_debug(cards);             //every cell in cards[] should contain a card
-        for (int i=0; i<10; i++){
+        instance.setCardsDebug(cards);             //every cell in cards[] should contain a card
+        for (int i = 0; i < 10; i++) {
             assertNotNull(instance.getCards()[i]);
         }
-        
+
         instance.resetHand();                       //now very cell in cards[] should be null
-        
-        for (int i=0; i<10; i++){
+
+        for (int i = 0; i < 10; i++) {
             assertNull(instance.getCards()[i]);
         }
     }
@@ -78,19 +73,19 @@ public class HandTest {
         System.out.println("dealerHandValue");
         Hand instance = new Hand();
         Card[] cards = new Card[11];
-        cards[0] = new Card(2,Spades);
-        cards[1] = new Card(13,Hearts);
-        cards[2] = new Card(2,Clubs);
-        cards[3] = new Card(8,Spades);
-        cards[4] = new Card(4,Clubs);
-        cards[5] = new Card(6,Diamonds);
-        cards[6] = new Card(7,Spades);
-        cards[7] = new Card(11,Hearts);
-        cards[8] = new Card(12,Diamonds);
-        cards[9] = new Card(2,Clubs);
+        cards[0] = new Card(2, Spades);
+        cards[1] = new Card(13, Hearts);
+        cards[2] = new Card(2, Clubs);
+        cards[3] = new Card(8, Spades);
+        cards[4] = new Card(4, Clubs);
+        cards[5] = new Card(6, Diamonds);
+        cards[6] = new Card(7, Spades);
+        cards[7] = new Card(11, Hearts);
+        cards[8] = new Card(12, Diamonds);
+        cards[9] = new Card(2, Clubs);
         cards[10] = null;                   //marks end of array
-        
-        instance.setCards_debug(cards);
+
+        instance.setCardsDebug(cards);
         int expResult = 61;
         int result = instance.dealerHandValue();
         assertEquals(expResult, result);
@@ -104,22 +99,22 @@ public class HandTest {
         System.out.println("playerHandValue");
         Hand instance = new Hand();
         Card[] cards = new Card[11];
-        cards[0] = new Card(4,Spades);
-        cards[1] = new Card(13,Hearts);
-        cards[2] = new Card(5,Clubs);
-        cards[3] = new Card(8,Spades);
-        cards[4] = new Card(2,Clubs);
-        cards[5] = new Card(3,Diamonds);
-        cards[6] = new Card(4,Spades);
-        cards[7] = new Card(11,Hearts);
-        cards[8] = new Card(7,Diamonds);
-        cards[9] = new Card(9,Clubs);
+        cards[0] = new Card(4, Spades);
+        cards[1] = new Card(13, Hearts);
+        cards[2] = new Card(5, Clubs);
+        cards[3] = new Card(8, Spades);
+        cards[4] = new Card(2, Clubs);
+        cards[5] = new Card(3, Diamonds);
+        cards[6] = new Card(4, Spades);
+        cards[7] = new Card(11, Hearts);
+        cards[8] = new Card(7, Diamonds);
+        cards[9] = new Card(9, Clubs);
         cards[10] = null;                   //marks end of array
-        
-        instance.setCards_debug(cards);
+
+        instance.setCardsDebug(cards);
         int expResult = 62;
         int result = instance.playerHandValue();
         assertEquals(expResult, result);
     }
-    
+
 }
