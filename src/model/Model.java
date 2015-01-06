@@ -219,9 +219,9 @@ public final class Model implements I_Model, java.io.Serializable {
     @Override
     public Game getHighScoreGame() {
         Game highGame = null;
-        int highScore = 0;
+        int highScore = Integer.MIN_VALUE;
         for (Game g : db.getGames()) {
-            if (g.getScore() > highScore) {
+            if (g.getScore() >= highScore) {
                 highGame = g;
                 highScore = g.getScore();
             }
@@ -237,7 +237,7 @@ public final class Model implements I_Model, java.io.Serializable {
         Game highGame = null;
         int highWins = 0;
         for (Game g : db.getGames()) {
-            if (g.getWins() > highWins) {
+            if (g.getWins() >= highWins) {
                 highGame = g;
                 highWins = g.getWins();
             }
@@ -253,7 +253,7 @@ public final class Model implements I_Model, java.io.Serializable {
         Game highGame = null;
         int highLoses = 0;
         for (Game g : db.getGames()) {
-            if (g.getLoses() > highLoses) {
+            if (g.getLoses() >= highLoses) {
                 highGame = g;
                 highLoses = g.getLoses();
             }

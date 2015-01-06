@@ -105,9 +105,9 @@ public class MainFrame extends javax.swing.JFrame {
         pnlFacts.setVisible(true);
         pnlHighscore.setVisible(true);
         try {
-            lblHighscoresText.setText("<html>Most rounds won: " + view.getHighLosesGame().getPlayer() + " (" + view.getHighWinsGame().getWins() + ")"
-                    + "<br>Most rounds lost: " + view.getHighLosesGame().getPlayer() + " (" + view.getHighLosesGame().getLoses() + ")"
-                    + "<br>Highest score: " + view.getHighLosesGame().getPlayer() + " (" + view.getHighScoreGame().getScore() + ")</html>");
+            lblHighscoresText.setText("<html>Most rounds won: " + view.getHighWinsGame().getPlayer().getName() + " (" + view.getHighWinsGame().getWins() + ")"
+                    + "<br>Most rounds lost: " + view.getHighLosesGame().getPlayer().getName() + " (" + view.getHighLosesGame().getLoses() + ")"
+                    + "<br>Highest score: " + view.getHighScoreGame().getPlayer().getName() + " (" + view.getHighScoreGame().getScore() + ")</html>");
         } catch (NullPointerException e) {
             lblHighscoresText.setText("<html>Currently empty.<br>You need to play more games to have Highscores. :)</html>");
             if (Constants.DEBUG) {
